@@ -56,7 +56,7 @@ section {
 
 section img {
     display:block;
-    max-width:500px;
+    max-width:600px;
     padding:0 20px;
     margin:auto;
 }
@@ -82,7 +82,7 @@ section p {
 
 table {
 	width: 600px;
-	max-width: 100%;
+	max-width: 600px;
     padding: 4px;
 	font-size: 14px;
 	line-height: 14px;
@@ -91,14 +91,15 @@ table {
 	padding-bottom:40px;
     padding-left:20px;
     padding-right:20px;
+	box-sizing: border-box;
 }
 
 th, td {
 	width: auto;
-	max-width: 100%;
+	max-width: 600px;
 	table-layout: fixed;
 	border: 1px solid #dddddd;
-    padding: 4px;
+	padding: 6px;
 	font-size: 14px;
 	line-height: 14px;
 }
