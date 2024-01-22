@@ -18,6 +18,12 @@ header h1 {
     text-align:center;
 }
 
+.page-title {
+	transition:color 200ms ease;
+}
+.page-title:hover {
+	color: #6d6d6d;
+}
 nav {
     margin-top:45px;
     text-align:center;
@@ -39,12 +45,13 @@ nav a:hover {
 }
 
 nav .active {
-    color:#303030;
+    color:#303030; /*Need to find a way of having "home" not be illuminated when on a page that isnt "home" or "about". Thinking maybe I need a seperate style sheet for individul pages?*/
 }
 
 section {
     width:100%;
 	margin: auto;
+	padding-bottom: 40px;
 }
 
 section img {
