@@ -5,6 +5,7 @@ html, body {
 body {
     margin:0;
 	font-family: Montserrat, sans-serif;
+    color:rgba(0, 0, 0, 0.74)
 }
 
 header {
@@ -14,8 +15,7 @@ header {
 
 header h1 {
     font-size:53px;
-    text-align:center;  
-    color:rgba(0, 0, 0, 0.74);
+    text-align:center;
 }
 
 nav {
@@ -43,9 +43,8 @@ nav .active {
 }
 
 section {
-    width:65%;
+    width:100%;
 	margin: auto;
-    color:rgba(0, 0, 0, 0.74);
 }
 
 section img {
@@ -75,7 +74,7 @@ section p {
 }
 
 table {
-	max-width: 65%;
+	width: 600px;
 	table-layout: fixed;
     padding: 4px;
 	font-size: 14px;
@@ -110,4 +109,37 @@ th, td {
 
 .read-more:hover {
     color:#303030;
+}
+
+footer {
+    width:100%;
+    border-top: 1px solid #AAA;
+    background-color:#F0F0F0;
+    padding:40px 0;
+}
+
+footer a {
+    width:120px;
+    text-align:center;
+    display: block;
+    text-decoration:none;
+    color:rgba(0, 0, 0, 0.74);
+    padding:10px;
+    background-color:white;
+    border:1px solid #AAA;
+    margin:auto;
+}
+
+footer a:hover {
+    background-color:#f5f5f5;
+}
+
+@media screen and (max-width: 600px) {
+    section img {
+        max-width: 80%; /* Change to your desired percentage */
+    }
+
+    table {
+        width:100%;
+    }
 }
