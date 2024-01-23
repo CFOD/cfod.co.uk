@@ -75,6 +75,10 @@ section img {
     margin:auto;
 }
 
+.flag-image {
+	padding: inherit;
+}
+
 .about-photo {
 	display: block;
 	margin-right: auto;
