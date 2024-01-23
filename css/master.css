@@ -48,6 +48,16 @@ nav .active {
     color:#303030; /*Need to find a way of having "home" not be illuminated when on a page that isnt "home" or "about". Thinking maybe I need a seperate style sheet for individul pages?*/
 }
 
+li {
+	max-width:600px;
+    margin:auto;
+    font-size:14px;
+    line-height:22px;
+    text-align:justify;
+    padding-left:auto;
+    padding-right:20px;
+}
+
 section {
     width:100%;
 	margin: auto;
@@ -57,8 +67,18 @@ section {
 section img {
     display:block;
     max-width:600px;
+	max-height: 600px;
     padding:0 20px;
     margin:auto;
+}
+
+.about-photo {
+	display: block;
+	margin-right: auto;
+	margin-bottom: 25px;
+	margin-left: auto;
+	border-radius: 50%;
+	width: 200px;
 }
 
 section h1 {
@@ -83,7 +103,7 @@ section p {
 table {
 	width: 600px;
 	max-width: 600px;
-    padding: 4px;
+    padding: 6px;
 	font-size: 14px;
 	line-height: 14px;
 	margin: auto;
@@ -100,6 +120,8 @@ th, td {
 	table-layout: fixed;
 	border: 1px solid #dddddd;
 	padding: 6px;
+	padding-bottom: 8px;
+	padding-top: 8px;
 	font-size: 14px;
 	line-height: 14px;
 }
