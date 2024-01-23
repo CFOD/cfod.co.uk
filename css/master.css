@@ -90,6 +90,10 @@ section h1 {
     margin-bottom:10px;
 }
 
+.centred-title-1 {
+	text-align: center;
+}
+
 section p {
     max-width:600px;
     margin:auto;
