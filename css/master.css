@@ -100,6 +100,10 @@ section p {
     padding-right:20px;
 }
 
+.pacific-paragraph {
+	margin-bottom:15px;
+}
+
 table {
 	width: 600px;
 	max-width: 600px;
@@ -108,9 +112,6 @@ table {
 	line-height: 14px;
 	margin: auto;
 	border-collapse: collapse;
-	padding-bottom:40px;
-    padding-left:20px;
-    padding-right:20px;
 	box-sizing: border-box;
 }
 
@@ -120,8 +121,8 @@ th, td {
 	table-layout: fixed;
 	border: 1px solid #dddddd;
 	padding: 6px;
-	padding-bottom: 8px;
 	padding-top: 8px;
+	padding-bottom: 8px;
 	font-size: 14px;
 	line-height: 14px;
 }
