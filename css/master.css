@@ -75,6 +75,17 @@ section img {
     margin:auto;
 }
 
+section iframe {
+	width: 600px;
+	height: 400px;
+	display:block;
+    max-width:600px;
+	max-height: 600px;
+    padding:0 20px;
+    margin:auto;
+	border: none;
+}
+
 .flag-image {
 	padding: inherit;
 }
