@@ -1,0 +1,14 @@
+{
+    "countries": {
+        "usa": {
+        "img": "mauritania1.jpg",
+        "title": "Land of the Free",
+        "text": "The United States of America is a vast country known for its diverse culture, innovation, and iconic landmarks. From the bustling streets of New York City to the serene landscapes of Yellowstone National Park, the USA offers a wide range of experiences."
+        },
+        "uk": {
+        "img": "uk_image.jpg",
+        "title": "Great Britain",
+        "text": "The United Kingdom, comprising England, Scotland, Wales, and Northern Ireland, has a rich history and cultural heritage. With landmarks like Big Ben, the Tower of London, and picturesque landscapes in Scotland, the UK is a blend of tradition and modernity."
+        }
+    }
+}
