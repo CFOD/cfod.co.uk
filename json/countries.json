@@ -23,7 +23,7 @@
 		"denmark": {
 		"img": "denmark_image.jpg",
 		"title": "Denmark",
-		"text": "Denmark, a Nordic country situated in northern Europe, is known for its rich history, progressive social policies, and picturesque landscapes. The country is composed of the Jutland Peninsula and numerous islands, the largest of which are Zealand and Funen. Copenhagen, the capital and largest city, is a vibrant metropolis that seamlessly blends modernity with historical charm. Denmark has a constitutional monarchy, and the Danish people enjoy a high standard of living, social welfare, and a strong focus on sustainability. The country has a rich cultural heritage, from its medieval castles like Kronborg to the contemporary design excellence seen in the works of Danish architects and designers. The concept of "hygge," representing a cozy and comfortable way of life, is deeply ingrained in Danish culture. The nation is also known for its contributions to literature, with renowned authors like Hans Christian Andersen. Denmark's coastal landscapes, with sandy beaches and wind-sculpted dunes, add to the country's allure, making it a fascinating blend of tradition and modernity."
+		"text": "Denmark, a Nordic country situated in northern Europe, is known for its rich history, progressive social policies, and picturesque landscapes. The country is composed of the Jutland Peninsula and numerous islands, the largest of which are Zealand and Funen. Copenhagen, the capital and largest city, is a vibrant metropolis that seamlessly blends modernity with historical charm. Denmark has a constitutional monarchy, and the Danish people enjoy a high standard of living, social welfare, and a strong focus on sustainability. The country has a rich cultural heritage, from its medieval castles like Kronborg to the contemporary design excellence seen in the works of Danish architects and designers. The concept of \"hygge,\" representing a cozy and comfortable way of life, is deeply ingrained in Danish culture. The nation is also known for its contributions to literature, with renowned authors like Hans Christian Andersen. Denmark's coastal landscapes, with sandy beaches and wind-sculpted dunes, add to the country's allure, making it a fascinating blend of tradition and modernity."
 		},
 		"france": {
 		"img": "france_image.jpg",
@@ -99,6 +99,6 @@
 		"img": "kazakhstan_image.jpg",
 		"title": "Kazakhstan",
 		"text": "Kazakhstan, the world's largest landlocked country, is situated in Central Asia and Eastern Europe. The country's diverse landscapes include vast steppes, mountains, and the Caspian Sea coastline. Nur-Sultan (formerly Astana) is the capital, while Almaty is a major cultural and economic hub. Kazakhstan has a rich nomadic heritage, and its history is intertwined with the Silk Road. The modern skyline of Nur-Sultan contrasts with the traditional yurts and historic architecture found in various regions. Kazakhstan is also known for its space exploration achievements, hosting the Baikonur Cosmodrome. The country's cultural tapestry includes influences from Turkic, Mongolic, and Persian cultures, creating a unique blend of traditions and modernity."
-		},			
+		}		
     }
 }
