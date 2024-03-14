@@ -8,6 +8,51 @@ body {
     color:rgba(0, 0, 0, 0.74)
 }
 
+/*This is the start of the ChatGPT broken CSS*/
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+#overlay:target {
+  display: none;
+}
+
+#overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#overlay-content {
+  text-align: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#acknowledge-link {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#acknowledge-link:hover {
+  background-color: #0056b3;
+}
+/*This is the end of the ChatGPT broken CSS*/
+
 header {
     margin:80px 0;
     width:100%;
