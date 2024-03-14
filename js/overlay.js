@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>`;
 
-        document.querySelector('#overlay').addEventListener("click", () => {
-            document.querySelector('#overlay').style.display='none';
+        document.querySelector("#acknowledge-link").addEventListener("click", () => {
+            document.querySelector("#overlay").style.display="none";
             localStorage.setItem("Acknowledged", true);
         });
     }
