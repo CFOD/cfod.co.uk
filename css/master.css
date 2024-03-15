@@ -53,6 +53,11 @@ body {
 }
 /*This is the end of the ChatGPT broken CSS*/
 
+.table-div {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
 header {
     margin:80px 0;
     width:100%;
