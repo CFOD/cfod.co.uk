@@ -139,7 +139,13 @@ section iframe {
 .flag-image {
 	padding: inherit;
 }
+.shooter-pic {
+	padding: inherit;
+}
 
+.tiktok-pic {
+	padding: inherit;
+}
 .about-photo {
 	display: block;
 	margin-right: auto;
@@ -147,6 +153,25 @@ section iframe {
 	margin-left: auto;
 	border-radius: 50%;
 	width: 200px;
+}
+
+.correct {
+	position: relative;
+}
+
+/* This class is used to create the rollover effect on "Correct" within the chanigng nature of war page */
+.correct:hover:after {
+	content: "*correct in the eyes of the actor, validity in regard to morals is dependent on political or moral standards of the reader, as a ‘correct’ usage of media manipulation or political interference is unverifiable";
+    position: absolute;
+    display: inline-block;
+    left: 0px;
+    top: 100%;
+	width: 300px;
+    padding: 10px;
+    background-color: #6d6d6d;
+    color: white;
+	border-radius: 5px;
+	z-index: 1;
 }
 
 section h1 {
