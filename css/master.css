@@ -69,7 +69,6 @@ header {
 header h1 {
     font-size:53px;
     text-align:center;
-	
 }
 
 .page-title {
@@ -139,12 +138,8 @@ section iframe {
 .flag-image {
 	padding: inherit;
 }
-.shooter-pic {
-	padding: inherit;
-}
-
-.tiktok-pic {
-	padding: inherit;
+.inline-pic {
+    padding: inherit;
 }
 .about-photo {
 	display: block;
@@ -154,7 +149,6 @@ section iframe {
 	border-radius: 50%;
 	width: 200px;
 }
-
 .correct {
 	position: relative;
 }
