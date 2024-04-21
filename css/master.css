@@ -119,8 +119,8 @@ section {
 
 section img {
     display:block;
-    max-width:600px;
-	max-height: 600px;
+    max-width:550px;
+	max-height: 550px;
     padding:0 20px;
     margin:auto;
 }
@@ -153,6 +153,18 @@ section iframe {
 	position: relative;
 }
 
+.audio-container {
+  max-width:600px;
+  margin:auto;
+  font-size:14px;
+  line-height:22px;
+  text-align:center;
+  padding-left:20px;
+  padding-right:20px;
+}
+.ambience {
+  max-width:100%;
+}
 /* This class is used to create the rollover effect on "Correct" within the chanigng nature of war page */
 .correct:hover:after {
 	content: "*correct in the eyes of the actor, validity in regard to morals is dependent on political or moral standards of the reader, as a ‘correct’ usage of media manipulation or political interference is unverifiable";
@@ -196,6 +208,16 @@ section p {
     text-align:justify;
     padding-left:20px;
     padding-right:20px;
+}
+
+audio {
+  max-width:600px;
+  margin:auto;
+  font-size:14px;
+  line-height:22px;
+  text-align:justify;
+  padding-left:20px;
+  padding-right:20px;
 }
 
 .pacific-paragraph {
