@@ -4,14 +4,8 @@ html, body {
 
 body {
     margin:0;
-	font-family: Montserrat, sans-serif;
+	font-family: Arial, sans-serif;
     color:rgba(0, 0, 0, 0.74)
-}
-
-/*This is the start of the ChatGPT broken CSS*/
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
 }
 
 #overlay:target {
@@ -51,7 +45,6 @@ body {
 #acknowledge-link:hover {
   background-color: #0056b3;
 }
-/*This is the end of the ChatGPT broken CSS*/
 
 .table-div {
 	max-width: 100%;
@@ -98,7 +91,7 @@ nav a:hover {
 }
 
 nav .active {
-    color:#303030; /*Need to find a way of having "home" not be illuminated when on a page that isnt "home" or "about". Thinking maybe I need a seperate style sheet for individul pages?*/
+    color:#303030;
 }
 
 li {
