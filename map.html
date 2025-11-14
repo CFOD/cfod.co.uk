@@ -1,34 +1,213 @@
 <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>CFOD - Map</title>
+    
+    <link rel="icon" type="image/png" href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif">
+    
+    <!-- Load Tailwind CSS and Typography Plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    
+    <!-- Load Google Fonts (Inter) and Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/0b745d7406.js" crossorigin="anonymous"></script>
 
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>CFOD</title>
-		<link rel="icon" type="image/x-icon" href="./imgs/favicon.png">
-        <script src="https://kit.fontawesome.com/0b745d7406.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic%7CRoboto:300,regular,500" media="all">
-        <link rel="stylesheet" href="./css/master.css">
-    </head>
+    <script>
+        // Custom Tailwind configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            '600': '#374151', // gray-700
+                            '700': '#1f2937', // gray-800
+                            '800': '#111827', // gray-900
+                        }
+                    },
+                    // Typography plugin styles for articles
+                    typography: (theme) => ({
+                        DEFAULT: {
+                            css: {
+                                color: theme('colors.gray.700'),
+                                'font-size': '1.125rem', // text-lg
+                                'line-height': '1.75',
+                                a: {
+                                    color: theme('colors.primary.600'),
+                                    '&:hover': {
+                                        color: theme('colors.primary.700'),
+                                    },
+                                },
+                                h1: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '800',
+                                    'font-size': '2.25rem', // text-4xl
+                                },
+                                h2: {
+                                    color: theme('colors.gray.900'),
+                                    fontWeight: '700',
+                                },
+                                'p.italic': {
+                                    fontStyle: 'italic',
+                                    color: theme('colors.gray.600'),
+                                    borderLeft: `4px solid ${theme('colors.gray.300')}`,
+                                    paddingLeft: theme('spacing.4'),
+                                },
+                                'p.font-bold': {
+                                    fontWeight: '700',
+                                    color: theme('colors.gray.800'),
+                                    textAlign: 'center',
+                                },
+                                ul: {
+                                    listStyleType: 'disc',
+                                    paddingLeft: theme('spacing.6'),
+                                },
+                                'ul li': {
+                                    marginTop: theme('spacing.2'),
+                                    marginBottom: theme('spacing.2'),
+                                },
+                                img: {
+                                    borderRadius: theme('borderRadius.lg'),
+                                    marginTop: theme('spacing.8'),
+                                    marginBottom: theme('spacing.8'),
+                                }
+                            },
+                        },
+                    }),
+                },
+            },
+        }
+    </script>
 
-    <body>
-        <header>
-            <h1 class="page-title">CFOD</h1>
+    <style>
+        /* Custom styles for article layout */
+        .article-content {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+        }
+        .article-content img.article-header {
+            width: 100%;
+            height: 400px; /* Header image height */
+            object-fit: cover;
+        }
+        .article-body {
+            /* 'prose' enables Tailwind's typography styles */
+            max-width: 800px; /* Sets max width for readability */
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem; /* Padding for mobile */
+        }
         
-            <nav>
-                <a href="./index.html">HOME</a>
-                <a href="./about-me.html">ABOUT ME</a>
-				<a class="active" href="./map.html">MAP</a>
-             </nav>
-        </header>
-		<section class="map"> <h1>WORK IN PROGRESS - Click a pin, follow my journey</h1>
-        <p>On the map below, you will find pins marking countries I've visited, in red, or those relevant to my interests, both academic and personal, in grey. Clicking on each pin opens a dedicated webpage featuring images, personal narratives, travel logs, and analyses of political research.</p></section>
-        <section class="map"><iframe width="100%" frameborder="0" src="//umap.openstreetmap.fr/en/map/unbenannte-karte_1013958?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=false&onLoadPanel=undefined&captionBar=false&captionMenus=false"></iframe>
-		<!--DO NOT REMOVE OR EDIT THIS LINK IT WILL BREAK THE MAP. THE LINK BELOW IS TO EDIT THE MAP IN THE FUTURE. WITHOUT THIS LINK IT WILL BREAK COMPLETELY. - https://umap.openstreetmap.fr/en/map/anonymous-edit/1013958:ZgHt1ty4dP5i2pmUpuxr0-S5RsSCPin5mKV9tCYiBNo-->
-		</section>
+        /* Fix for inline images inside the article body */
+        .article-body img.inline-pic, 
+        .article-body img.flag-image {
+            width: 100%;
+        }
 
-        <footer>
-          <a href="mailto:connor-odonnell@hotmail.co.uk"><i class="fa-regular fa-envelope"></i><br>CONTACT ME</a>
-        </footer>
-    </body>
+        .article-body .audio-container {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        .article-body .map-iframe {
+            width: 100%;
+            height: 600px;
+            border: 0;
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        /* Table styles (for Pacific Cup, etc.) */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin: 2rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        }
+        th {
+            background-color: #f9fafb; /* gray-50 */
+            font-weight: 600;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb; /* gray-50 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <a href="./index.html" class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors">CFOD</a>
+            </div>
+            <div class="flex space-x-6">
+                <a href="./index.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">HOME</a>
+                <a href="./about-me.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">ABOUT ME</a>
+                <a href="./map.html" class="text-base font-medium text-primary-700 border-b-2 border-primary-700">MAP</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Your 'Map' content -->
+        <div class="article-content">
+            <!-- No header image for this page -->
+            
+            <!-- Article Body -->
+            <div class="article-body prose lg:prose-lg">
+                <h1>Click a pin, follow my journey&nbsp; &nbsp; &nbsp;&nbsp;</h1>
+                <p>On the map below, you will find pins marking countries I've visited, in red, or those relevant to my interests, both academic and personal, in grey. Clicking on each pin opens a dedicated webpage featuring images, personal narratives, travel logs, and analyses of political research.</p>
+                
+                <iframe class="map-iframe" width="100%" frameborder="0" src="//umap.openstreetmap.fr/en/map/unbenannte-karte_1013958?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=false&onLoadPanel=undefined&captionBar=false&captionMenus=false"></iframe>
+                <!--DO NOT REMOVE OR EDIT THIS LINK IT WILL BREAK THE MAP. THE LINK BELOW IS TO EDIT THE MAP IN THE FUTURE. WITHOUT THIS LINK IT WILL BREAK COMPLETELY. - https://umap.openstreetmap.fr/en/map/anonymous-edit/1013958:ZgHt1ty4dP5i2pmUpuxr0-S5RsSCPin5mKV9tCYiBNo-->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 mt-16">
+        <div class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <a href="./index.html" class="text-2xl font-bold text-white hover:text-primary-700 transition-colors">CFOD</a>
+                <p class="text-sm text-gray-400 mt-1">&copy; 2023-2025 CFOD. All Rights Reserved.</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="flex space-x-6">
+                    <a href="./index.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">HOME</a>
+                    <a href="./about-me.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">ABOUT ME</a>
+                    <a href="./map.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">MAP</a>
+                </div>
+                <a href="mailto:connor-odonnell@hotmail.co.uk" class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium">
+                    <i class="fa-regular fa-envelope mr-2"></i>
+                    CONTACT ME
+                </a>
+            </div>
+        </div>
+    </footer>
+
+</body>
 </html>
