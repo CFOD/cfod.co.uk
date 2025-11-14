@@ -1,0 +1,33 @@
+# A friendly name for this workflow
+name: Deploy website to InfinityFree
+
+# This tells GitHub WHEN to run the action
+on:
+  # Run this workflow every time you push to the 'main' branch
+  push:
+    branches:
+      - main  # Change this if your main branch is 'master'
+
+# This defines the "job" or set of tasks
+jobs:
+  ftp-deploy:
+    # Use a standard, up-to-date virtual machine
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. This step checks out your repository's code onto the virtual machine
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. This is the magic. It uses a pre-built "Action" to do the FTP upload.
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+      with:
+        # Get the secret values you created in Step 2
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        
+        # This is the CRITICAL part for InfinityFree
+        # It tells the action to put your files inside the /htdocs/ folder
+        server-dir: /htdocs/

@@ -1,151 +1,304 @@
 <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFOD - Home</title>
+    <!-- Use a placeholder for the favicon as the original path is local -->
+    <link rel="icon" type="image/png" href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif">
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Google Fonts (Inter) and Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/0b745d7406.js" crossorigin="anonymous"></script>
 
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>CFOD</title>
-		<link rel="icon" type="image/x-icon" href="./imgs/favicon.png">
-        <script src="https://kit.fontawesome.com/0b745d7406.js" crossorigin="anonymous"></script>
-        <script src="./js/overlay.js"></script>
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic%7CRoboto:300,regular,500" media="all">
-        <link rel="stylesheet" href="./css/master.css">
-    </head>
-	<body>
-        <header>
-            <h1 class="page-title">CFOD</h1>
+    <script>
+        // Custom Tailwind configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            '600': '#374151', // gray-700
+                            '700': '#1f2937', // gray-800
+                            '800': '#111827', // gray-900
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+
+    <style>
+        /* A little custom CSS for the table to ensure it looks good */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        }
+        th {
+            background-color: #f9fafb; /* gray-50 */
+            font-weight: 600;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb; /* gray-50 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <a href="./index.html" class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors">CFOD</a>
+            </div>
+            <div class="flex space-x-6">
+                <!-- Standardize relative links -->
+                <a href="./index.html" class="text-base font-medium text-primary-700 border-b-2 border-primary-700">HOME</a>
+                <a href="./about-me.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">ABOUT ME</a>
+                <!-- <a href="./map.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">MAP</a> -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="container mx-auto px-6 py-12">
         
-            <nav>
-                <a class="active" href="./index.html">HOME</a>
-                <a href="./about-me.html">ABOUT ME</a>
-				<!--<a href="./map.html">MAP</a> -->
-            </nav>
-        </header>
-		
-		<section>
-			<img src="imgs/kosovo-header.jpg" alt="image of the Pristina skyline">
-			<h1>A Bipolar Exploration of Kosovo</h1>
-			<p>The reasoning behind my visit to Kosovo is admittedly rather vague. There have been many times in life where I have been bestowed with a small sum of money of which I can do as I please, and nearly every time the same situation and questions arise - Can I go on holiday with this amount? Where can I go? Where's Interesting? Both my family and associates alike seem to avoid me when they know this scenario is on the horizon, they'll be met with...</p>
-			<a class="read-more" href="/kosovo.html">READ MORE</a>
-		</section>
-		
-		<section>
-			<img src="imgs/books_2.jpg" alt="image of a pile of books">
-			<h1>Essay - "The Changing Nature of War"</h1>
-			<p class="centred-title-2"><i>The following essay was written as the sole coursework piece for the module "The Changing Nature of War" at the University of Warwick, receiving first class honours.</i></p><br>
-			<p class="centred-title-1"><b>Critically consider the implications of warfare increasingly migrating to the extended battlefield of social media and video gaming.</b></p><br>
-			<p>Throughout the 21st century, video games, memes and social media have become a mainstream part of culture and society. With this comes a variety of complex issues such as the simplification of conflict and violence, perception of war and propagation of stereotypes, especially to a large base of younger users (Massarat, 2022) at risk of manipulation and indoctrination. Video games, social media and memes are relatively new ways for a once somewhat underreported series of events to enter the mainstream. Propaganda, once produced in a ‘top-down’...</p>
-			<a class="read-more" href="/changing-nature-of-war.html">READ MORE</a>
-		</section>
+        <!-- Grid for article sections -->
+        <!-- This grid will be populated by JavaScript -->
+        <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Articles will be injected here -->
+        </div>
 
-		<section>
-			<img src="imgs/f35-image.jpg" alt="image of F35 Jet">
-			<h1>World Hunger Story - in Progress</h1>
-			<p class="centred-title-2"><i>The following article was written in response to a question given in an internship interview</i></p>
-			<p>I feel the answer to this question can be answered both globally and in regard to the United States specifically. From some very rough calculations, around 1 in 10 people are experiencing hunger, or do not get enough to eat. Likewise, it seems around 700-800 million people are facing chronic hunger. Considering this, Oxfam America claims that it would take around $14m a year, for the next 6-7 years to end chronic world hunger sustainably. On a global scale, this would mean roughly doubling the current commitments of foreign aid for a number of years, but when put into US-specific terms, the numbers become even more upsetting...</p>
-			<a class="read-more" href="/world-hunger-story.html">READ MORE</a>
-		</section>
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+            <button id="load-more-btn" class="bg-primary-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors">
+                Load More Articles
+            </button>
+        </div>
+    </main>
 
-		<section>
-			<img src="imgs/rishi_sunak.jpg" alt="image of Rishi Sunak">
-			<h1>UK Political Uncertainty Ahead of 2024 General Election – YouGov Poll Sparks Right-Wing Revolt Conspiracy</h1>
-			<p class="centred-title-2"><i>The following article   serves as my initial submission as content writer/reporter for otb.news</i></p>
-			<p>As the UK gears up for the 2024 general election, a recent article regarding a YouGov poll published by The Telegraph has ignited speculation about the potential shift in leadership. According to the poll of over 13,000 potential voters, The Conservatives are projected to lead in 322 constituencies, dwarfing the opposition leader Sir Keir Starmer of the Labour Party, with a minority of only 164 seats...</p>
-			<a class="read-more" href="/rishi-story.html">READ MORE</a>
-		</section>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 mt-16">
+        <div class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <a href="./index.html" class="text-2xl font-bold text-white hover:text-primary-700 transition-colors">CFOD</a>
+                <p class="text-sm text-gray-400 mt-1">&copy; 2023-2025 CFOD. All Rights Reserved.</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="flex space-x-6">
+                    <a href="./index.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">HOME</a>
+                    <a href="./about-me.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">ABOUT ME</a>
+                </div>
+                <a href="mailto:connor-odonnell@hotmail.co.uk" class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium">
+                    <i class="fa-regular fa-envelope mr-2"></i>
+                    CONTACT ME
+                </a>
+            </div>
+        </div>
+    </footer>
 
-		<section>
-        	<img src="imgs/books.jpg" alt="pile of books">
-            <h1>The English School - A 14 Day essay</h1>
-            <p><i>This essay served as a significant milestone in my pursuit of a Master's degree and involved undertaking all research, planning, and writing within a strict 14-day timeframe, intending to assess my progress during Term 1. Additionally, it served as an effective marker of my general ability for both myself and my tutors, following an extended break from writing of just over three years.</i></p><br>
-			<p class="centred-title-1"><b>What are the core elements of the English School’s approach to IR? How, if at all, does it differ from realism?</b></p><br>
-			<p>This essay will argue the core elements of the English School’s approach to International Relations (IR), how they are based around and emphasise social cooperation, mutual interests and international society, as well as pluralism and historicism, and how...</p>
-			<!--For the preview paragraphs there is a char limit of 930 to keep things concise-->
-            <a class="read-more" href="./english-school.html">READ MORE</a>
-        </section>
-		
-        <section>
-			<img src="imgs/islands.jpg" alt="map of pacific islands">
-			<h1> Pacific island cup 2024</h1>
-			<p class="pacific-paragraph">The Pacific Island Cup 2024 is a personal endeavor born out of interest in Geography, Politics, Flags and History. After receiving exposure to nations within the Pacific through informal means, I have created a personal ranking system based on subjective factors, such as independence, location, rating looks and island usage. </p>
-            <div class="table-div">
-			<table border="0">
-                <thead>
-                    <tr>
-                        <th>Island/Country</th>
-                        <th>Owned or Indipendent?</th>
-                        <th>Flag Rating</th>
-                        <th>Atoll?</th>
-                        <th>Location</th>
-                        <th>Island Rating</th>
-                        <th>Just a military base?</th>
-                        <th>Total</th>
-                     </tr>
-                </thead>
+    <!-- Article Loading JavaScript -->
+    <script>
+        // --- ARTICLE DATABASE ---
+        // To add new articles, just add a new object to this array.
+        const allArticles = [
+            {
+                type: 'standard', // 'standard' or 'table'
+                imageUrl: './imgs/kosovo-header.jpg',
+                altText: 'Pristina skyline',
+                title: 'A Bipolar Exploration of Kosovo',
+                description: 'The reasoning behind my visit to Kosovo is admittedly rather vague. There have been many times in life where I have been bestowed with a small sum of money... Both my family and associates alike seem to avoid me...',
+                linkUrl: './kosovo.html',
+                contentHtml: '' // No special content for standard cards
+            },
+            {
+                type: 'standard',
+                imageUrl: './imgs/books_2.jpg',
+                altText: 'Pile of books',
+                title: 'Essay - "The Changing Nature of War"',
+                description: 'Throughout the 21st century, video games, memes and social media have become a mainstream part of culture and society. With this comes a variety of complex issues...',
+                linkUrl: './changing-nature-of-war.html',
+                contentHtml: `
+                    <p class="text-sm italic text-center mb-2">The following essay was written as the sole coursework piece for the module "The Changing Nature of War"... receiving first class honours.</p>
+                    <p class="font-semibold text-gray-900 text-center mb-4">Critically consider the implications of warfare increasingly migrating to the extended battlefield of social media and video gaming.</p>
+                `
+            },
+            {
+                type: 'standard',
+                imageUrl: './imgs/f35-image.jpg',
+                altText: 'F35 Jet',
+                title: 'World Hunger Story - in Progress',
+                description: 'I feel the answer to this question can be answered both globally and in regard to the United States specifically. From some very rough calculations, around 1 in 10 people are experiencing hunger...',
+                linkUrl: './world-hunger-story.html',
+                contentHtml: `
+                    <p class="text-sm italic text-center mb-4">The following article was written in response to a question given in an internship interview</p>
+                `
+            },
+            {
+                type: 'standard',
+                imageUrl: './imgs/rishi_sunak.jpg',
+                altText: 'Rishi Sunak',
+                title: 'UK Political Uncertainty Ahead of 2024...',
+                description: 'As the UK gears up for the 2024 general election, a recent article regarding a YouGov poll published by The Telegraph has ignited speculation about the potential shift in leadership...',
+                linkUrl: './rishi-story.html',
+                contentHtml: `
+                    <p class="text-sm italic text-center mb-4">The following article serves as my initial submission as content writer/reporter for otb.news</p>
+                `
+            },
+            {
+                type: 'standard',
+                imageUrl: 'https://placehold.co/600x400/9ca3af/FFF?text=Article+Image',
+                altText: 'Pile of books',
+                title: 'The English School - A 14 Day essay',
+                description: 'This essay will argue the core elements of the English School’s approach to International Relations (IR), how they are based around and emphasise social cooperation...',
+                linkUrl: './english-school.html',
+                contentHtml: `
+                    <p class="text-sm italic mb-2">This essay served as a significant milestone in my pursuit of a Master's degree... within a strict 14-day timeframe...</p>
+                    <p class="font-semibold text-gray-900 text-center mb-4">What are the core elements of the English School’s approach to IR? How, if at all, does it differ from realism?</p>
+                `
+            },
+            {
+                type: 'table', // Special type for the wide table card
+                imageUrl: 'https://placehold.co/800x400/9ca3af/FFF?text=Pacific+Islands+Map',
+                altText: 'Map of pacific islands',
+                title: 'Pacific island cup 2024',
+                description: 'The Pacific Island Cup 2024 is a personal endeavor born out of interest in Geography, Politics, Flags and History. After receiving exposure to nations within the Pacific through informal means, I have created a personal ranking system based on subjective factors, such as independence, location, rating looks and island usage.',
+                linkUrl: './pacific-cup.html',
+                colSpan: 'md:col-span-2 lg:col-span-3', // Special class for this card
+                contentHtml: `
+                    <div class="table-responsive rounded-lg border mb-6">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Island/Country</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owned or Independent?</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flag Rating</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Atoll?</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Island Rating</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Just a military base?</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr><td class="px-6 py-4">Kiribati</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.85</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.8</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">4.65</td></tr>
+                                <tr><td class="px-6 py-4">The Marshall Islands</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.85</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">4.05</td></tr>
+                                <tr><td class="px-6 py-4">Palau</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.2</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.8</td></tr>
+                                <tr><td class="px-6 py-4">Micronesia</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.8</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.45</td><td class="px-6 py-4">0.4</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.65</td></tr>
+                                <tr><td class="px-6 py-4">Tuvalu</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.15</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0.5</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.25</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            },
+            // --- DUMMY ARTICLES TO SHOW PAGINATION ---
+            // You can remove these and add your own
+            {
+                type: 'standard',
+                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+1',
+                altText: 'Dummy Article',
+                title: 'This is a New Dummy Article',
+                description: 'This article was loaded dynamically. Add as many as you want to the `allArticles` list, and the "Load More" button will handle them.',
+                linkUrl: '#',
+                contentHtml: ''
+            },
+            {
+                type: 'standard',
+                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+2',
+                altText: 'Dummy Article',
+                title: 'Another Article Post',
+                description: 'This is the eighth article in the list. The button will load this and the next one, and then disappear since there are no more to load.',
+                linkUrl: '#',
+                contentHtml: ''
+            },
+            {
+                type: 'standard',
+                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+3',
+                altText: 'Dummy Article',
+                title: 'The Final Dummy Post',
+                description: 'Once this post is loaded, the "Load More" button will be hidden automatically because the end of the `allArticles` list has been reached.',
+                linkUrl: '#',
+                contentHtml: ''
+            }
+        ];
 
-                <tbody>
-                    <tr>
-                        <td>Kiribati</td>
-                        <td>1</td>
-                        <td>0.85</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>0.8</td>
-                        <td>0</td>
-                        <td>4.65</td>
-                    </tr>
+        // --- ARTICLE LOADING LOGIC ---
+        const articlesPerLoad = 6;
+        let articlesLoaded = 0;
+        const articleGrid = document.getElementById('article-grid');
+        const loadMoreBtn = document.getElementById('load-more-btn');
 
-                    <tr>
-                        <td>The Marshall Islands</td>
-                        <td>1</td>
-                        <td>0.85</td>
-                        <td>1</td>
-                        <td>0.6</td>
-                        <td>0.6</td>
-                        <td>0</td>
-                        <td>4.05</td>
-                    </tr>
-					
-					<tr>
-						<td>Palau</td>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-						<td>0.2</td>
-						<td>0.6</td>
-						<td>0</td>
-						<td>3.8</td>
-					</tr>
-					
-					<tr>
-						<td>Micronesia</td>
-						<td>1</td>
-						<td>0.8</td>
-						<td>1</td>
-						<td>0.45</td>
-						<td>0.4</td>
-						<td>0</td>
-						<td>3.65</td>
-					</tr>
-					
-					<tr>
-						<td>Tuvalu</td>
-						<td>1</td>
-						<td>0.15</td>
-						<td>1</td>
-						<td>0.6</td>
-						<td>0.5</td>
-						<td>0</td>
-						<td>3.25</td>
-					</tr>
-                </tbody>
-            </table>
-			</div>
-			<a class="read-more" href="./pacific-cup.html">READ MORE</a>
-        </section>
+        function generateArticleHtml(article) {
+            const colSpanClass = article.colSpan || '';
+            let contentHtml = '';
+            let descriptionHtml = `<p class="text-gray-700 mb-4 flex-grow">${article.description}</p>`;
+            let linkClass = 'inline-block mt-auto bg-primary-600 text-white font-medium py-2 px-4 rounded-lg text-center hover:bg-primary-700 transition-colors';
 
-        <footer>
-            <a href="mailto:connor-odonnell@hotmail.co.uk"><i class="fa-regular fa-envelope"></i><br>CONTACT ME</a>
-        </footer>
-    </body>
+            if (article.type === 'standard') {
+                contentHtml = article.contentHtml || '';
+            } else if (article.type === 'table') {
+                descriptionHtml = `<p class="text-gray-700 mb-6">${article.description}</p>`;
+                contentHtml = article.contentHtml || '';
+                linkClass += ' w-full md:w-auto md:self-start'; // Special class for the table card's button
+            }
+
+            return `
+                <section class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-[1.02] ${colSpanClass}">
+                    <img class="h-56 w-full object-cover" src="${article.imageUrl}" alt="${article.altText}">
+                    <div class="p-6 flex-grow flex flex-col">
+                        <h2 class="text-2xl font-bold mb-3 text-gray-900">${article.title}</h2>
+                        <div class="text-gray-700 mb-4 flex-grow">
+                            ${contentHtml}
+                            ${descriptionHtml}
+                        </div>
+                        <a href="${article.linkUrl}" class="${linkClass}">READ MORE</a>
+                    </div>
+                </section>
+            `;
+        }
+
+        function loadArticles() {
+            const articlesToLoad = allArticles.slice(articlesLoaded, articlesLoaded + articlesPerLoad);
+            
+            articlesToLoad.forEach(article => {
+                const articleHtml = generateArticleHtml(article);
+                articleGrid.innerHTML += articleHtml;
+            });
+
+            articlesLoaded += articlesToLoad.length;
+
+            // Hide button if no more articles
+            if (articlesLoaded >= allArticles.length) {
+                loadMoreBtn.style.display = 'none';
+            }
+        }
+
+        // Load initial articles
+        document.addEventListener('DOMContentLoaded', loadArticles);
+
+        // Load more on button click
+        loadMoreBtn.addEventListener('click', loadArticles);
+
+    </script>
+
+</body>
 </html>
