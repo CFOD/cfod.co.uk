@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MW2 Collection Portfolio</title>
+	<link rel="icon" type="image/x-icon" href="icon.ico">
+    <!-- Importing Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importing Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+      // Custom Tailwind config
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+    
+    <style>
+        /* Reset default margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            /* Using a dark background for the whole page */
+            font-family: 'Inter', sans-serif;
+            /* Allow smooth scrolling for any anchor links (if added later) */
+            scroll-behavior: smooth;
+        }
+
+        /* 1. HERO SECTION STYLES (The original page) */
+
+        .hero-section {
+            /* CHANGED: This is now fixed to the viewport */
+            position: fixed; 
+            top: 0;
+            left: 0;
+            
+            height: 100vh; /* Full viewport height */
+            width: 100%;
+            overflow: hidden; /* This is KEY: it traps the embers in this section */
+            z-index: 1;
+        }
+
+        /* Style the image to cover the entire hero */
+        #fullscreen-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            /* This z-index is local to .hero-section */
+            z-index: 1;
+            /* Add animation for Ken Burns effect */
+            animation: kenburns 30s ease-in-out infinite alternate;
+        }
+
+        @keyframes kenburns {
+            from { transform: scale(1); }
+            to { transform: scale(1.05) translate(-1%, -1%); }
+        }
+
+		#scanline-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicks to pass through */
+            z-index: 3; /* MODIFIED: Was 2, now 3 (on top of content) */
+            background: linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px; /* Thickness of the lines */
+            opacity: 0.3; /* Subtle effect */
+            animation: scanmove 4s linear infinite;
+        }
+		
+        /* Container for the ember particles */
+        #ember-container {
+            /* Position is now 'fixed' to float over everything */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* z-index is now '3' to be on top of the content (which is z-index 2) */
+            z-index: 3; 
+        }
+
+        .ember {
+            position: absolute;
+            bottom: -20px;
+            background: rgba(255, 180, 0, 0.6);
+            border-radius: 50%;
+            opacity: 0;
+            animation: rise 10s infinite linear;
+            width: 3px;
+            height: 3px;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-100vh) translateX(15px); opacity: 0; }
+        }
+
+        /* Ember variations */
+        .ember:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; width: 2px; height: 2px; }
+        .ember:nth-child(2) { left: 20%; animation-duration: 10s; animation-delay: 1s; background: rgba(255, 100, 0, 0.5); }
+        .ember:nth-child(3) { left: 30%; animation-duration: 6s; animation-delay: 2s; width: 4px; height: 4px; }
+        .ember:nth-child(4) { left: 40%; animation-duration: 12s; animation-delay: 0.5s; }
+        .ember:nth-child(5) { left: 50%; animation-duration: 7s; animation-delay: 3s; width: 2px; height: 2px; }
+        .ember:nth-child(6) { left: 60%; animation-duration: 9s; animation-delay: 1.5s; background: rgba(255, 200, 50, 0.6); }
+        .ember:nth-child(7) { left: 70%; animation-duration: 11s; animation-delay: 4s; width: 3px; height: 3px; }
+        .ember:nth-child(8) { left: 80%; animation-duration: 5s; animation-delay: 2.5s; }
+        .ember:nth-child(9) { left: 90%; animation-duration: 8s; animation-delay: 1.8s; width: 2px; height: 2px; }
+        .ember:nth-child(10) { left: 5%; animation-duration: 10s; animation-delay: 3.5s; background: rgba(255, 80, 0, 0.5); }
+
+        /* 2. CONTENT SECTION STYLES */
+
+        /* NEW STYLE: Add semi-transparent background and blur to the content area */
+        #content {
+            background-color: rgba(27, 27, 27, 0.3);
+            
+            /* Add the frosted glass effect */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+
+            position: relative;
+            z-index: 2;
+        }
+        
+		.gallery-image {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .gallery-image:hover {
+            transform: scale(1.03);
+        }
+
+        /* NEW: Lightbox styles */
+		#lightbox {
+            position: fixed;
+            z-index: 50;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        #lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 3rem;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .lightbox-close:hover {
+            color: #ccc;
+        }
+		
+    </style>
+</head>
+
+<body>
+
+    <!-- 
+      SECTION 1: HERO (Your original page)
+      This stays at the top and fills the screen.
+    -->
+    <div class="hero-section">
+        <img id="fullscreen-image" src="background.jpg" alt="Soldier walking through a fiery, smoky battlefield">        
+    </div>
+	
+    <div id="ember-container">
+        <!-- Embers -->
+        <div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
+        <div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
+        <div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
+        <div class="ember"></div>
+    </div>
+
+	<div id="scanline-overlay"></div>
+    <!-- 
+      SECTION 2: CONTENT (Your new portfolio area)
+      This is where you add your text and images.
+    -->
+    <div id="content" class="text-gray-300 py-20 px-4 sm:px-6 lg:px-8">
+        
+        <!-- Max-width container to keep content centered and readable -->
+        <div class="max-w-4xl mx-auto">
+
+            <!-- Title Section -->
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white text-center mb-4">
+                MW2 Collector
+            </h1>
+            <p class="text-xl text-gray-400 text-center mb-16">
+                A portfolio of my Modern Warfare 2 collection.
+            </p>
+
+            <!-- Text Section -->
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">Welcome</h2>
+                <p class="text-lg mb-4">
+                  <!-- START WRITING HERE -->
+This website is a website about Modern Warfare 2 stuff on the internet website. I collect Modern Warfare 2 stuff and put it on this website which is on the internet. Thank you very much love you - cf&nbsp; &nbsp;
+<!-- END WRITING HERE -->
+                </p>
+                <p class="text-lg">
+                  <!-- MORE TEXT HERE -->
+Private First Class Joseph Allen of the 1st Battalion, 75th Ranger Regiment, conducts a combat patrol in Afghanistan with his squadmates Sergeant Foley and Corporal Dunn, impressing his commanding officer, Lieutenant General Shepherd, who reassigns Allen to Task Force 141, a multinational special forces unit. </p>
+            </div>
+
+            <!-- Gallery Section -->
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-6">Resurgence DLC&nbsp;</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+
+                    <!-- Image 1 -->
+                    <!-- CHANGED: Made card background slightly more opaque for readability -->
+                    <div class="bg-zinc-800/60 rounded-lg overflow-hidden shadow-lg">
+
+                        <img src="resurgence_pack.jpg" 
+                             alt="My favorite M4 loadout" 
+                             class="w-full h-64 object-cover gallery-image">
+                        
+                        <div class="p-4">
+                            <h3 class="text-xl font-semibold text-white">THIS IS A PICTURE OF A DLC BOX GAME BOX ADDON DLC ETC...</h3>
+                            <p class="text-gray-400 mt-2">
+                                <!-- Add your description here -->
+                                IT CAMED FROM AMERICA USA WOW IMPORTED!!!!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Image 2 -->
+                    <div class="bg-zinc-800/60 rounded-lg overflow-hidden shadow-lg">
+
+                        <img src="resurgence_sticker.jpg" 
+                             alt="High-score screenshot" 
+                             class="w-full h-64 object-cover gallery-image">
+                        
+                        <div class="p-4">
+                            <h3 class="text-xl font-semibold text-white">I TOOKED THE STICKER OFF NO MORE STICKER HAHAHAHA</h3>
+                            <p class="text-gray-400 mt-2">
+                                <!-- Add your description here -->
+                                CYA STICKER CYA LATER ALIGATER !
+                            </p>
+							
+							<p>dsad</p>
+                        </div>
+                    </div>
+					<p class="text-lg mb-4">
+						This is a paragraph of text about the MW2 resurgence DLC. Proper good isn't it? Only cost like £27 delivered from america. 
+						</p>
+					<p class="text-lg mb-4">
+                  This is me removing the sticker from the box of the sealed Resugence DLC. Oh boy no more sticky sticky sticker! </p>
+				</div>
+					<p class="text-lg mb-12">
+						This is now in my collection case, yahoo! Time for another classic piece of MW2 memorabilia. Come back tomorrow for more! Love you!&nbsp; </p>
+				
+				<h2 class="text-3xl font-bold text-white mb-6">Picture of some patch</h2>
+                    <!-- Image 3 (Spans full width) -->
+				    <div class="bg-zinc-800/60 rounded-lg overflow-hidden shadow-lg md:col-span-2 mb-4">
+						
+
+						<img src="patch.jpg" 
+                             alt="Epic sniper shot" 
+                             class="w-full h-80 object-cover gallery-image">
+                        
+                        <div class="p-4">
+                            <h3 class="text-xl font-semibold text-white ">You aren't gonna believe it... but this is a patch</h3>
+                            <p class="text-gray-400 mt-2">
+                                <!-- Add your description here -->
+                                It is in my hand. Look at it. It's also in some plas tick.
+                            </p>
+                        </div>
+                    </div>
+				<p class="text-lg mb-4">
+					This is some text. There is a patch in my hand. The patch is designed to look like Modern Warfare 2. What a coincidence! It's also sealed! Yahoo!&nbsp;&nbsp; </p>
+            </div>
+
+            <!-- Final Text Section -->
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">The End</h2>
+                <p class="text-lg max-w-2xl mx-auto">
+                    <!-- More text here -->
+                    In retaliation for the airport massacre, Russia launches a surprise invasion of the U.S. East Coast, facilitated by their earlier capture of the ACS module, which allowed them to disable NORAD's satellite network. Foley's squad, including Allen's replacement Private James Ramirez, alongside other Army Rangers, defends Northern Virginia before holding out against Russian forces in Washington, D.C. Under interrogation, Rojas reveals that Makarov's most hated enemy is an individual known as "Prisoner 627", imprisoned in a gulag in Kamchatka Krai. With the United States unable to send assistance due to the war, Task Force 141 is forced to escape Rio de Janeiro with aid from Soap's old contact, Nikolai. Task Force 141 then links up with U.S. Navy SEALs to rescue hostages and neutralize S.A.M. sites aboard oilrigs, before breaking into the gulag and rescuing the prisoner, who is revealed to be Soap's former commanding officer Captain John Price.
+                </p>
+            </div>
+			<div class="content-area w-full text-center p-8">
+            <p class="text-gray-400">&copy; 2025 - cfod.co.uk<br>
+Call of Duty: Modern Warfare 2 © 2009 Activision Publishing, Inc. All trademarks and copyrights are the property of their respective owners.</p></div>
+        </div>
+    </div>
+<div id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <!-- MODIFIED: Added 1x1 transparent pixel to satisfy linters -->
+        <img id="lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Enlarged gallery image">
+    </div>
+            
+    <script>
+        // MODIFIED: Wrapped all JS in one DOMContentLoaded listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const galleryImages = document.querySelectorAll('.gallery-image');
+            const closeButton = document.querySelector('.lightbox-close');
+
+            if (lightbox) {
+                galleryImages.forEach(image => {
+                    image.addEventListener('click', () => {
+                        const imgSrc = image.getAttribute('src');
+                        lightboxImg.setAttribute('src', imgSrc);
+                        lightbox.style.display = 'flex';
+                    });
+                });
+
+                // Function to close the lightbox
+                const closeLightbox = () => {
+                    lightbox.style.display = 'none';
+                    // Reset src to prevent linter issues on hide
+                    lightboxImg.setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+                };
+
+                // Close on button click
+                if (closeButton) {
+                    closeButton.addEventListener('click', closeLightbox);
+                }
+                
+                // Close on background click
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
