@@ -128,7 +128,7 @@
 
     <!-- Main Content --><main>
         
-        <!-- Hero Section --><section id="hero" class="relative h-[70vh] min-h-[400px] flex items-center justify-center text-center text-white parallax-bg" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTA4Ij48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjEwOCIgZmlsbD0iIzNBNEY0MSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkludGVyLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjRjhGNUYyIj5IaXN0b3JpY2FsIEtpdGNoZW4gU2V0dGluZzwvdGV4dD48L3N2Zz4=');">
+        <!-- Hero Section --><section id="hero" class="relative h-[70vh] min-h-[400px] flex items-center justify-center text-center text-white parallax-bg" style="background-image: url('../../../OneDrive/background.jpg'); background-position: center bottom 28%">
             <!-- Overlay --><div class="absolute inset-0 bg-black opacity-40"></div>
             
             <!-- Content --><div class="relative z-10 p-6">
@@ -249,35 +249,45 @@
                         </p>
                     </div>
                     
-                    <!-- Contact Form --><div class="w-full lg:w-1/2">
-                        <form id="contact-form" class="space-y-6">
+					<!-- Contact Form -->
+                    <div class="w-full lg:w-1/2">
+                        
+                        <!--
+                           SIMPLE MAILTO: FORM
+                           1. Change "YOUR-MOTHERS-EMAIL@example.com" to your mother's real email address.
+                        -->
+                        <form action="mailto:YOUR-MOTHERS-EMAIL@example.com?subject=New%20Website%20Enquiry" method="POST" enctype="text/plain" class="space-y-6">
+
                             <div>
                                 <label for="name" class="form-label text-gray-200">Full Name</label>
-                                <input type="text" id="name" name="name" class="form-input" placeholder="Your Name" required>
+                                <!-- The 'name' attribute is 'Full Name' for the email body -->
+                                <input type="text" id="name" name="Full Name" class="form-input" placeholder="Your Name" required>
                             </div>
                             
                             <div>
                                 <label for="email" class="form-label text-gray-200">Email Address</label>
-                                <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required>
+                                <!-- The 'name' attribute is 'Reply-To Email' for the email body -->
+                                <input type="email" id="email" name="Reply-To Email" class="form-input" placeholder="you@example.com" required>
                             </div>
 
                             <div>
                                 <label for="subject" class="form-label text-gray-200">Subject</label>
-                                <input type="text" id="subject" name="subject" class="form-input" placeholder="Booking Enquiry for..." required>
+                                <!-- The 'name' attribute is 'Enquiry Subject' for the email body -->
+                                <input type="text" id="subject" name="Enquiry Subject" class="form-input" placeholder="Booking Enquiry for..." required>
                             </div>
                             
                             <div>
                                 <label for="message" class="form-label text-gray-200">Message</label>
-                                <textarea id="message" name="message" rows="5" class="form-input" placeholder="Tell me about your event..." required></textarea>
+                                <!-- The 'name' attribute is 'Message' for the email body -->
+                                <textarea id="message" name="Message" rows="5" class="form-input" placeholder="Tell me about your event..." required></textarea>
                             </div>
                             
                             <div>
-                                <button type="submit" id="submit-btn" class="w-full bg-accent text-white px-8 py-4 rounded-lg shadow-xl font-bold text-lg hover:bg-accent-dark transition duration-200 transform hover:scale-105 focusable">
+                                <button type="submit" class="w-full bg-accent text-white px-8 py-4 rounded-lg shadow-xl font-bold text-lg hover:bg-accent-dark transition duration-200 transform hover:scale-105 focusable">
                                     Send Enquiry
                                 </button>
                             </div>
                         </form>
-                        <div id="form-status" class="text-center text-sm text-gray-200 mt-4 h-6"></div>
                     </div>
                 </div>
             </div>
@@ -300,58 +310,6 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             
-            // --- Firebase Initialization ---
-            let db, auth, userId, appId;
-            const submitBtn = document.getElementById('submit-btn');
-            const formStatus = document.getElementById('form-status');
-
-            try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                setLogLevel('Debug'); // Optional: for more detailed console logs
-
-                // Sign in the user (anonymously or with token)
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        console.log("User is authenticated:", user.uid);
-                        userId = user.uid;
-                        // Enable the form once auth is ready
-                        if (submitBtn.disabled) {
-                            submitBtn.disabled = false;
-                            submitBtn.textContent = 'Send Enquiry';
-                        }
-                    } else {
-                        console.log("No user signed in, attempting auth...");
-                        // Disable form until auth is complete
-                        submitBtn.disabled = true;
-                        submitBtn.textContent = 'Connecting...';
-                        try {
-                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                                await signInWithCustomToken(auth, __initial_auth_token);
-                                console.log("Signed in with custom token.");
-                            } else {
-                                await signInAnonymously(auth);
-                                console.log("Signed in anonymously.");
-                            }
-                            // onAuthStateChanged will run again, setting userId and enabling the form
-                        } catch (error) {
-                            console.error("Firebase Auth Error:", error);
-                            formStatus.textContent = 'Error connecting. Please refresh.';
-                            formStatus.classList.add('text-red-400');
-                        }
-                    }
-                });
-            } catch (e) {
-                console.error("Firebase init failed:", e);
-                formStatus.textContent = 'Error loading components. Please refresh.';
-                formStatus.classList.add('text-red-400');
-                submitBtn.disabled = true;
-            }
-
             // Mobile Menu Toggle
             const menuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -378,73 +336,6 @@
 
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // --- NEW Contact Form Logic with Firebase ---
-            const contactForm = document.getElementById('contact-form');
-            
-            contactForm.addEventListener('submit', async function(e) {
-                e.preventDefault(); // Stop the form from submitting normally
-                
-                // Guard against submission before auth is ready
-                if (!userId || !db) {
-                    formStatus.textContent = 'Still connecting, please wait...';
-                    formStatus.classList.add('text-yellow-400');
-                    return;
-                }
-
-                // Get form values
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const subject = document.getElementById('subject').value;
-                const message = document.getElementById('message').value;
-                
-                // Disable button and show sending state
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Sending...';
-                formStatus.textContent = '';
-                formStatus.classList.remove('text-red-400', 'text-green-400', 'text-yellow-400');
-
-                try {
-                    // --- Save to Firestore ---
-                    // We save enquiries to a public collection for the app owner to see.
-                    const enquiriesCollectionPath = `artifacts/${appId}/public/data/enquiries`;
-                    const docRef = await addDoc(collection(db, enquiriesCollectionPath), {
-                        name: name,
-                        email: email,
-                        subject: subject,
-                        message: message,
-                        createdAt: serverTimestamp(),
-                        userId: userId // Store the anonymous ID of the sender
-                    });
-
-                    console.log("Document written with ID: ", docRef.id);
-                    
-                    // Show success message
-                    formStatus.textContent = 'Message Sent! Thank you.';
-                    formStatus.classList.add('text-green-400');
-
-                    // Clear the form after a short delay
-                    setTimeout(() => {
-                        contactForm.reset();
-                        formStatus.textContent = '';
-                        formStatus.classList.remove('text-green-400');
-                    }, 3000); // 3-second delay
-
-                } catch (error) {
-                    console.error("Error adding document: ", error);
-                    // Show error message
-                    formStatus.textContent = 'Error sending message. Please try again.';
-                    formStatus.classList.add('text-red-400');
-                } finally {
-                    // Re-enable button after a delay
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Send Enquiry';
-                    }, 3000);
-                }
-            });
-
-        });
     </script>
 
 </body>
