@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MW2 Collector</title>
-	<link rel="icon" type="image/x-icon" href="../icon.ico">
+	<link rel="icon" type="image/x-icon" href="./icon.ico">
     <!-- Importing Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Importing Google Font -->
@@ -129,6 +129,11 @@
         .ember:nth-child(8) { left: 80%; animation-duration: 5s; animation-delay: 2.5s; }
         .ember:nth-child(9) { left: 90%; animation-duration: 8s; animation-delay: 1.8s; width: 2px; height: 2px; }
         .ember:nth-child(10) { left: 5%; animation-duration: 10s; animation-delay: 3.5s; background: rgba(255, 80, 0, 0.5); }
+		.ember:nth-child(11) { left: 15%; animation-duration: 9s; animation-delay: 2.2s; width: 2px; height: 2px; }
+        .ember:nth-child(12) { left: 25%; animation-duration: 11s; animation-delay: 5s; background: rgba(255, 120, 0, 0.5); }
+        .ember:nth-child(13) { left: 45%; animation-duration: 7s; animation-delay: 3.8s; width: 3px; height: 3px; }
+        .ember:nth-child(14) { left: 75%; animation-duration: 10s; animation-delay: 1.2s; }
+        .ember:nth-child(15) { left: 85%; animation-duration: 8s; animation-delay: 6s; width: 2px; height: 2px; }
 
         /* 2. CONTENT SECTION STYLES */
 
@@ -144,6 +149,10 @@
             z-index: 2;
         }
         
+		.map-list {
+			padding-inline-start: 40px;
+			list-style-type: disc;
+		}
 		.gallery-image {
             cursor: pointer;
             transition: transform 0.2s ease-in-out;
@@ -228,7 +237,8 @@
         <div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
         <div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
         <div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
-        <div class="ember"></div>
+        <div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
+		<div class="ember"></div> <div class="ember"></div> <div class="ember"></div>
     </div>
 
 	<div id="scanline-overlay"></div>
@@ -270,7 +280,7 @@
             <!-- Gallery Section -->
             <div class="mb-16">
                 <!-- MODIFIED: Added fade-in-section class -->
-                <h2 class="text-3xl font-bold text-white mb-6 fade-in-section">Resurgence DLC&nbsp;</h2>
+                <h2 class="text-3xl font-bold text-white mb-6 fade-in-section">Resurgence DLC</h2>
                 <!-- MODIFIED: Added fade-in-section class -->
                 <p class="text-lg mb-6 fade-in-section">
                 This is a sealed copy of the Resurgence downloadable content for Modern Warfare 2. This was the second of two DLC's released for the game, honouring Activision's claim to release at least two pieces of downloadable content at E3 2009. The Resurgence Pack was released on June 3, 2010 for Xbox 360, and July 6 for PlayStation 3 in North America and PC worldwide, and July 7 for PS3 in Europe. </p>
@@ -296,7 +306,7 @@
                             <h3 class="text-xl font-semibold text-white">At £27 delivered from america, this was surprisingly good value.</h3>
                             <p class="text-gray-400 mt-2">
                               <!-- Add your description here -->
-Although 15+ years old, I couldn't accept the Best Buy sticker. I had to find a way to remove it.&nbsp;&nbsp;</p>
+						Although 15+ years old, I couldn't accept the Best Buy sticker. I had to find a way to remove it.</p>
                         </div>
                     </div>
 
@@ -319,20 +329,62 @@ Although 15+ years old, I couldn't accept the Best Buy sticker. I had to find a 
                             </p>
                         </div>
                     </div>
+				</div>
+				<div class="mb-16">
 					<p class="text-lg mb-4">
-						This is a paragraph of text about the MW2 resurgence DLC. Proper good isn't it? Only cost like £27 delivered from america. 
-						</p>
-					<p class="text-lg mb-4">
-                  This is me removing the sticker from the box of the sealed Resugence DLC. Oh boy no more sticky sticky sticker! </p>
-					</div>
-					<p class="text-lg mb-12">
-						This is now in my collection case, yahoo! Time for another classic piece of MW2 memorabilia. Come back tomorrow for more! Love you!</p>
-				
+						The Resugence Pack expanded the Modern Warfare 2 online experience with five new multiplayer maps, with three brand new releases and two remastered fan-favourites from the original Modern Warfare - causing its release to be both fascinating and controversial.</p>
+				<p class="text-lg mb-4">
+					The three new maps added completely fresh experiences:</p>
+				<ul class="map-list text-lg mb-2">
+				<li class="mb-2">Carnival: A large, desolate theme park, offering a uniquely colorful and chaotic battlefield. Its wide-open spaces were a sniper's dream, while the claustrophobic funhouse and bumper car areas led to frantic close-quarters battles.</li>
+				<li class="mb-2">Fuel: An absolutely massive oil refinery and rail yard built for long-range warfare. It was one of the largest maps in the game, defined by its huge sightlines and vehicle-based combat in certain game modes.</li>
+				<li class="mb-4">Trailer Park: The polar opposite of Fuel, this map was a tight, maze-like trailer park. Its extremely close quarters and chaotic layout made it a haven for shotgun and submachine gun players.</li> 
+				</ul>
+
+				<p class="text-lg mb-4">Alongside these new maps, the pack brought back two legendary maps from Call of Duty 4: Modern Warfare, remastered with MW2's updated graphics and mechanics:</p>
+				<ul class="map-list text-lg mb-2">
+				<li class="mb-2">Strike: A fan-favorite urban environment set in a desert town, perfectly balanced for a mix of objective play and team deathmatch.</li>
+				<li class="mb-2">Vacant: An abandoned, decaying Russian office complex that became iconic for its intense indoor firefights and strategic flanking routes.</li>
+				</ul>
+			</div>
 				
                 <!-- MODIFIED: Added fade-in-section class -->
 				
                     <!-- Image 3 (Spans full width) -->
                     <!-- MODIFIED: Added fade-in-section class -->
+				
+			<h2 class="text-3xl font-bold text-white mb-6 fade-in-section">Modern Warfare 2 Hardened Edition</h2>
+            <p class="text-lg mb-6 fade-in-section"> This was one of the later items I have added to my collection as it was an oddly difficult one to find. I had seen a lot of copies for sale that weren't sealed, and the ones that were looked particularly suspicious due to a torn or loose seal. I'd seen this copy available on a website for a game shop in Doncaster, over a hundred miles away. It was surprisingly cheap, but the reviews for the shop were all excellent </p>
+			<div class="bg-zinc-800/60 rounded-lg overflow-hidden shadow-lg md:col-span-2 mb-4 fade-in-section">
+						
+                        <!-- MODIFIED FOR LAZY LOADING (See comments above) -->
+			<img data-src="hardened.jpg"
+              loading="lazy"
+              alt="MW2 patch in hand" 
+              class="w-full h-80 object-cover gallery-image lazy">
+                        
+            <div class="p-4 fade-in-section">
+                 <h3 class="text-xl font-semibold text-white ">A sealed copy of the limited Hardened Edition was one of the hardest things i've had to source.</h3>
+                 <p class="text-gray-400 mt-2">
+                            Thankfully this was found in near-perfect condition for a very reasonable price.</p>
+                        </div>
+                    </div>
+                <!-- MODIFIED: Added fade-in-section class -->
+			  <div class="mb-16>"
+              <p class="text-lg mb-4 fade-in-section">The "Hardened Edition" was the premium, mid-tier collector's version of Modern Warfare 2, sitting just below the "Prestige Edition" that came with night-vision goggles or a statue of Soap McTavish. The Hardened edition offered a collectable version of the game at a price-point that was far more accessible for the average consumer.</p>
+                    
+              <p class="text-lg mb-4">Its contents were a significant upgrade from the standard release, all contained in a unique metal case: </p>
+              <ul class="map-list text-lg mb-2">    
+                    <li class="mb-2">A copy of Modern Warfare 2 on a PS3.</li>
+                    
+                    <li class="mb-2">Collectible SteelBook: The game came in a metal steelbook case, which are often collected items in themselves.</li>
+                    
+                    <li class="mb-2">"Behind the Lines" Art Book: A hardcover book filled with development art, sketches, and behind-the-scenes renders.</li>
+                    
+                    <li class="mb-2">Call of Duty Classic Download: This version included a voucher code to download a full, remastered version of the original Call of Duty. At the time, this was the only way to get CoD Classic on the console.</li>
+			</div>
+
+			<div class="content-section mb-16">
 					<h2 class="text-3xl font-bold text-white mb-6 fade-in-section">Modern Warfare 2 Patch</h2>
 				    <div class="bg-zinc-800/60 rounded-lg overflow-hidden shadow-lg md:col-span-2 mb-4 fade-in-section">
 						
@@ -352,10 +404,10 @@ Although 15+ years old, I couldn't accept the Best Buy sticker. I had to find a 
                         </div>
                     </div>
                 <!-- MODIFIED: Added fade-in-section class -->
-				<p class="text-lg mb-4 fade-in-section">
-					This is some text. There is a patch in my hand. The patch is designed to look like Modern Warfare 2. What a coincidence! It's also sealed! Yahoo!&nbsp;&nbsp; </p>
+				<p class="text-lg mb-8 fade-in-section">
+					This is some text. There is a patch in my hand. The patch is designed to look like Modern Warfare 2. What a coincidence! It's also sealed! Yahoo!</p>
             </div>
-
+			
             <!-- Final Text Section -->
             <!-- MODIFIED: Added fade-in-section class -->
             <div class="text-center fade-in-section">
