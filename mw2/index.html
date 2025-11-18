@@ -42,7 +42,6 @@
             position: fixed; 
             top: 0;
             left: 0;
-            
             height: 100vh; /* Full viewport height */
             width: 100%;
             overflow: hidden; /* This is KEY: it traps the embers in this section */
@@ -69,6 +68,26 @@
             to { transform: scale(1.05) translate(-1%, -1%); }
         }
 
+		#content-wrapper {
+            /* This is crucial. It sits on top of the fixed background */
+            position: relative;
+            z-index: 2;
+        }
+
+        /* This is the blurred background for the content area.
+           It's a child of the wrapper so it scrolls too. */
+        #content-bg {
+            background-color: rgba(27, 27, 27, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Sits behind the text inside #content-wrapper */
+        }
+		
 		#scanline-overlay {
             position: fixed;
             top: 0;
@@ -135,13 +154,49 @@
         .ember:nth-child(14) { left: 75%; animation-duration: 10s; animation-delay: 1.2s; }
         .ember:nth-child(15) { left: 85%; animation-duration: 8s; animation-delay: 6s; width: 2px; height: 2px; }
 
+		.scroll-down-btn {
+    		color: white;
+    		text-decoration: none;
+    		font-weight: bold;
+    		padding: 10px 20px;
+    		border-radius: 20px;
+    		position: fixed;
+    		display: flex;
+    		justify-content: center;
+    		align-items: center;
+    		bottom: 2rem;
+    		left: 50%;
+    		transform: translateX(-50%) translateY(0);
+    		z-index: 4;
+    		will-change: opacity, transform;
+    		transition: opacity 1.6s ease, transform 1.6s ease;
+    		opacity: 1;
+			animation: pulse 2s infinite ease-in-out;
+}
+
+		.scroll-down-btn.hidden {
+    		opacity: 0;
+			transform: translateX(-50%) translateY(20px) translateZ(0);
+    		pointer-events: none;
+		}
+
+
+		.scroll-down-btn:hover {
+    		color: sandybrown;
+    		animation-play-state: paused; /* Stop pulsing on hover */
+		}
+
+		@keyframes pulse {
+    		0% { transform: scale(1); }
+    		50% { transform: scale(1.05); }
+    		100% { transform: scale(1); }
+		}
         /* 2. CONTENT SECTION STYLES */
 
         /* NEW STYLE: Add semi-transparent background and blur to the content area */
         #content {
             background-color: rgba(27, 27, 27, 0.3);
-            
-            /* Add the frosted glass effect */
+            padding-top: 100vh;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px); /* For Safari */
 
@@ -242,13 +297,19 @@
     </div>
 
 	<div id="scanline-overlay"></div>
+	
+	<a href="#main-content-area" class="scroll-down-btn self-center">
+        Scroll Down ↓
+    </a>
     <!-- 
       SECTION 2: CONTENT (Your new portfolio area)
       This is where you add your text and images.
     -->
+	<div id="content-wrapper" class="text-gray-300">
     <div id="content" class="text-gray-300 py-20 px-4 sm:px-6 lg:px-8">
         
         <!-- Max-width container to keep content centered and readable -->
+	<div id="main-content-area" class="relative py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
 
             <!-- Title Section -->
@@ -359,6 +420,7 @@
 						
                         <!-- MODIFIED FOR LAZY LOADING (See comments above) -->
 			<img data-src="hardened.jpg"
+			  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
               loading="lazy"
               alt="MW2 patch in hand" 
               class="w-full h-80 object-cover gallery-image lazy">
@@ -371,7 +433,8 @@
                     </div>
                 <!-- MODIFIED: Added fade-in-section class -->
 			  <div class="mb-16">
-              <p class="text-lg mb-4 fade-in-section"> The "Hardened Edition" was the premium, mid-tier collector's version of Modern Warfare 2, sitting just below the "Prestige Edition" that came with night-vision goggles or a statue of Soap McTavish. The Hardened edition offered a collectable version of the game at a price-point that was far more accessible for the average consumer. </p>
+              <p class="text-lg mb-4 fade-in-section">The "Hardened Edition" was the premium, mid-tier collector's version of Modern Warfare 2, sitting just below the "Prestige Edition" that came with night-vision goggles or a statue of Soap McTavish. The Hardened edition offered a collectable version of the game at a price-point that was far more accessible for the average consumer.</p>
+                    
               <p class="text-lg mb-4">Its contents were a significant upgrade from the standard release, all contained in a unique metal case: </p>
               <ul class="map-list text-lg mb-2">    
                     <li class="mb-2">A copy of Modern Warfare 2 on a PS3.</li>
@@ -380,7 +443,8 @@
                     
                     <li class="mb-2">"Behind the Lines" Art Book: A hardcover book filled with development art, sketches, and behind-the-scenes renders.</li>
                     
-                    <li class="mb-2">Call of Duty Classic Download: This version included a voucher code to download a full, remastered version of the original Call of Duty. At the time, this was the only way to get CoD Classic on the console.</li></ul>
+                    <li class="mb-2">Call of Duty Classic Download: This version included a voucher code to download a full, remastered version of the original Call of Duty. At the time, this was the only way to get CoD Classic on the console.</li>
+				  </ul>
 			</div>
 
 			<div class="content-section mb-16">
@@ -416,7 +480,6 @@
                     In retaliation for the airport massacre, Russia launches a surprise invasion of the U.S. East Coast, facilitated by their earlier capture of the ACS module, which allowed them to disable NORAD's satellite network. Foley's squad, including Allen's replacement Private James Ramirez, alongside other Army Rangers, defends Northern Virginia before holding out against Russian forces in Washington, D.C. Under interrogation, Rojas reveals that Makarov's most hated enemy is an individual known as "Prisoner 627", imprisoned in a gulag in Kamchatka Krai. With the United States unable to send assistance due to the war, Task Force 141 is forced to escape Rio de Janeiro with aid from Soap's old contact, Nikolai. Task Force 141 then links up with U.S. Navy SEALs to rescue hostages and neutralize S.A.M. sites aboard oilrigs, before breaking into the gulag and rescuing the prisoner, who is revealed to be Soap's former commanding officer Captain John Price.
                 </p>
             </div>
-			</div>
 			<div class="content-area w-full text-center p-8">
             <p class="text-gray-400">&copy; 2025 - cfod.co.uk<br>
 Call of Duty: Modern Warfare 2 © 2009 Activision Publishing, Inc. All trademarks and copyrights are the property of their respective owners.</p></div>
@@ -427,10 +490,60 @@ Call of Duty: Modern Warfare 2 © 2009 Activision Publishing, Inc. All trademark
         <!-- MODIFIED: Added 1x1 transparent pixel to satisfy linters -->
         <img id="lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Enlarged gallery image">
     </div>
-            
+	</div>      
+	</div>
+	</div>
     <script>
         // MODIFIED: Wrapped all JS in one DOMContentLoaded listener
         document.addEventListener('DOMContentLoaded', () => {
+			
+			const scrollButton = document.querySelector('.scroll-down-btn');
+            
+            // --- START OF FIX ---
+            
+            // This variable will track the *intended* state of the button.
+            // This prevents the scroll listener from "flickering" the class
+            // on every single pixel of scroll.
+            let isButtonVisible = true; 
+
+			if (scrollButton) {
+                const toggleScrollButton = () => {
+                    // Check if we want to hide the button
+                    if (window.scrollY > 50) {
+                        // Only add the class *once* if it's currently visible
+                        if (isButtonVisible) { 
+                            scrollButton.classList.add('hidden');
+                            isButtonVisible = false;
+                        }
+                    } 
+                    // Check if we want to show the button
+                    else {
+                        // Only remove the class *once* if it's currently hidden
+                        if (!isButtonVisible) {
+                            scrollButton.classList.remove('hidden');
+                            isButtonVisible = true;
+                        }
+                    }
+                };
+
+                // Show/hide on scroll
+                window.addEventListener('scroll', toggleScrollButton, { passive: true });
+
+                // We remove the 'click' listener.
+                // The click on the anchor link will cause a scroll,
+                // and the scroll listener above will handle hiding the button
+                // at the correct time (once scrollY > 50).
+                // This stops the click and scroll events from fighting.
+                /*
+                scrollButton.addEventListener('click', () => {
+                    scrollButton.classList.add('hidden');
+                });
+                */
+
+                // Initial check
+                toggleScrollButton();
+            }
+
             
             // --- Lightbox Code (Existing) ---
             const lightbox = document.getElementById('lightbox');
@@ -440,8 +553,7 @@ Call of Duty: Modern Warfare 2 © 2009 Activision Publishing, Inc. All trademark
 
             if (lightbox) {
                 galleryImages.forEach(image => {
-                    // MODIFIED: Changed 'click' to 'pointerup' for better mobile compatibility
-                    image.addEventListener('pointerup', () => {
+                    image.addEventListener('click', () => {
                         // MODIFIED: Check for data-src first, fallback to src
                         const imgSrc = image.getAttribute('data-src') || image.getAttribute('src');
                         lightboxImg.setAttribute('src', imgSrc);
@@ -458,12 +570,10 @@ Call of Duty: Modern Warfare 2 © 2009 Activision Publishing, Inc. All trademark
 
                 // Close on button click
                 if (closeButton) {
-                    // MODIFIED: Changed 'click' to 'pointerup'
-                    closeButton.addEventListener('pointerup', closeLightbox);
+                    closeButton.addEventListener('click', closeLightbox);
                 }
                 
-                // MODIFIED: Changed 'click' to 'pointerup'
-                lightbox.addEventListener('pointerup', (e) => {
+                lightbox.addEventListener('click', (e) => {
                     if (e.target === lightbox) {
                         closeLightbox();
                     }
@@ -537,8 +647,8 @@ Call of Duty: Modern Warfare 2 © 2009 Activision Publishing, Inc. All trademark
                     section.classList.add('is-visible');
                 });
             }
-
         });
     </script>
+	
 </body>
 </html>
