@@ -246,6 +246,18 @@
             position: relative;
             z-index: 2;
         }
+		
+		.content-card {
+            background-color: rgba(20, 20, 20, 0.2); /* Dark, semi-transparent card background */
+            backdrop-filter: blur(12px); /* Strong blur for the card */
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
+            border-top: 2px solid rgba(255, 255, 255, 0.15); /* Highlight on top border */
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 4rem; /* Large space between cards */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
 
         #content-bg {
             background-color: rgba(27, 27, 27, 0.3);
@@ -478,11 +490,8 @@
             <div id="main-content-area" class="relative py-1 sm:px-6 lg:px-8">
                 <div class="max-w-4xl mx-auto">
 
-                    <!-- <p class="text-xl text-gray-400 text-center mb-16">
-                        A portfolio of my Modern Warfare 2 collection.
-                    </p> -->
-
-                    <div class="mb-16">
+				<div class="content-card fade-in-section fade-in-section-static">
+                    <div class="mb-0">
                         <h2 class="text-3xl font-bold mb-4 uppercase tracking-widest">Welcome</h2>
                         <p class="text-lg mb-4">
                           This website showcases my collection of Call of Duty: Modern Warfare 2 items. While their rarity and monetary value may vary, each one holds significant sentimental value as a positive reminder of childhood nostalgia and an era of my personal and gaming history that I do not believe can ever be replicated. 
@@ -497,8 +506,10 @@
                           While these dedicated modding communities have given the game a rebirth, its player base is inevitably dwindling from the million concurrent players it boasted in 2009. This collection, therefore, is my way of honouring the game and the memories it gave me. It serves as a personal archive for a not-too-distant future when the lobbies may be empty, but the game's legacy — and its impact on me — will remain.
                         </p>
                     </div>
+					</div>
 
-                    <div class="mb-16">
+<div class="mb-16">
+	<div class="content-card fade-in-section fade-in-section-static">
                         <h2 class="text-3xl font-bold  mb-6 fade-in-section uppercase tracking-widest">Resurgence DLC</h2>
                         <p class="text-lg mb-6 fade-in-section">
                         This is a sealed copy of the Resurgence downloadable content for Modern Warfare 2. This was the second of two DLC's released for the game, honouring Activision's claim to release at least two pieces of downloadable content at E3 2009. The Resurgence Pack was released on June 3, 2010 for Xbox 360, and July 6 for PlayStation 3 in North America and PC worldwide, and July 7 for PS3 in Europe. </p>
@@ -532,7 +543,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-16">
+                        <div class="">
                             <p class="text-lg mb-4">
                                 The Resugence Pack expanded the Modern Warfare 2 online experience with five new multiplayer maps, with three brand new releases and two remastered fan-favourites from the original Modern Warfare - causing its release to be both fascinating and controversial.</p>
                             <p class="text-lg mb-4">
@@ -586,9 +597,11 @@
                             <li class="mb-2">Strike: An urban environment set in a desert town, balanced for a mix of domination and team deathmatch.</li>
                             <li class="mb-2">Vacant: An abandoned Russian office complex that became well known for its incredibly tight angles and across-map sniping positions.</li>
                             </ul>
-                        </div>
-                        
-						 <div class="content-section mb-16">
+</div>
+	</div>
+                     
+					<div class="content-card fade-in-section fade-in-section-static">
+						 <div class="content-section">
                             <h2 class="text-3xl font-bold mb-6 fade-in-section uppercase tracking-widest">Promotional Copy of Modern Warfare 2</h2>
                             <div class="bg-zinc-800/60 rounded-lg overflow-hidden shadow-lg md:col-span-2 mb-4 fade-in-section">
                                 <img data-src="promo_copy.jpg"
@@ -604,9 +617,10 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="text-lg mb-8 fade-in-section">
+                            <p class="text-lg fade-in-section">
                                 A paragraph below the image of the promo copy. The disk is white, I need to put a picture of it on here. I really need to find out what promotion this was a part of... Maybe I'll message the eBay seller and see if he has any idea.</p>
                         </div>
+					</div>
 						
                         <h2 class="text-3xl font-bold mb-6 fade-in-section uppercase tracking-widest">Modern Warfare 2 Hardened Edition</h2>
                         <p class="text-lg mb-6 fade-in-section"> This was one of the later items I have added to my collection as it was an oddly difficult one to find. I had seen a lot of copies for sale that weren't sealed, and the ones that were looked particularly suspicious due to a torn or loose seal. I'd seen this copy available on a website for a game shop in Doncaster, over a hundred miles away. It was surprisingly cheap, but the reviews for the shop were all excellent </p>
