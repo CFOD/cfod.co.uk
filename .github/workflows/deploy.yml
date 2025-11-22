@@ -25,15 +25,17 @@ jobs:
         # Upload from the root of your repo
         local-dir: ./
         
-        # Destination: Main public folder (Standard InfinityFree main site)
+        # Destination: Main public folder
         server-dir: /htdocs/
         
-        # EXCLUDE the subdomain folders so they don't clutter your main site
+        # EXCLUDE the git history and subdomains!
         exclude: |
+          **/.git/**
+          **/.git*
+          **/.github/**
           mw2/**
           newsletter/**
-          .git*
-          **/.github/**
+          node_modules/**
 
     # ---------------------------------------------------------
     # STEP 2: Deploy MW2 Subdomain
@@ -48,10 +50,13 @@ jobs:
         # Source: Only look inside the 'mw2' folder
         local-dir: ./mw2/
         
-        # Destination: The specific folder you found in the root
-        # NOTE: I included /htdocs/ at the end because InfinityFree usually requires it inside the domain folder.
-        # If your HTML files are directly in mw2.jcjournal.co.uk, remove the 'htdocs/' part.
+        # Destination: Your subdomain folder
         server-dir: /mw2.cfod.co.uk/htdocs/
+        
+        # Prevent git folder upload here too
+        exclude: |
+          **/.git/**
+          **/.git*
 
     # ---------------------------------------------------------
     # STEP 3: Deploy NEWSLETTER Subdomain
@@ -66,5 +71,10 @@ jobs:
         # Source: Only look inside the 'newsletter' folder
         local-dir: ./newsletter/
         
-        # Destination: The specific folder you found in the root
+        # Destination: Your subdomain folder
         server-dir: /newsletter.cfod.co.uk/htdocs/
+        
+        # Prevent git folder upload here too
+        exclude: |
+          **/.git/**
+          **/.git*
