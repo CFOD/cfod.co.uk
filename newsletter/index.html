@@ -1,0 +1,412 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Global Stratum | IR & Politics Newsletter</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    
+    <!-- Fonts and Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,600,600italic" rel="stylesheet" />
+
+    <style>
+        /* --- RESET & BASICS --- */
+        *, *:before, *:after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
+        body {
+            background: #1b1f22;
+            color: #ffffff;
+            font-family: "Source Sans Pro", sans-serif;
+            font-weight: 300;
+            font-size: 16pt;
+            line-height: 1.65;
+            overflow: hidden; /* Prevent scrolling on main body, handled by wrapper */
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 600; text-transform: uppercase; letter-spacing: 0.2rem; margin: 0 0 1rem 0; color: #fff; }
+        
+        /* The Brand Title */
+        h1 { 
+            font-family: "Source Sans Pro", sans-serif;
+            font-size: 2.25rem;
+            line-height: 1.3; 
+            letter-spacing: 0.5rem; 
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        h2 { font-size: 1.5rem; border-bottom: solid 1px #fff; padding-bottom: 0.5rem; margin-bottom: 2rem; display: inline-block; }
+        
+        p { margin-bottom: 2rem; }
+        a { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.5); transition: 0.2s; }
+        a:hover { border-bottom-color: transparent; color: #4db6ac; } /* Subtle teal accent */
+        
+        /* --- BACKGROUND SYSTEM --- */
+        #bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop'); 
+            background-position: center; background-size: cover; background-repeat: no-repeat;
+            transition: transform 0.3s, filter 0.3s;
+        }
+        #bg::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(19, 21, 25, 0.5); /* Dark overlay */
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0JyBoZWlnaHQ9JzQnPgo8cmVjdCB3aWR0aD0nNCcgaGVpZ2h0PSc0JyBmaWxsPSJyZ2JhKDAsMCwwLDAuMikiLz4KPC9zdmc+"); /* Tiny grid pattern overlay */
+        }
+
+        /* --- WRAPPER --- */
+        #wrapper {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; z-index: 2; min-height: 100vh; width: 100%; padding: 2rem;
+            transition: opacity 0.5s;
+        }
+
+        /* --- HEADER (The Central Card) --- */
+        #header {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            transition: transform 0.325s, opacity 0.325s, filter 0.325s;
+        }
+        
+        /* Logo Circle */
+        .logo {
+            width: 5.5rem; height: 5.5rem;
+            border: solid 1px #ffffff; border-radius: 100%; margin-bottom: 2rem;
+            background: rgba(255,255,255,0.05);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        .logo .icon { font-size: 2.5rem; }
+
+        /* Content Box */
+        .content {
+            border-top: solid 1px #ffffff; border-bottom: solid 1px #ffffff;
+            padding: 3rem 2rem; max-width: 550px;
+            background: rgba(19, 21, 25, 0.4);
+            backdrop-filter: blur(2px);
+        }
+        .content p { 
+            text-transform: uppercase; 
+            letter-spacing: 0.2rem; 
+            font-size: 0.8rem; 
+            line-height: 2; 
+            margin-bottom: 0; 
+        }
+
+        /* Navigation */
+        nav { margin-top: 2rem; }
+        nav ul { display: flex; list-style: none; padding: 0; margin: 0; border: solid 1px #ffffff; border-radius: 4px; }
+        nav ul li { border-left: solid 1px #ffffff; }
+        nav ul li:first-child { border-left: none; }
+        nav ul li a {
+            display: block; min-width: 7.5rem; height: 2.75rem; line-height: 2.75rem;
+            padding: 0 1.25rem; text-transform: uppercase; letter-spacing: 0.2rem; font-size: 0.8rem;
+            border-bottom: none; transition: background 0.2s; cursor: pointer;
+        }
+        nav ul li a:hover { background: rgba(255, 255, 255, 0.15); }
+
+        /* --- MAIN ARTICLES (The Modals) --- */
+        #main { display: none; z-index: 3; } /* Hidden container */
+
+        article {
+            display: none; /* Hidden by default */
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 40rem; max-width: 90vw; max-height: 90vh;
+            background: rgba(27, 31, 34, 0.95);
+            padding: 4rem 3rem 2rem 3rem;
+            border-radius: 4px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            z-index: 10;
+        }
+        
+        article.active { display: block; opacity: 1; animation: fadeIn 0.4s forwards; }
+
+        /* Close Button */
+        .close {
+            display: block; position: absolute; top: 0; right: 0;
+            width: 4rem; height: 4rem; cursor: pointer;
+            text-indent: -9999px; /* Hide text */
+            transition: background 0.2s;
+        }
+        .close:before, .close:after {
+            content: ''; display: block; position: absolute; top: 50%; left: 50%;
+            width: 1.5rem; height: 1px; background: #fff;
+            transform-origin: center;
+        }
+        .close:before { transform: translate(-50%, -50%) rotate(45deg); }
+        .close:after { transform: translate(-50%, -50%) rotate(-45deg); }
+        .close:hover { background: rgba(255,255,255,0.1); }
+
+        /* --- FORM ELEMENTS --- */
+        form .fields { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2rem; }
+        form .field { width: 100%; }
+        form .field.half { width: calc(50% - 0.75rem); }
+        
+        label { display: block; font-size: 0.8rem; margin-bottom: 0.5rem; letter-spacing: 0.1rem; text-transform: uppercase; }
+        
+        input[type="text"], input[type="email"], textarea {
+            width: 100%; background: rgba(255,255,255,0.05);
+            border: solid 1px rgba(255,255,255,0.3);
+            color: #fff; padding: 0.75rem 1rem; border-radius: 4px;
+            font-family: inherit; font-weight: 300;
+            transition: border-color 0.2s, background 0.2s;
+            outline: none;
+        }
+        input:focus, textarea:focus { border-color: #fff; background: rgba(255,255,255,0.1); }
+
+        button, input[type="submit"] {
+            appearance: none; background: transparent; border: solid 1px #fff; border-radius: 4px;
+            color: #fff; cursor: pointer; display: inline-block;
+            font-size: 0.8rem; font-weight: 600; height: 3rem; letter-spacing: 0.2rem;
+            line-height: 3rem; padding: 0 1.5rem; text-align: center; text-transform: uppercase;
+            transition: background 0.2s, color 0.2s;
+        }
+        button:hover, input[type="submit"]:hover { background: rgba(255,255,255,0.15); }
+        button.primary, input[type="submit"].primary { background: #fff; color: #1b1f22; }
+        button.primary:hover, input[type="submit"].primary:hover { background: rgba(255,255,255,0.85); }
+
+        /* --- FOOTER --- */
+        #footer {
+            position: absolute; bottom: 1rem; width: 100%; text-align: center;
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2rem;
+            opacity: 0.5; transition: opacity 0.3s;
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media screen and (max-width: 736px) {
+            #wrapper { padding: 1rem; }
+            .logo { width: 4rem; height: 4rem; line-height: 4rem; }
+            nav ul { flex-direction: column; min-width: 10rem; }
+            nav ul li { border-left: 0; border-top: solid 1px #fff; }
+            nav ul li:first-child { border-top: 0; }
+            form .field.half { width: 100%; }
+            article { padding: 2rem 1.5rem; }
+        }
+
+        /* --- STATE CLASSES --- */
+        body.is-article-visible #header {
+            transform: scale(0.95); filter: blur(0.2rem); opacity: 0; pointer-events: none;
+        }
+        body.is-article-visible #bg {
+            transform: scale(1.1); filter: blur(0.5rem);
+        }
+        body.is-article-visible #footer { opacity: 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background -->
+    <div id="bg"></div>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Header (The "Card") -->
+        <header id="header">
+            <div class="logo">
+                <!-- REVERTED: Back to original Font Awesome Globe Icon -->
+                <span class="icon fas fa-globe-americas"></span>
+            </div>
+            <div class="content">
+                <div class="inner">
+                    <h1>Global Stratum</h1>
+                    <p>Deep layer analysis on<br />
+                    International Relations &amp; Policy.</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#signup">Subscribe</a></li>
+                    <li><a href="#about">Manifesto</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main Articles (Hidden Modals) -->
+        <div id="main">
+
+            <!-- SIGN UP (Primary Focus) -->
+            <article id="signup">
+                <h2 class="major">The Briefing</h2>
+                <span class="image main" style="display:block; margin-bottom: 2rem;">
+                    <!-- Abstract map image placeholder -->
+                    <img src="https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?q=80&w=1000&auto=format&fit=crop" alt="Politics" style="width:100%; border-radius:4px;">
+                </span>
+                <p>Headlines only show the surface. <b>Global Stratum</b> digs deeper. We analyze the underlying layers of history, economics, and culture that drive modern geopolitical conflict.</p>
+                <p>Join 12,000+ policymakers, students, and diplomats who rely on our deep-dive analysis.</p>
+                
+                <form method="post" action="#">
+                    <div class="fields">
+                        <div class="field">
+                            <label for="email">Email Address</label>
+                            <input type="email" name="email" id="email" placeholder="diplomat@example.com" required />
+                        </div>
+                    </div>
+                    <ul class="actions" style="list-style:none; padding:0; display:flex; gap:1rem;">
+                        <li><input type="submit" value="Join the List" class="primary" /></li>
+                    </ul>
+                </form>
+                <div class="close">Close</div>
+            </article>
+
+            <!-- ABOUT -->
+            <article id="about">
+                <h2 class="major">Manifesto</h2>
+                <p>We believe that understanding the world requires looking beyond the headlines. International Relations is not just about conflict; it is about the subtle currents of trade, culture, and diplomacy that bind nations together.</p>
+                <h3>What to expect</h3>
+                <ul style="margin-bottom: 2rem;">
+                    <li><b>Weekly Essays:</b> 1,000 words on a single topic.</li>
+                    <li><b>Book Reviews:</b> What the experts are reading.</li>
+                    <li><b>No Ads:</b> Just pure analysis.</li>
+                </ul>
+                <p>Written by analysts based in London, DC, and Singapore.</p>
+                <div class="close">Close</div>
+            </article>
+
+            <!-- CONTACT -->
+            <article id="contact">
+                <h2 class="major">Contact</h2>
+                <p>Have a tip? Want to sponsor an issue? Or just want to debate a recent piece? Reach out below.</p>
+                <form method="post" action="#">
+                    <div class="fields">
+                        <div class="field half">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" />
+                        </div>
+                        <div class="field half">
+                            <label for="email">Email</label>
+                            <input type="text" name="email" id="contact-email" />
+                        </div>
+                        <div class="field">
+                            <label for="message">Message</label>
+                            <textarea name="message" id="message" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <ul class="actions" style="list-style:none; padding:0; display:flex; gap:1rem;">
+                        <li><input type="submit" value="Send Message" class="primary" /></li>
+                        <li><input type="reset" value="Reset" /></li>
+                    </ul>
+                </form>
+                
+                <!-- Social Icons -->
+                <ul style="display: flex; gap: 1.5rem; list-style: none; padding: 0; justify-content: center; margin-top: 2rem;">
+                    <li><a href="#" class="icon brands fa-twitter" style="font-size: 1.5rem; border: none;"><span class="label" style="display:none;">Twitter</span></a></li>
+                    <li><a href="#" class="icon brands fa-linkedin" style="font-size: 1.5rem; border: none;"><span class="label" style="display:none;">LinkedIn</span></a></li>
+                    <li><a href="#" class="icon brands fa-github" style="font-size: 1.5rem; border: none;"><span class="label" style="display:none;">GitHub</span></a></li>
+                </ul>
+
+                <div class="close">Close</div>
+            </article>
+
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <p class="copyright">&copy; Global Stratum - 2025</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Simple Vanilla JS to handle the "Dimension" transitions
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const main = document.getElementById('main');
+            const articles = document.querySelectorAll('article');
+            const navLinks = document.querySelectorAll('nav ul li a');
+            const closeButtons = document.querySelectorAll('.close');
+            const wrapper = document.getElementById('wrapper');
+
+            // Function to show an article
+            function showArticle(id) {
+                // Remove active class from all articles first
+                articles.forEach(art => art.classList.remove('active'));
+                
+                // Find target
+                const target = document.querySelector(id);
+                if (target) {
+                    // Add visible state to body (blurs header/bg)
+                    body.classList.add('is-article-visible');
+                    
+                    // Show main container
+                    main.style.display = 'block';
+                    
+                    // Small timeout to allow display:block to apply before opacity transition
+                    setTimeout(() => {
+                        target.classList.add('active');
+                    }, 10);
+                }
+            }
+
+            // Function to close all articles
+            function closeArticles() {
+                body.classList.remove('is-article-visible');
+                articles.forEach(art => art.classList.remove('active'));
+                
+                // Wait for transition to finish before hiding main container
+                setTimeout(() => {
+                    main.style.display = 'none';
+                    // Clear hash without jumping
+                    history.replaceState(null, null, ' '); 
+                }, 350);
+            }
+
+            // Event Listeners for Nav Links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        showArticle(href);
+                    }
+                });
+            });
+
+            // Event Listeners for Close Buttons
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    closeArticles();
+                });
+            });
+
+            // Close when clicking on the "blurred" background area (wrapper)
+            wrapper.addEventListener('click', (e) => {
+                if (body.classList.contains('is-article-visible')) {
+                    // Only close if clicking the wrapper itself, not the header or inside article
+                    // Note: Because the article sits "on top" via z-index, clicks on it won't bubble to wrapper in a way that hurts us here easily, 
+                    // but we check ensuring we aren't clicking the header.
+                    if (e.target.id === 'wrapper') {
+                        closeArticles();
+                    }
+                }
+            });
+
+            // ESC key to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeArticles();
+                }
+            });
+
+            // Check hash on load (e.g. user visits site.com/#signup)
+            if (window.location.hash) {
+                const target = document.querySelector(window.location.hash);
+                if (target && target.tagName === 'ARTICLE') {
+                    // Small delay to allow page init
+                    setTimeout(() => showArticle(window.location.hash), 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

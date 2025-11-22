@@ -1,33 +1,70 @@
-# A friendly name for this workflow
-name: Deploy website to InfinityFree
-
-# This tells GitHub WHEN to run the action
+name: Deploy Website
 on:
-  # Run this workflow every time you push to the 'main' branch
   push:
     branches:
-      - main  # Change this if your main branch is 'master'
+      - main
 
-# This defines the "job" or set of tasks
 jobs:
-  ftp-deploy:
-    # Use a standard, up-to-date virtual machine
+  web-deploy:
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
-    
     steps:
-    # 1. This step checks out your repository's code onto the virtual machine
-    - name: Checkout code
+    - name: 🚚 Get latest code
       uses: actions/checkout@v4
 
-    # 2. This is the magic. It uses a pre-built "Action" to do the FTP upload.
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+    # ---------------------------------------------------------
+    # STEP 1: Deploy MAIN SITE (Root)
+    # ---------------------------------------------------------
+    - name: 📂 Sync Main Site to HTDocs
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        # Get the secret values you created in Step 2
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         
-        # This is the CRITICAL part for InfinityFree
-        # It tells the action to put your files inside the /htdocs/ folder
+        # Upload from the root of your repo
+        local-dir: ./
+        
+        # Destination: Main public folder (Standard InfinityFree main site)
         server-dir: /htdocs/
+        
+        # EXCLUDE the subdomain folders so they don't clutter your main site
+        exclude: |
+          mw2/**
+          newsletter/**
+          .git*
+          **/.github/**
+
+    # ---------------------------------------------------------
+    # STEP 2: Deploy MW2 Subdomain
+    # ---------------------------------------------------------
+    - name: 📂 Sync MW2 to Subdomain Folder
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        
+        # Source: Only look inside the 'mw2' folder
+        local-dir: ./mw2/
+        
+        # Destination: The specific folder you found in the root
+        # NOTE: I included /htdocs/ at the end because InfinityFree usually requires it inside the domain folder.
+        # If your HTML files are directly in mw2.jcjournal.co.uk, remove the 'htdocs/' part.
+        server-dir: /mw2.cfod.co.uk/htdocs/
+
+    # ---------------------------------------------------------
+    # STEP 3: Deploy NEWSLETTER Subdomain
+    # ---------------------------------------------------------
+    - name: 📂 Sync Newsletter to Subdomain Folder
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        
+        # Source: Only look inside the 'newsletter' folder
+        local-dir: ./newsletter/
+        
+        # Destination: The specific folder you found in the root
+        server-dir: /newsletter.cfod.co.uk/htdocs/
