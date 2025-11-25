@@ -1,305 +1,299 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CFOD - Home</title>
-    <!-- Use a placeholder for the favicon as the original path is local -->
-    <link rel="icon" type="image/png" href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif">
-    
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Load Google Fonts (Inter) and Font Awesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/0b745d7406.js" crossorigin="anonymous"></script>
+import React, { useState, useMemo } from 'react';
+import { Search, Menu, ChevronRight, ArrowLeft, ExternalLink, Monitor, Database, Cpu, FileText, Layers, PenTool, BookOpen, BarChart, Settings, Wrench, Shield, Globe, Server, Terminal, Smartphone } from 'lucide-react';
 
-    <script>
-        // Custom Tailwind configuration
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        montserrat: ['Montserrat', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary': {
-                            '600': '#374151', // gray-700
-                            '700': '#1f2937', // gray-800
-                            '800': '#111827', // gray-900
-                        }
-                    }
-                },
-            },
-        }
-    </script>
+// --- DATA STRUCTURE: Mimicking the "Catalog" Hierarchy ---
+// Super Categories = "Fastening & Joining", "Pipe, Tubing..."
+// Sub Categories = "Screws", "Pipe Fittings" (These are the clickable icons)
 
-    <style>
-        /* A little custom CSS for the table to ensure it looks good */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb; /* gray-200 */
-        }
-        th {
-            background-color: #f9fafb; /* gray-50 */
-            font-weight: 600;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #f9fafb; /* gray-50 */
-        }
-    </style>
-</head>
-<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+const CATALOG_DATA = [
+  {
+    title: "Software Development",
+    id: "software",
+    subcategories: [
+      { id: 'web', title: 'Web Applications', icon: <Monitor size={40} strokeWidth={1.5} />, count: 12 },
+      { id: 'mobile', title: 'Mobile Apps', icon: <Smartphone size={40} strokeWidth={1.5} />, count: 5 },
+      { id: 'backend', title: 'Backend APIs', icon: <Server size={40} strokeWidth={1.5} />, count: 8 },
+      { id: 'cli', title: 'CLI Tools', icon: <Terminal size={40} strokeWidth={1.5} />, count: 3 },
+    ]
+  },
+  {
+    title: "Data & Analysis",
+    id: "data",
+    subcategories: [
+      { id: 'db', title: 'Databases', icon: <Database size={40} strokeWidth={1.5} />, count: 6 },
+      { id: 'analytics', title: 'Data Viz', icon: <BarChart size={40} strokeWidth={1.5} />, count: 4 },
+      { id: 'algo', title: 'Algorithms', icon: <Layers size={40} strokeWidth={1.5} />, count: 10 },
+    ]
+  },
+  {
+    title: "Engineering & Design",
+    id: "engineering",
+    subcategories: [
+      { id: 'embedded', title: 'Embedded Sys', icon: <Cpu size={40} strokeWidth={1.5} />, count: 7 },
+      { id: 'uiux', title: 'UI/UX Design', icon: <PenTool size={40} strokeWidth={1.5} />, count: 5 },
+      { id: 'research', title: 'Technical Reports', icon: <BookOpen size={40} strokeWidth={1.5} />, count: 9 },
+    ]
+  }
+];
 
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
-                <a href="./index.html" class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors">CFOD</a>
+// The "Parts" (Your actual projects)
+const PROJECTS = {
+  'web': [
+    { id: 'w1', title: 'E-Commerce Platform', spec: 'React, Node.js, Stripe', grade: 'A', date: '2023', description: 'Full-stack retail application with inventory management.' },
+    { id: 'w2', title: 'Student Portal', spec: 'Vue.js, Firebase', grade: 'A-', date: '2023', description: 'Course management dashboard for university students.' },
+    { id: 'w3', title: 'Portfolio Site v1', spec: 'HTML5, SCSS', grade: 'B+', date: '2022', description: 'Static responsive personal website.' },
+  ],
+  'mobile': [
+    { id: 'm1', title: 'Fitness Tracker', spec: 'React Native', grade: 'A', date: '2024', description: 'Cross-platform activity logging app with geolocation.' },
+  ],
+  'backend': [
+    { id: 'b1', title: 'Auth Service', spec: 'Go, JWT', grade: 'A', date: '2023', description: 'Microservice for centralized user authentication.' },
+    { id: 'b2', title: 'Payment Gateway', spec: 'Express, Stripe API', grade: 'B', date: '2022', description: 'Secure payment processing middleware.' },
+  ],
+  // ... populating a few others for demo purposes
+  'embedded': [
+    { id: 'e1', title: 'Arduino Thermostat', spec: 'C++, Wiring', grade: 'A', date: '2022', description: 'PID controlled temperature regulation system.' },
+  ]
+};
+
+const Header = ({ searchTerm, setSearchTerm, onHome }) => (
+  <div className="w-full bg-white font-sans">
+    {/* Top Utils Bar */}
+    <div className="hidden md:flex justify-end items-center gap-6 px-4 py-1 text-[11px] text-gray-600 border-b border-gray-100">
+      <span>(555) 123-4567</span>
+      <span>student@university.edu</span>
+      <span className="font-bold text-[#005a31] cursor-pointer">Log in</span>
+    </div>
+
+    {/* Main Branding Bar */}
+    <div className="flex flex-col md:flex-row items-center px-4 py-3 md:py-4 gap-4 md:gap-8">
+      <div 
+        onClick={onHome}
+        className="cursor-pointer group flex-shrink-0"
+      >
+        <h1 
+          className="text-[#005a31] text-4xl md:text-5xl font-black tracking-tighter leading-none"
+          style={{ fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif', transform: 'scaleY(1.1)' }}
+        >
+          McSTUDENT-CARR<span className="text-yellow-500 text-xs align-top">®</span>
+        </h1>
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex-1 w-full relative">
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full h-10 border border-gray-400 pl-3 pr-10 text-sm focus:outline-none focus:border-[#005a31] focus:ring-1 focus:ring-[#005a31] shadow-inner"
+        />
+        <button className="absolute right-0 top-0 h-10 w-10 flex items-center justify-center text-[#005a31]">
+          <Search size={18} />
+        </button>
+      </div>
+
+      {/* Right Actions */}
+      <div className="hidden md:flex flex-col items-end gap-1">
+        <div className="text-[#005a31] font-bold text-sm tracking-tight uppercase">Order History</div>
+        <div className="text-[#005a31] font-bold text-sm tracking-tight uppercase">Projects</div>
+      </div>
+    </div>
+
+    {/* Green Banner */}
+    <div className="bg-[#005a31] text-white text-center py-2 px-4 text-sm font-medium border-b-4 border-[#ffc20e]">
+      Delivering over 50 completed assignments, including Java and Python projects, in 4 years! Click here to learn more.
+    </div>
+  </div>
+);
+
+const Sidebar = ({ activeSub, setActiveSub }) => (
+  <div className="hidden md:block w-56 flex-shrink-0 border-r border-gray-300 bg-white min-h-screen">
+    <div className="p-3 border-b border-gray-300 font-bold text-sm text-gray-800 bg-gray-50">
+      Choose a Category
+    </div>
+    <div className="text-[13px] leading-tight">
+      {CATALOG_DATA.map((cat) => (
+        <div key={cat.id}>
+          <div className="px-3 py-2 font-bold text-gray-700 mt-2">{cat.title}</div>
+          {cat.subcategories.map((sub) => (
+            <div 
+              key={sub.id}
+              onClick={() => setActiveSub(sub.id)}
+              className={`px-3 py-1.5 cursor-pointer hover:bg-[#fff9e6] hover:text-[#005a31] hover:underline decoration-1 underline-offset-2 ${activeSub === sub.id ? 'bg-[#fff9e6] text-[#005a31] font-bold' : 'text-gray-600'}`}
+            >
+              {sub.title}
             </div>
-            <div class="flex space-x-6">
-                <!-- Standardize relative links -->
-                <a href="./index.html" class="text-base font-medium text-primary-700 border-b-2 border-primary-700">HOME</a>
-                <a href="./about-me.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">ABOUT ME</a>
-                <a href="./map.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">MAP</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Main Content Grid -->
-    <main class="container mx-auto px-6 py-12">
-        
-        <!-- Grid for article sections -->
-        <!-- This grid will be populated by JavaScript -->
-        <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Articles will be injected here -->
+          ))}
         </div>
+      ))}
+      <div className="px-3 py-2 font-bold text-gray-700 mt-4 border-t border-gray-200 pt-4">About</div>
+      <div className="px-3 py-1.5 cursor-pointer hover:underline text-gray-600">Resume / CV</div>
+      <div className="px-3 py-1.5 cursor-pointer hover:underline text-gray-600">LinkedIn Profile</div>
+      <div className="px-3 py-1.5 cursor-pointer hover:underline text-gray-600">Contact Me</div>
+    </div>
+  </div>
+);
 
-        <!-- Load More Button -->
-        <div class="text-center mt-12">
-            <button id="load-more-btn" class="bg-primary-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors">
-                Load More Articles
-            </button>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 mt-16">
-        <div class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0">
-                <a href="./index.html" class="text-2xl font-bold text-white hover:text-primary-700 transition-colors">CFOD</a>
-                <p class="text-sm text-gray-400 mt-1">&copy; 2023-2025 CFOD. All Rights Reserved.</p>
-            </div>
-            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
-                <div class="flex space-x-6">
-                    <a href="./index.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">HOME</a>
-                    <a href="./about-me.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">ABOUT ME</a>
-					<a href="./map.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">MAP</a>
+// The Grid View (Home Page)
+const CatalogGrid = ({ onSelect }) => (
+  <div className="p-4 md:p-6">
+    <h2 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-300 pb-1">All Categories</h2>
+    
+    <div className="space-y-8">
+      {CATALOG_DATA.map((group) => (
+        <div key={group.id}>
+          <h3 className="text-[#005a31] font-bold text-xl mb-3">{group.title}</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-8">
+            {group.subcategories.map((sub) => (
+              <div 
+                key={sub.id} 
+                onClick={() => onSelect(sub.id)}
+                className="flex flex-col items-center cursor-pointer group"
+              >
+                <div className="w-full aspect-square border border-gray-200 flex items-center justify-center mb-2 bg-white group-hover:border-gray-400 transition-colors shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
+                  {/* Icons are purely decorative/illustrative like the catalog parts */}
+                  <div className="text-gray-600 opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all">
+                    {sub.icon}
+                  </div>
                 </div>
-                <a href="mailto:connor-odonnell@hotmail.co.uk" class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium">
-                    <i class="fa-regular fa-envelope mr-2"></i>
-                    CONTACT ME
-                </a>
-            </div>
+                <span className="text-center text-[13px] leading-tight text-gray-700 group-hover:text-[#005a31] group-hover:underline decoration-1 underline-offset-2">
+                  {sub.title}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* Subtle separator line between groups unless it's the last one */}
+          <div className="h-px bg-gray-200 mt-6 w-full" />
         </div>
-    </footer>
+      ))}
+    </div>
+  </div>
+);
 
-    <!-- Article Loading JavaScript -->
-    <script>
-        // --- ARTICLE DATABASE ---
-        // To add new articles, just add a new object to this array.
-        const allArticles = [
-            {
-                type: 'standard', // 'standard' or 'table'
-                imageUrl: './imgs/kosovo-header.jpg',
-                altText: 'Pristina skyline',
-                title: 'A Bipolar Exploration of Kosovo',
-                description: 'The reasoning behind my visit to Kosovo is admittedly rather vague. There have been many times in life where I have been bestowed with a small sum of money... Both my family and associates alike seem to avoid me...',
-                linkUrl: './kosovo.html',
-                contentHtml: '' // No special content for standard cards
-            },
-            {
-                type: 'standard',
-                imageUrl: './imgs/books_2.jpg',
-                altText: 'Pile of books',
-                title: 'Essay - "The Changing Nature of War"',
-                description: 'Throughout the 21st century, video games, memes and social media have become a mainstream part of culture and society. With this comes a variety of complex issues...',
-                linkUrl: './changing-nature-of-war.html',
-                contentHtml: `
-                    <p class="text-sm italic text-center mb-2">The following essay was written as the sole coursework piece for the module "The Changing Nature of War"... receiving first class honours.</p>
-                    <p class="font-semibold text-gray-900 text-center mb-4">Critically consider the implications of warfare increasingly migrating to the extended battlefield of social media and video gaming.</p>
-                `
-            },
-            {
-                type: 'standard',
-                imageUrl: './imgs/f35-image.jpg',
-                altText: 'F35 Jet',
-                title: 'World Hunger Story - in Progress',
-                description: 'I feel the answer to this question can be answered both globally and in regard to the United States specifically. From some very rough calculations, around 1 in 10 people are experiencing hunger...',
-                linkUrl: './world-hunger-story.html',
-                contentHtml: `
-                    <p class="text-sm italic text-center mb-4">The following article was written in response to a question given in an internship interview</p>
-                `
-            },
-            {
-                type: 'standard',
-                imageUrl: './imgs/rishi_sunak.jpg',
-                altText: 'Rishi Sunak',
-                title: 'UK Political Uncertainty Ahead of 2024...',
-                description: 'As the UK gears up for the 2024 general election, a recent article regarding a YouGov poll published by The Telegraph has ignited speculation about the potential shift in leadership...',
-                linkUrl: './rishi-story.html',
-                contentHtml: `
-                    <p class="text-sm italic text-center mb-4">The following article serves as my initial submission as content writer/reporter for otb.news</p>
-                `
-            },
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/9ca3af/FFF?text=Article+Image',
-                altText: 'Pile of books',
-                title: 'The English School - A 14 Day essay',
-                description: 'This essay will argue the core elements of the English School’s approach to International Relations (IR), how they are based around and emphasise social cooperation...',
-                linkUrl: './english-school.html',
-                contentHtml: `
-                    <p class="text-sm italic mb-2">This essay served as a significant milestone in my pursuit of a Master's degree... within a strict 14-day timeframe...</p>
-                    <p class="font-semibold text-gray-900 text-center mb-4">What are the core elements of the English School’s approach to IR? How, if at all, does it differ from realism?</p>
-                `
-            },
-            {
-                type: 'table', // Special type for the wide table card
-                imageUrl: 'https://placehold.co/800x400/9ca3af/FFF?text=Pacific+Islands+Map',
-                altText: 'Map of pacific islands',
-                title: 'Pacific island cup 2024',
-                description: 'The Pacific Island Cup 2024 is a personal endeavor born out of interest in Geography, Politics, Flags and History. After receiving exposure to nations within the Pacific through informal means, I have created a personal ranking system based on subjective factors, such as independence, location, rating looks and island usage.',
-                linkUrl: './pacific-cup.html',
-                colSpan: 'md:col-span-2 lg:col-span-3', // Special class for this card
-                contentHtml: `
-                    <div class="table-responsive rounded-lg border mb-6">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Island/Country</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owned or Independent?</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flag Rating</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Atoll?</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Island Rating</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Just a military base?</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr><td class="px-6 py-4">Kiribati</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.85</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.8</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">4.65</td></tr>
-                                <tr><td class="px-6 py-4">The Marshall Islands</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.85</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">4.05</td></tr>
-                                <tr><td class="px-6 py-4">Palau</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.2</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.8</td></tr>
-                                <tr><td class="px-6 py-4">Micronesia</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.8</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.45</td><td class="px-6 py-4">0.4</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.65</td></tr>
-                                <tr><td class="px-6 py-4">Tuvalu</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.15</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0.5</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.25</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `
-            },
-            // --- DUMMY ARTICLES TO SHOW PAGINATION ---
-            // You can remove these and add your own
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+1',
-                altText: 'Dummy Article',
-                title: 'This is a New Dummy Article',
-                description: 'This article was loaded dynamically. Add as many as you want to the `allArticles` list, and the "Load More" button will handle them.',
-                linkUrl: '#',
-                contentHtml: ''
-            },
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+2',
-                altText: 'Dummy Article',
-                title: 'Another Article Post',
-                description: 'This is the eighth article in the list. The button will load this and the next one, and then disappear since there are no more to load.',
-                linkUrl: '#',
-                contentHtml: ''
-            },
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+3',
-                altText: 'Dummy Article',
-                title: 'The Final Dummy Post',
-                description: 'Once this post is loaded, the "Load More" button will be hidden automatically because the end of the `allArticles` list has been reached.',
-                linkUrl: '#',
-                contentHtml: ''
-            }
-        ];
+// The "Product" Detail View (Project List)
+const ProjectView = ({ subId, onBack }) => {
+  // Find the category info
+  let categoryInfo = null;
+  CATALOG_DATA.forEach(group => {
+    const found = group.subcategories.find(s => s.id === subId);
+    if (found) categoryInfo = found;
+  });
 
-        // --- ARTICLE LOADING LOGIC ---
-        const articlesPerLoad = 6;
-        let articlesLoaded = 0;
-        const articleGrid = document.getElementById('article-grid');
-        const loadMoreBtn = document.getElementById('load-more-btn');
+  const projects = PROJECTS[subId] || [];
 
-        function generateArticleHtml(article) {
-            const colSpanClass = article.colSpan || '';
-            let contentHtml = '';
-            let descriptionHtml = `<p class="text-gray-700 mb-4 flex-grow">${article.description}</p>`;
-            let linkClass = 'inline-block mt-auto bg-primary-600 text-white font-medium py-2 px-4 rounded-lg text-center hover:bg-primary-700 transition-colors';
+  return (
+    <div className="p-4 md:p-6 font-sans">
+      <button onClick={onBack} className="text-[#005a31] hover:underline text-sm font-bold flex items-center mb-4">
+        <ArrowLeft size={14} className="mr-1" /> All Categories
+      </button>
 
-            if (article.type === 'standard') {
-                contentHtml = article.contentHtml || '';
-            } else if (article.type === 'table') {
-                descriptionHtml = `<p class="text-gray-700 mb-6">${article.description}</p>`;
-                contentHtml = article.contentHtml || '';
-                linkClass += ' w-full md:w-auto md:self-start'; // Special class for the table card's button
-            }
+      <div className="flex items-baseline gap-4 mb-2">
+        <h2 className="text-2xl font-bold text-[#005a31]">{categoryInfo?.title}</h2>
+        <span className="text-gray-500 text-sm">See all {projects.length} projects</span>
+      </div>
 
-            return `
-                <section class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-[1.02] ${colSpanClass}">
-                    <img class="h-56 w-full object-cover" src="${article.imageUrl}" alt="${article.altText}">
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h2 class="text-2xl font-bold mb-3 text-gray-900">${article.title}</h2>
-                        <div class="text-gray-700 mb-4 flex-grow">
-                            ${contentHtml}
-                            ${descriptionHtml}
-                        </div>
-                        <a href="${article.linkUrl}" class="${linkClass}">READ MORE</a>
-                    </div>
-                </section>
-            `;
-        }
+      <p className="text-sm text-gray-700 max-w-3xl mb-6">
+        Choose from our selection of {categoryInfo?.title.toLowerCase()} assignments, including verified graded work, 
+        open source contributions, and capstone requirements. In stock and ready for review.
+      </p>
 
-        function loadArticles() {
-            const articlesToLoad = allArticles.slice(articlesLoaded, articlesLoaded + articlesPerLoad);
-            
-            articlesToLoad.forEach(article => {
-                const articleHtml = generateArticleHtml(article);
-                articleGrid.innerHTML += articleHtml;
-            });
+      {/* The "Spec" Table */}
+      <div className="border border-gray-300 bg-white">
+        {/* Header */}
+        <div className="grid grid-cols-12 bg-[#f4f4f4] border-b border-gray-300 text-[11px] font-bold text-gray-600 uppercase py-1.5 px-3">
+          <div className="col-span-5 md:col-span-4">Project Title</div>
+          <div className="col-span-3">Tech Specs</div>
+          <div className="col-span-2 hidden md:block">Grade</div>
+          <div className="col-span-2 hidden md:block">Year</div>
+          <div className="col-span-4 md:col-span-1 text-right">Details</div>
+        </div>
 
-            articlesLoaded += articlesToLoad.length;
+        {/* Rows */}
+        {projects.length > 0 ? (
+          projects.map((proj, idx) => (
+            <div 
+              key={proj.id}
+              className={`grid grid-cols-12 items-start py-2 px-3 border-b border-gray-200 text-sm hover:bg-[#fff9e6] group transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}
+            >
+              <div className="col-span-5 md:col-span-4 pr-4">
+                <span className="font-bold text-[#005a31] group-hover:underline cursor-pointer">{proj.title}</span>
+                <p className="text-xs text-gray-500 mt-1 leading-tight">{proj.description}</p>
+              </div>
+              
+              <div className="col-span-3 text-gray-700 text-xs md:text-sm self-center">
+                {proj.spec}
+              </div>
 
-            // Hide button if no more articles
-            if (articlesLoaded >= allArticles.length) {
-                loadMoreBtn.style.display = 'none';
-            }
-        }
+              <div className="col-span-2 hidden md:flex items-center text-gray-700 font-medium">
+                {proj.grade}
+              </div>
 
-        // Load initial articles
-        document.addEventListener('DOMContentLoaded', loadArticles);
+              <div className="col-span-2 hidden md:flex items-center text-gray-600 text-xs">
+                {proj.date}
+              </div>
 
-        // Load more on button click
-        loadMoreBtn.addEventListener('click', loadArticles);
+              <div className="col-span-4 md:col-span-1 text-right self-center">
+                 <button className="text-[#005a31] font-bold text-xs border border-gray-300 px-2 py-1 bg-white hover:bg-[#005a31] hover:text-white transition-colors">
+                   VIEW
+                 </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="p-8 text-center text-gray-500 text-sm italic">
+            No items match your specifications.
+          </div>
+        )}
+      </div>
 
-    </script>
+      {/* Additional "Product" Info */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-gray-50 p-4 border border-gray-200">
+          <h4 className="font-bold text-gray-800 text-sm mb-2">Technical Specifications</h4>
+          <ul className="text-xs text-gray-600 space-y-1 list-disc pl-4">
+            <li>All projects comply with University Academic Integrity Standards (UAIS).</li>
+            <li>Codebases are linted and formatted according to industry best practices.</li>
+            <li>Documentation provided in Markdown format.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-</body>
-</html>
+const App = () => {
+  const [activeSub, setActiveSub] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  return (
+    <div className="min-h-screen bg-white text-gray-900 font-sans flex flex-col">
+      <Header 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+        onHome={() => setActiveSub(null)} 
+      />
+      
+      <div className="flex flex-1 max-w-[1400px] mx-auto w-full border-l border-r border-gray-200 shadow-sm my-0 md:my-4">
+        {/* Sidebar Navigation (Desktop Only) */}
+        <Sidebar activeSub={activeSub} setActiveSub={setActiveSub} />
+
+        {/* Main Content Area */}
+        <main className="flex-1 bg-white">
+          {activeSub ? (
+            <ProjectView subId={activeSub} onBack={() => setActiveSub(null)} />
+          ) : (
+            <CatalogGrid onSelect={setActiveSub} />
+          )}
+        </main>
+      </div>
+
+      {/* Mobile-only Bottom Nav (optional, since sidebar is hidden) */}
+      <div className="md:hidden p-4 bg-gray-100 text-center text-xs text-gray-500 border-t border-gray-300">
+        © 2025 McStudent-Carr Supply Co.
+      </div>
+    </div>
+  );
+};
+
+export default App;
