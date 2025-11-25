@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>McStudent-Carr Portfolio</title>
+
+        <!-- React & ReactDOM (Development versions for easy error viewing) -->
+        <script
+            crossorigin
+            src="https://unpkg.com/react@18/umd/react.development.js"
+        ></script>
+        <script
+            crossorigin
+            src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+        ></script>
+
+        <!-- Babel for translating JSX in the browser -->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+        <!-- Tailwind CSS (CDN) -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Custom Font for that "Industrial" feel -->
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Oswald:wght@500;700&display=swap");
+
+            body {
+                font-family: "Inter", sans-serif;
+            }
+            .font-header {
+                font-family:
+                    "Oswald", sans-serif; /* Similar to the heavy impact font */
+            }
+        </style>
+    </head>
+    <body class="bg-white text-gray-900">
+        <!-- Root Element for React -->
+        <div id="root"></div>
+
+        <script type="text/babel">
+            const { useState, useMemo } = React;
+
+            // --- ICON SYSTEM (Inline SVGs to avoid install requirements) ---
+            const Icons = {
+                Search: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                ),
+                Menu: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <line x1="4" x2="20" y1="12" y2="12" />
+                        <line x1="4" x2="20" y1="6" y2="6" />
+                        <line x1="4" x2="20" y1="18" y2="18" />
+                    </svg>
+                ),
+                ChevronRight: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                ),
+                ArrowLeft: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="m12 19-7-7 7-7" />
+                        <path d="M19 12H5" />
+                    </svg>
+                ),
+                Monitor: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <rect width="20" height="14" x="2" y="3" rx="2" />
+                        <line x1="8" x2="16" y1="21" y2="21" />
+                        <line x1="12" x2="12" y1="17" y2="21" />
+                    </svg>
+                ),
+                Smartphone: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <rect
+                            width="14"
+                            height="20"
+                            x="5"
+                            y="2"
+                            rx="2"
+                            ry="2"
+                        />
+                        <path d="M12 18h.01" />
+                    </svg>
+                ),
+                Server: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+                        <rect
+                            width="20"
+                            height="8"
+                            x="2"
+                            y="14"
+                            rx="2"
+                            ry="2"
+                        />
+                        <line x1="6" x2="6.01" y1="6" y2="6" />
+                        <line x1="6" x2="6.01" y1="18" y2="18" />
+                    </svg>
+                ),
+                Terminal: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <polyline points="4 17 10 11 4 5" />
+                        <line x1="12" x2="20" y1="19" y2="19" />
+                    </svg>
+                ),
+                Database: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <ellipse cx="12" cy="5" rx="9" ry="3" />
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                    </svg>
+                ),
+                BarChart: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <line x1="12" x2="12" y1="20" y2="10" />
+                        <line x1="18" x2="18" y1="20" y2="4" />
+                        <line x1="6" x2="6" y1="20" y2="16" />
+                    </svg>
+                ),
+                Layers: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                        <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                        <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                ),
+                Cpu: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <rect width="16" height="16" x="4" y="4" rx="2" />
+                        <rect width="6" height="6" x="9" y="9" rx="1" />
+                        <path d="M15 2v2" />
+                        <path d="M15 20v2" />
+                        <path d="M2 15h2" />
+                        <path d="M2 9h2" />
+                        <path d="M20 15h2" />
+                        <path d="M20 9h2" />
+                        <path d="M9 2v2" />
+                        <path d="M9 20v2" />
+                    </svg>
+                ),
+                PenTool: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="m12 19 7-7 3 3-7 7-3-3z" />
+                        <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                        <path d="m2 2 7.586 7.586" />
+                        <circle cx="11" cy="11" r="2" />
+                    </svg>
+                ),
+                BookOpen: (props) => (
+                    <svg
+                        {...props}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                ),
+            };
+
+            // --- DATA ---
+            const CATALOG_DATA = [
+                {
+                    title: "Software Development",
+                    id: "software",
+                    subcategories: [
+                        {
+                            id: "web",
+                            title: "Web Applications",
+                            iconName: "Monitor",
+                            count: 12,
+                        },
+                        {
+                            id: "mobile",
+                            title: "Mobile Apps",
+                            iconName: "Smartphone",
+                            count: 5,
+                        },
+                        {
+                            id: "backend",
+                            title: "Backend APIs",
+                            iconName: "Server",
+                            count: 8,
+                        },
+                        {
+                            id: "cli",
+                            title: "CLI Tools",
+                            iconName: "Terminal",
+                            count: 3,
+                        },
+                    ],
+                },
+                {
+                    title: "Data & Analysis",
+                    id: "data",
+                    subcategories: [
+                        {
+                            id: "db",
+                            title: "Databases",
+                            iconName: "Database",
+                            count: 6,
+                        },
+                        {
+                            id: "analytics",
+                            title: "Data Viz",
+                            iconName: "BarChart",
+                            count: 4,
+                        },
+                        {
+                            id: "algo",
+                            title: "Algorithms",
+                            iconName: "Layers",
+                            count: 10,
+                        },
+                    ],
+                },
+                {
+                    title: "Engineering & Design",
+                    id: "engineering",
+                    subcategories: [
+                        {
+                            id: "embedded",
+                            title: "Embedded Sys",
+                            iconName: "Cpu",
+                            count: 7,
+                        },
+                        {
+                            id: "uiux",
+                            title: "UI/UX Design",
+                            iconName: "PenTool",
+                            count: 5,
+                        },
+                        {
+                            id: "research",
+                            title: "Technical Reports",
+                            iconName: "BookOpen",
+                            count: 9,
+                        },
+                    ],
+                },
+            ];
+
+            const PROJECTS = {
+                web: [
+                    {
+                        id: "w1",
+                        title: "E-Commerce Platform",
+                        spec: "React, Node.js, Stripe",
+                        grade: "A",
+                        date: "2023",
+                        description:
+                            "Full-stack retail application with inventory management.",
+                    },
+                    {
+                        id: "w2",
+                        title: "Student Portal",
+                        spec: "Vue.js, Firebase",
+                        grade: "A-",
+                        date: "2023",
+                        description:
+                            "Course management dashboard for university students.",
+                    },
+                    {
+                        id: "w3",
+                        title: "Portfolio Site v1",
+                        spec: "HTML5, SCSS",
+                        grade: "B+",
+                        date: "2022",
+                        description: "Static responsive personal website.",
+                    },
+                ],
+                mobile: [
+                    {
+                        id: "m1",
+                        title: "Fitness Tracker",
+                        spec: "React Native",
+                        grade: "A",
+                        date: "2024",
+                        description:
+                            "Cross-platform activity logging app with geolocation.",
+                    },
+                ],
+                backend: [
+                    {
+                        id: "b1",
+                        title: "Auth Service",
+                        spec: "Go, JWT",
+                        grade: "A",
+                        date: "2023",
+                        description:
+                            "Microservice for centralized user authentication.",
+                    },
+                    {
+                        id: "b2",
+                        title: "Payment Gateway",
+                        spec: "Express, Stripe API",
+                        grade: "B",
+                        date: "2022",
+                        description: "Secure payment processing middleware.",
+                    },
+                ],
+                embedded: [
+                    {
+                        id: "e1",
+                        title: "Arduino Thermostat",
+                        spec: "C++, Wiring",
+                        grade: "A",
+                        date: "2022",
+                        description:
+                            "PID controlled temperature regulation system.",
+                    },
+                ],
+            };
+
+            // --- COMPONENTS ---
+
+            const Header = ({ searchTerm, setSearchTerm, onHome }) => (
+                <div className="w-full bg-white font-sans">
+                    {/* Top Utils Bar */}
+                    <div className="hidden md:flex justify-end items-center gap-6 px-4 py-1 text-[11px] text-gray-600 border-b border-gray-100">
+                        <span>(555) 123-4567</span>
+                        <span>student@university.edu</span>
+                        <span className="font-bold text-[#005a31] cursor-pointer">
+                            Log in
+                        </span>
+                    </div>
+
+                    {/* Main Branding Bar */}
+                    <div className="flex flex-col md:flex-row items-center px-4 py-3 md:py-4 gap-4 md:gap-8">
+                        <div
+                            onClick={onHome}
+                            className="cursor-pointer group flex-shrink-0"
+                        >
+                            <h1 className="text-[#005a31] text-4xl md:text-5xl font-black tracking-tighter leading-none font-header transform scale-y-110">
+                                McSTUDENT-CARR
+                                <span className="text-yellow-500 text-xs align-top">
+                                    ®
+                                </span>
+                            </h1>
+                        </div>
+
+                        {/* Search Bar */}
+                        <div className="flex-1 w-full relative">
+                            <input
+                                type="text"
+                                placeholder="Search"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full h-10 border border-gray-400 pl-3 pr-10 text-sm focus:outline-none focus:border-[#005a31] focus:ring-1 focus:ring-[#005a31] shadow-inner"
+                            />
+                            <button className="absolute right-0 top-0 h-10 w-10 flex items-center justify-center text-[#005a31]">
+                                <Icons.Search size={18} />
+                            </button>
+                        </div>
+
+                        {/* Right Actions */}
+                        <div className="hidden md:flex flex-col items-end gap-1">
+                            <div className="text-[#005a31] font-bold text-sm tracking-tight uppercase">
+                                Order History
+                            </div>
+                            <div className="text-[#005a31] font-bold text-sm tracking-tight uppercase">
+                                Projects
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Green Banner */}
+                    <div className="bg-[#005a31] text-white text-center py-2 px-4 text-sm font-medium border-b-4 border-[#ffc20e]">
+                        Delivering over 50 completed assignments, including Java
+                        and Python projects, in 4 years! Click here to learn
+                        more.
+                    </div>
+                </div>
+            );
+
+            const Sidebar = ({ activeSub, setActiveSub }) => (
+                <div className="hidden md:block w-56 flex-shrink-0 border-r border-gray-300 bg-white min-h-screen">
+                    <div className="p-3 border-b border-gray-300 font-bold text-sm text-gray-800 bg-gray-50">
+                        Choose a Category
+                    </div>
+                    <div className="text-[13px] leading-tight">
+                        {CATALOG_DATA.map((cat) => (
+                            <div key={cat.id}>
+                                <div className="px-3 py-2 font-bold text-gray-700 mt-2">
+                                    {cat.title}
+                                </div>
+                                {cat.subcategories.map((sub) => (
+                                    <div
+                                        key={sub.id}
+                                        onClick={() => setActiveSub(sub.id)}
+                                        className={`px-3 py-1.5 cursor-pointer hover:bg-[#fff9e6] hover:text-[#005a31] hover:underline decoration-1 underline-offset-2 ${activeSub === sub.id ? "bg-[#fff9e6] text-[#005a31] font-bold" : "text-gray-600"}`}
+                                    >
+                                        {sub.title}
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                        <div className="px-3 py-2 font-bold text-gray-700 mt-4 border-t border-gray-200 pt-4">
+                            About
+                        </div>
+                        <div className="px-3 py-1.5 cursor-pointer hover:underline text-gray-600">
+                            Resume / CV
+                        </div>
+                        <div className="px-3 py-1.5 cursor-pointer hover:underline text-gray-600">
+                            LinkedIn Profile
+                        </div>
+                        <div className="px-3 py-1.5 cursor-pointer hover:underline text-gray-600">
+                            Contact Me
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const CatalogGrid = ({ onSelect }) => (
+                <div className="p-4 md:p-6">
+                    <h2 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-300 pb-1">
+                        All Categories
+                    </h2>
+
+                    <div className="space-y-8">
+                        {CATALOG_DATA.map((group) => (
+                            <div key={group.id}>
+                                <h3 className="text-[#005a31] font-bold text-xl mb-3">
+                                    {group.title}
+                                </h3>
+                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-8">
+                                    {group.subcategories.map((sub) => {
+                                        const IconComponent =
+                                            Icons[sub.iconName] ||
+                                            Icons.Monitor;
+                                        return (
+                                            <div
+                                                key={sub.id}
+                                                onClick={() => onSelect(sub.id)}
+                                                className="flex flex-col items-center cursor-pointer group"
+                                            >
+                                                <div className="w-full aspect-square border border-gray-200 flex items-center justify-center mb-2 bg-white group-hover:border-gray-400 transition-colors shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
+                                                    <div className="text-gray-600 opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all">
+                                                        <IconComponent
+                                                            size={40}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <span className="text-center text-[13px] leading-tight text-gray-700 group-hover:text-[#005a31] group-hover:underline decoration-1 underline-offset-2">
+                                                    {sub.title}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div className="h-px bg-gray-200 mt-6 w-full" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            const ProjectView = ({ subId, onBack }) => {
+                let categoryInfo = null;
+                CATALOG_DATA.forEach((group) => {
+                    const found = group.subcategories.find(
+                        (s) => s.id === subId,
+                    );
+                    if (found) categoryInfo = found;
+                });
+
+                const projects = PROJECTS[subId] || [];
+
+                return (
+                    <div className="p-4 md:p-6 font-sans">
+                        <button
+                            onClick={onBack}
+                            className="text-[#005a31] hover:underline text-sm font-bold flex items-center mb-4"
+                        >
+                            <Icons.ArrowLeft size={14} className="mr-1" /> All
+                            Categories
+                        </button>
+
+                        <div className="flex items-baseline gap-4 mb-2">
+                            <h2 className="text-2xl font-bold text-[#005a31]">
+                                {categoryInfo?.title}
+                            </h2>
+                            <span className="text-gray-500 text-sm">
+                                See all {projects.length} projects
+                            </span>
+                        </div>
+
+                        <p className="text-sm text-gray-700 max-w-3xl mb-6">
+                            Choose from our selection of{" "}
+                            {categoryInfo?.title.toLowerCase()} assignments,
+                            including verified graded work, open source
+                            contributions, and capstone requirements. In stock
+                            and ready for review.
+                        </p>
+
+                        <div className="border border-gray-300 bg-white">
+                            <div className="grid grid-cols-12 bg-[#f4f4f4] border-b border-gray-300 text-[11px] font-bold text-gray-600 uppercase py-1.5 px-3">
+                                <div className="col-span-5 md:col-span-4">
+                                    Project Title
+                                </div>
+                                <div className="col-span-3">Tech Specs</div>
+                                <div className="col-span-2 hidden md:block">
+                                    Grade
+                                </div>
+                                <div className="col-span-2 hidden md:block">
+                                    Year
+                                </div>
+                                <div className="col-span-4 md:col-span-1 text-right">
+                                    Details
+                                </div>
+                            </div>
+
+                            {projects.length > 0 ? (
+                                projects.map((proj, idx) => (
+                                    <div
+                                        key={proj.id}
+                                        className={`grid grid-cols-12 items-start py-2 px-3 border-b border-gray-200 text-sm hover:bg-[#fff9e6] group transition-colors ${idx % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}
+                                    >
+                                        <div className="col-span-5 md:col-span-4 pr-4">
+                                            <span className="font-bold text-[#005a31] group-hover:underline cursor-pointer">
+                                                {proj.title}
+                                            </span>
+                                            <p className="text-xs text-gray-500 mt-1 leading-tight">
+                                                {proj.description}
+                                            </p>
+                                        </div>
+
+                                        <div className="col-span-3 text-gray-700 text-xs md:text-sm self-center">
+                                            {proj.spec}
+                                        </div>
+
+                                        <div className="col-span-2 hidden md:flex items-center text-gray-700 font-medium">
+                                            {proj.grade}
+                                        </div>
+
+                                        <div className="col-span-2 hidden md:flex items-center text-gray-600 text-xs">
+                                            {proj.date}
+                                        </div>
+
+                                        <div className="col-span-4 md:col-span-1 text-right self-center">
+                                            <button className="text-[#005a31] font-bold text-xs border border-gray-300 px-2 py-1 bg-white hover:bg-[#005a31] hover:text-white transition-colors">
+                                                VIEW
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="p-8 text-center text-gray-500 text-sm italic">
+                                    No items match your specifications.
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="bg-gray-50 p-4 border border-gray-200">
+                                <h4 className="font-bold text-gray-800 text-sm mb-2">
+                                    Technical Specifications
+                                </h4>
+                                <ul className="text-xs text-gray-600 space-y-1 list-disc pl-4">
+                                    <li>
+                                        All projects comply with University
+                                        Academic Integrity Standards (UAIS).
+                                    </li>
+                                    <li>
+                                        Codebases are linted and formatted
+                                        according to industry best practices.
+                                    </li>
+                                    <li>
+                                        Documentation provided in Markdown
+                                        format.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const App = () => {
+                const [activeSub, setActiveSub] = useState(null);
+                const [searchTerm, setSearchTerm] = useState("");
+
+                return (
+                    <div className="min-h-screen bg-white text-gray-900 font-sans flex flex-col">
+                        <Header
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            onHome={() => setActiveSub(null)}
+                        />
+
+                        <div className="flex flex-1 max-w-[1400px] mx-auto w-full border-l border-r border-gray-200 shadow-sm my-0 md:my-4">
+                            <Sidebar
+                                activeSub={activeSub}
+                                setActiveSub={setActiveSub}
+                            />
+
+                            <main className="flex-1 bg-white">
+                                {activeSub ? (
+                                    <ProjectView
+                                        subId={activeSub}
+                                        onBack={() => setActiveSub(null)}
+                                    />
+                                ) : (
+                                    <CatalogGrid onSelect={setActiveSub} />
+                                )}
+                            </main>
+                        </div>
+
+                        <div className="md:hidden p-4 bg-gray-100 text-center text-xs text-gray-500 border-t border-gray-300">
+                            © 2025 McStudent-Carr Supply Co.
+                        </div>
+                    </div>
+                );
+            };
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<App />);
+        </script>
+    </body>
+</html>
