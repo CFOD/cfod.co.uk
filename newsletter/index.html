@@ -731,6 +731,45 @@
                         );
                     }
                 }
+
+                // --- NEWSLETTER AJAX SUBMISSION ---
+                // This script intercepts the Kit form submission to keep the user on the page
+                const newsletterForm =
+                    document.getElementById("newsletter-form");
+                const signupWrapper = document.getElementById(
+                    "signup-form-wrapper",
+                );
+                const successMessage =
+                    document.getElementById("signup-success");
+
+                if (newsletterForm) {
+                    newsletterForm.addEventListener("submit", function (e) {
+                        e.preventDefault(); // Stop the browser from navigating to Kit
+
+                        const formData = new FormData(this);
+                        const action = this.action;
+
+                        // Send data to Kit using Fetch API
+                        fetch(action, {
+                            method: "POST",
+                            body: formData,
+                            mode: "no-cors", // Important: Kit might block CORS, this allows opaque response
+                        })
+                            .then((response) => {
+                                // Since we use 'no-cors', we can't read the response status properly,
+                                // but the request usually succeeds. We'll assume success for UX.
+                                // Hide form, show success message
+                                signupWrapper.style.display = "none";
+                                successMessage.style.display = "block";
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                                alert(
+                                    "Something went wrong. Please try again later.",
+                                );
+                            });
+                    });
+                }
             });
         </script>
     </body>
