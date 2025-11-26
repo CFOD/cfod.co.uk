@@ -814,6 +814,33 @@
                             });
                     });
                 }
+                // --- HASH CHANGE LISTENER (The Fix) ---
+                // 1. Listen for changes (e.g. user gets redirected back to #success)
+                window.addEventListener("hashchange", () => {
+                    if (window.location.hash) {
+                        const target = document.querySelector(
+                            window.location.hash,
+                        );
+                        if (target && target.tagName === "ARTICLE") {
+                            showArticle(window.location.hash);
+                        }
+                    } else {
+                        // If hash is cleared, close articles
+                        closeArticles();
+                    }
+                });
+
+                // 2. Check hash on initial load
+                if (window.location.hash) {
+                    const target = document.querySelector(window.location.hash);
+                    if (target && target.tagName === "ARTICLE") {
+                        // Small delay to allow page init
+                        setTimeout(
+                            () => showArticle(window.location.hash),
+                            100,
+                        );
+                    }
+                }
             });
         </script>
     </body>
