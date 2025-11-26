@@ -629,6 +629,7 @@
                         </li>
                     </ul>
 
+                    <!-- SUCCESS MESSAGE (The Hidden Box) -->
                     <article id="success">
                         <h2 class="major">Welcome</h2>
                         <div style="text-align: center; padding: 2rem 0">
@@ -697,8 +698,10 @@
                     // Remove active class from all articles first
                     articles.forEach((art) => art.classList.remove("active"));
 
-                    // Find target
+                    // Find target based on ID (e.g. #success)
+                    // We use querySelector explicitly to handle the ID passed
                     const target = document.querySelector(id);
+
                     if (target) {
                         // Add visible state to body (blurs header/bg)
                         body.classList.add("is-article-visible");
@@ -706,10 +709,14 @@
                         // Show main container
                         main.style.display = "block";
 
+                        // Force a browser reflow/repaint to ensure the display:block is registered
+                        // before we add the opacity transition class.
+                        void main.offsetWidth;
+
                         // Small timeout to allow display:block to apply before opacity transition
                         setTimeout(() => {
                             target.classList.add("active");
-                        }, 10);
+                        }, 50); // Increased slightly to ensure DOM is ready
                     }
                 }
 
@@ -763,66 +770,20 @@
                         closeArticles();
                     }
                 });
-
-                // Check hash on load (e.g. user visits site.com/#signup)
-                if (window.location.hash) {
-                    const target = document.querySelector(window.location.hash);
-                    if (target && target.tagName === "ARTICLE") {
-                        // Small delay to allow page init
-                        setTimeout(
-                            () => showArticle(window.location.hash),
-                            100,
-                        );
-                    }
-                }
-
-                // --- NEWSLETTER AJAX SUBMISSION ---
-                // This script intercepts the Kit form submission to keep the user on the page
-                const newsletterForm =
-                    document.getElementById("newsletter-form");
-                const signupWrapper = document.getElementById(
-                    "signup-form-wrapper",
-                );
-                const successMessage =
-                    document.getElementById("signup-success");
-
-                if (newsletterForm) {
-                    newsletterForm.addEventListener("submit", function (e) {
-                        e.preventDefault(); // Stop the browser from navigating to Kit
-
-                        const formData = new FormData(this);
-                        const action = this.action;
-
-                        // Send data to Kit using Fetch API
-                        fetch(action, {
-                            method: "POST",
-                            body: formData,
-                            mode: "no-cors", // Important: Kit might block CORS, this allows opaque response
-                        })
-                            .then((response) => {
-                                // Since we use 'no-cors', we can't read the response status properly,
-                                // but the request usually succeeds. We'll assume success for UX.
-                                // Hide form, show success message
-                                signupWrapper.style.display = "none";
-                                successMessage.style.display = "block";
-                            })
-                            .catch((error) => {
-                                console.error("Error:", error);
-                                alert(
-                                    "Something went wrong. Please try again later.",
-                                );
-                            });
-                    });
-                }
                 // --- HASH CHANGE LISTENER (The Fix) ---
                 // 1. Listen for changes (e.g. user gets redirected back to #success)
                 window.addEventListener("hashchange", () => {
+                    // Check if hash exists and specifically looks for our IDs or just success
                     if (window.location.hash) {
-                        const target = document.querySelector(
-                            window.location.hash,
-                        );
+                        // Handle both #success and #success?someparam=1
+                        let hashId = window.location.hash;
+                        if (hashId.includes("?")) {
+                            hashId = hashId.split("?")[0];
+                        }
+
+                        const target = document.querySelector(hashId);
                         if (target && target.tagName === "ARTICLE") {
-                            showArticle(window.location.hash);
+                            showArticle(hashId);
                         }
                     } else {
                         // If hash is cleared, close articles
@@ -830,15 +791,19 @@
                     }
                 });
 
-                // 2. Check hash on initial load
+                // 2. Check hash on initial load (handles redirect from Kit)
                 if (window.location.hash) {
-                    const target = document.querySelector(window.location.hash);
+                    let hashId = window.location.hash;
+                    // Clean up any query params Kit might add if they are part of the hash
+                    if (hashId.includes("?")) {
+                        hashId = hashId.split("?")[0];
+                    }
+
+                    // We check if the element exists
+                    const target = document.querySelector(hashId);
                     if (target && target.tagName === "ARTICLE") {
-                        // Small delay to allow page init
-                        setTimeout(
-                            () => showArticle(window.location.hash),
-                            100,
-                        );
+                        // Increase delay to 200ms to ensure page is fully painted after redirect
+                        setTimeout(() => showArticle(hashId), 200);
                     }
                 }
             });
