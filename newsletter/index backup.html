@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <title>Global Stratum | IR & Politics Newsletter</title>
@@ -429,7 +429,7 @@
             <!-- Header (The "Card") -->
             <header id="header">
                 <div class="logo">
-                    <!-- Original Font Awesome Globe Icon -->
+                    <!-- REVERTED: Back to original Font Awesome Globe Icon -->
                     <span class="icon fas fa-globe-americas"></span>
                 </div>
                 <div class="content">
@@ -455,36 +455,33 @@
                 <!-- SIGN UP (Primary Focus) -->
                 <article id="signup">
                     <h2 class="major">The Briefing</h2>
-                    <span
+                    <!--<span
                         class="image main"
                         style="display: block; margin-bottom: 2rem"
-                    >
-                        <!-- Abstract map image placeholder -->
-                        <img
-                            src="https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?q=80&w=1000&auto=format&fit=crop"
-                            alt="Politics"
-                            style="width: 100%; border-radius: 4px"
+                    > -->
+                    <!-- Abstract map image placeholder -->
+                    <!-- --    <img
+                            src=" "
+                            alt=""
+                            style="width: 1%; border-radius: 1px"
                         />
                     </span>
+                    -->
                     <p>
                         Headlines only show the surface.
-                        <b>Global Stratum</b> digs deeper. We analyze the
-                        underlying layers of history, economics, and culture
-                        that drive modern geopolitical conflict.
+                        <b>Global Stratum</b> is well good. This is some more
+                        text about how good the newsletter is and whats in it
+                        and so on etc and such.
                     </p>
                     <p>
-                        Join 12,000+ policymakers, students, and diplomats who
-                        rely on our deep-dive analysis.
+                        Join the like 20 million other people who cannot live
+                        without this groundbreaking info.
                     </p>
 
-                    <!--
-                    NEWSLETTER FORM (KIT / CONVERTKIT)
-                    1. Go to Kit Dashboard > Landing Pages & Forms > Settings > General
-                    2. Under "When a visitor subscribes", choose "Redirect to an external page"
-                    3. Paste your site URL followed by #success (e.g., https://www.globalstratum.com/#success)
-                    4. Paste the Action URL below.
-                -->
-                    <form action="YOUR_KIT_FORM_URL" method="POST">
+                    <form
+                        method="post"
+                        action="https://app.kit.com/forms/8807619/subscriptions"
+                    >
                         <div class="fields">
                             <div class="field">
                                 <label for="email">Email Address</label>
@@ -531,54 +528,26 @@
                     <h3>What to expect</h3>
                     <ul style="margin-bottom: 2rem">
                         <li>
-                            <b>Weekly Essays:</b> 1,000 words on a single topic.
+                            <b>Newsletter:</b> words in the form of a newsletter
                         </li>
+                        <li><b>Summut Else:</b> Other tack</li>
                         <li>
-                            <b>Book Reviews:</b> What the experts are reading.
+                            <b>No Ads:</b> No one wants to advertise on here
                         </li>
-                        <li><b>No Ads:</b> Just pure analysis.</li>
                     </ul>
-                    <p>
-                        Written by analysts based in London, DC, and Singapore.
-                    </p>
+                    <p>Written by analysts based in yer gaff</p>
                     <div class="close">Close</div>
                 </article>
 
                 <!-- CONTACT -->
                 <article id="contact">
                     <h2 class="major">Contact</h2>
-                    <p>
-                        Have a tip? Want to sponsor an issue? Or just want to
-                        debate a recent piece? Reach out below.
-                    </p>
-
-                    <!--
-                    CONTACT FORM (FormSubmit.co)
-                    Redirects to the same #success hash if configured.
-                -->
-                    <form
-                        action="https://formsubmit.co/YOUR_EMAIL_HERE"
-                        method="POST"
-                    >
-                        <input
-                            type="hidden"
-                            name="_subject"
-                            value="Global Stratum Contact Message"
-                        />
-                        <input type="hidden" name="_captcha" value="false" />
-
-                        <!-- IMPORTANT: Set this to your domain + #success once live -->
-                        <!-- <input type="hidden" name="_next" value="https://www.globalstratum.com/#success"> -->
-
+                    <p>Reach out below.</p>
+                    <form method="post" action="#">
                         <div class="fields">
                             <div class="field half">
                                 <label for="name">Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    id="name"
-                                    required
-                                />
+                                <input type="text" name="name" id="name" />
                             </div>
                             <div class="field half">
                                 <label for="email">Email</label>
@@ -586,7 +555,6 @@
                                     type="text"
                                     name="email"
                                     id="contact-email"
-                                    required
                                 />
                             </div>
                             <div class="field">
@@ -595,7 +563,6 @@
                                     name="message"
                                     id="message"
                                     rows="4"
-                                    required
                                 ></textarea>
                             </div>
                         </div>
@@ -662,59 +629,57 @@
                         </li>
                     </ul>
 
-                    <div class="close">Close</div>
-                </article>
+                    <!-- SUCCESS MESSAGE (The Hidden Box) -->
+                    <article id="success">
+                        <h2 class="major">Welcome</h2>
+                        <div style="text-align: center; padding: 2rem 0">
+                            <span
+                                class="icon fas fa-check-circle"
+                                style="
+                                    font-size: 4rem;
+                                    color: #4db6ac;
+                                    margin-bottom: 1.5rem;
+                                    display: block;
+                                "
+                            ></span>
+                            <p style="font-size: 1.2rem; margin-bottom: 1rem">
+                                <b>You are now on the list.</b>
+                            </p>
+                            <p>
+                                Please check your inbox (and spam folder) to
+                                confirm your subscription.
+                            </p>
+                            <ul
+                                class="actions"
+                                style="
+                                    list-style: none;
+                                    padding: 0;
+                                    display: flex;
+                                    justify-content: center;
+                                    gap: 1rem;
+                                    margin-top: 2rem;
+                                "
+                            >
+                                <li>
+                                    <a
+                                        href="#"
+                                        class="button primary"
+                                        onclick="location.hash=''; location.reload();"
+                                        >Back to Home</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="close">Close</div>
+                    </article>
 
-                <!-- SUCCESS MESSAGE (The Hidden Box) -->
-                <article id="success">
-                    <h2 class="major">Welcome</h2>
-                    <div style="text-align: center; padding: 2rem 0">
-                        <span
-                            class="icon fas fa-check-circle"
-                            style="
-                                font-size: 4rem;
-                                color: #4db6ac;
-                                margin-bottom: 1.5rem;
-                                display: block;
-                            "
-                        ></span>
-                        <p style="font-size: 1.2rem; margin-bottom: 1rem">
-                            <b>You are now on the list.</b>
-                        </p>
-                        <p>
-                            Please check your inbox (and spam folder) to confirm
-                            your subscription.
-                        </p>
-                        <ul
-                            class="actions"
-                            style="
-                                list-style: none;
-                                padding: 0;
-                                display: flex;
-                                justify-content: center;
-                                gap: 1rem;
-                                margin-top: 2rem;
-                            "
-                        >
-                            <li>
-                                <a
-                                    href="#"
-                                    class="button primary"
-                                    onclick="location.hash=''; location.reload();"
-                                    >Back to Home</a
-                                >
-                            </li>
-                        </ul>
-                    </div>
                     <div class="close">Close</div>
                 </article>
             </div>
 
             <!-- Footer -->
             <footer id="footer">
-                <p class="copyright">
-                    &copy; Global Stratum. Design inspired by HTML5 UP.
-                </p>
+                <p class="copyright">&copy; Global Stratum - 2025</p>
             </footer>
         </div>
 
@@ -733,56 +698,39 @@
                     // Remove active class from all articles first
                     articles.forEach((art) => art.classList.remove("active"));
 
-                    // Clean ID
-                    const cleanId = id.startsWith("#") ? id : "#" + id;
-
-                    // Find target
-                    const target = document.querySelector(cleanId);
+                    // Find target based on ID (e.g. #success)
+                    // We use querySelector explicitly to handle the ID passed
+                    const target = document.querySelector(id);
 
                     if (target) {
                         // Add visible state to body (blurs header/bg)
                         body.classList.add("is-article-visible");
 
-                        // Show main container and ensure it's blocked
+                        // Show main container
                         main.style.display = "block";
 
-                        // Force a browser reflow
+                        // Force a browser reflow/repaint to ensure the display:block is registered
+                        // before we add the opacity transition class.
                         void main.offsetWidth;
 
-                        // Add active class instantly for the success case, delayed for others
-                        if (cleanId === "#success") {
-                            target.style.display = "block";
+                        // Small timeout to allow display:block to apply before opacity transition
+                        setTimeout(() => {
                             target.classList.add("active");
-                        } else {
-                            target.style.display = "block";
-                            setTimeout(() => {
-                                target.classList.add("active");
-                            }, 10);
-                        }
+                        }, 50); // Increased slightly to ensure DOM is ready
                     }
                 }
 
                 // Function to close all articles
                 function closeArticles() {
                     body.classList.remove("is-article-visible");
-                    articles.forEach((art) => {
-                        art.classList.remove("active");
-                        // Hide after transition
-                        setTimeout(() => {
-                            if (!art.classList.contains("active"))
-                                art.style.display = "none";
-                        }, 350);
-                    });
+                    articles.forEach((art) => art.classList.remove("active"));
 
                     // Wait for transition to finish before hiding main container
                     setTimeout(() => {
-                        if (!body.classList.contains("is-article-visible")) {
-                            main.style.display = "none";
-                        }
+                        main.style.display = "none";
+                        // Clear hash without jumping
+                        history.replaceState(null, null, " ");
                     }, 350);
-
-                    // Clean URL
-                    history.replaceState(null, null, " ");
                 }
 
                 // Event Listeners for Nav Links
@@ -807,6 +755,9 @@
                 // Close when clicking on the "blurred" background area (wrapper)
                 wrapper.addEventListener("click", (e) => {
                     if (body.classList.contains("is-article-visible")) {
+                        // Only close if clicking the wrapper itself, not the header or inside article
+                        // Note: Because the article sits "on top" via z-index, clicks on it won't bubble to wrapper in a way that hurts us here easily,
+                        // but we check ensuring we aren't clicking the header.
                         if (e.target.id === "wrapper") {
                             closeArticles();
                         }
@@ -819,41 +770,42 @@
                         closeArticles();
                     }
                 });
-
-                // --- ROBUST HASH/URL CHECKER ---
-                // Check strictly on load
-                function checkHash() {
-                    const hash = window.location.hash;
-
-                    // If hash exists OR url contains 'success' (common redirect behavior)
-                    if (hash || window.location.href.includes("success")) {
-                        let targetId = hash;
-
-                        // If URL has 'success' but no hash, force target to success
-                        if (!hash && window.location.href.includes("success")) {
-                            targetId = "#success";
+                // --- HASH CHANGE LISTENER (The Fix) ---
+                // 1. Listen for changes (e.g. user gets redirected back to #success)
+                window.addEventListener("hashchange", () => {
+                    // Check if hash exists and specifically looks for our IDs or just success
+                    if (window.location.hash) {
+                        // Handle both #success and #success?someparam=1
+                        let hashId = window.location.hash;
+                        if (hashId.includes("?")) {
+                            hashId = hashId.split("?")[0];
                         }
 
-                        // Clean up any params
-                        if (targetId && targetId.includes("?")) {
-                            targetId = targetId.split("?")[0];
+                        const target = document.querySelector(hashId);
+                        if (target && target.tagName === "ARTICLE") {
+                            showArticle(hashId);
                         }
+                    } else {
+                        // If hash is cleared, close articles
+                        closeArticles();
+                    }
+                });
 
-                        if (targetId) {
-                            console.log("Opening article:", targetId); // Debug log
-                            showArticle(targetId);
-                        }
+                // 2. Check hash on initial load (handles redirect from Kit)
+                if (window.location.hash) {
+                    let hashId = window.location.hash;
+                    // Clean up any query params Kit might add if they are part of the hash
+                    if (hashId.includes("?")) {
+                        hashId = hashId.split("?")[0];
+                    }
+
+                    // We check if the element exists
+                    const target = document.querySelector(hashId);
+                    if (target && target.tagName === "ARTICLE") {
+                        // Increase delay to 200ms to ensure page is fully painted after redirect
+                        setTimeout(() => showArticle(hashId), 600);
                     }
                 }
-
-                // Run check immediately
-                checkHash();
-
-                // Run check again after a short delay (for slow renders)
-                setTimeout(checkHash, 100);
-
-                // Listen for changes
-                window.addEventListener("hashchange", checkHash);
             });
         </script>
     </body>
