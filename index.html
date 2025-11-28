@@ -212,7 +212,6 @@
                 setPersistence,
                 browserLocalPersistence,
             } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-            // Added 'where' to the imports
             import {
                 getFirestore,
                 collection,
@@ -237,20 +236,7 @@
             };
 
             // --- LEGACY CONTENT ---
-            const legacyArticles = [
-                {
-                    id: "legacy-3",
-                    type: "standard",
-                    source: "Portfolio",
-                    date: "2023-10-05",
-                    imageUrl: "./imgs/rishi_sunak.jpg",
-                    title: "UK Political Uncertainty Ahead of 2024...",
-                    description:
-                        "As the UK gears up for the 2024 general election, a recent article regarding a YouGov poll published by The Telegraph has ignited speculation...",
-                    linkUrl: "./rishi-story.html",
-                    isLegacy: true,
-                },
-            ];
+            const legacyArticles = [];
 
             let app, auth, db;
             let currentUser = null;
@@ -544,6 +530,16 @@
                           .join("")
                     : "<p>No content provided.</p>";
 
+                // EDIT BUTTON: Only show if logged in AND it's a native Portfolio item
+                let editAction = "";
+                if (
+                    currentUser &&
+                    item.source === "Portfolio" &&
+                    !item.id.startsWith("legacy")
+                ) {
+                    editAction = `<a href="#edit/${item.id}" class="text-blue-600 hover:text-blue-800 font-bold ml-4 border-l pl-4 border-gray-300"><i class="fa-solid fa-pen"></i> Edit Post</a>`;
+                }
+
                 container.innerHTML = `
                 <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100 fade-in">
                     <a href="#" onclick="window.location.hash=''; return false;" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-black mb-8 uppercase tracking-wide">
@@ -568,52 +564,85 @@
             `;
             }
 
-            // --- VIEW: SUBMIT FORM ---
-            function renderSubmitForm() {
+            // --- VIEW: SUBMIT/EDIT FORM ---
+            async function renderSubmitForm(editId = null) {
                 const container = document.getElementById("main-container");
+                let formTitle = "Create New CFOD Post";
+                let btnText = "Publish Post";
+
+                // Initial data structure
+                let articleData = {
+                    title: "",
+                    imageUrl: "",
+                    summary: "",
+                    content: "",
+                    externalLink: "",
+                };
+
+                // If editing, try to fetch data
+                if (editId) {
+                    container.innerHTML = `<div class="text-center py-20"><div class="loader mb-4"></div><p>Loading article data...</p></div>`;
+                    try {
+                        const docRef = doc(db, "cfod_articles", editId);
+                        const docSnap = await getDoc(docRef);
+                        if (docSnap.exists()) {
+                            articleData = docSnap.data();
+                            formTitle = "Edit Post";
+                            btnText = "Update Post";
+                        } else {
+                            alert("Article not found!");
+                            window.location.hash = "";
+                            return;
+                        }
+                    } catch (e) {
+                        alert("Error loading article: " + e.message);
+                        return;
+                    }
+                }
+
                 container.innerHTML = `
-                <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200 fade-in">
-                    <h2 class="text-2xl font-bold mb-6">Create New CFOD Post</h2>
-                    <form id="cms-form" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Title</label>
-                            <input type="text" id="p-title" required class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Image URL</label>
-                            <input type="text" id="p-image" placeholder="https://..." class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Summary (Shown on card)</label>
-                            <textarea id="p-summary" required rows="2" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all"></textarea>
-                        </div>
+                     <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200 fade-in">
+                         <h2 class="text-2xl font-bold mb-6">${formTitle}</h2>
+                         <form id="cms-form" class="space-y-4">
+                             <div>
+                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Title</label>
+                                 <input type="text" id="p-title" required value="${articleData.title}" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                             </div>
+                             <div>
+                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Image URL</label>
+                                 <input type="text" id="p-image" value="${articleData.imageUrl || ""}" placeholder="https://..." class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                             </div>
+                             <div>
+                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Summary (Shown on card)</label>
+                                 <textarea id="p-summary" required rows="2" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">${articleData.summary || ""}</textarea>
+                             </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded border border-gray-200">
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option A: Write Article</label>
-                                <textarea id="p-content" rows="6" placeholder="Write content here. Use '##' for headers." class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all"></textarea>
-                            </div>
-                            <div class="flex flex-col justify-center border-l border-gray-200 pl-4">
-                                <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option B: External Link</label>
-                                <input type="text" id="p-link" placeholder="e.g. ./about-me.html" class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all mb-2">
-                                <p class="text-xs text-gray-400">If you fill this in, the card will link here INSTEAD of opening the article text.</p>
-                            </div>
-                        </div>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded border border-gray-200">
+                                 <div>
+                                     <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option A: Write Article</label>
+                                     <textarea id="p-content" rows="6" placeholder="Write content here. Use '##' for headers." class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all">${articleData.content || ""}</textarea>
+                                 </div>
+                                 <div class="flex flex-col justify-center border-l border-gray-200 pl-4">
+                                     <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option B: External Link</label>
+                                     <input type="text" id="p-link" value="${articleData.externalLink || ""}" placeholder="e.g. ./about-me.html" class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all mb-2">
+                                     <p class="text-xs text-gray-400">If you fill this in, the card will link here INSTEAD of opening the article text.</p>
+                                 </div>
+                             </div>
 
-                        <div class="pt-4 flex justify-between items-center">
-                            <a href="#" class="text-sm text-red-500 font-bold hover:underline">Cancel</a>
-                            <button type="submit" class="bg-black text-white px-8 py-3 rounded font-bold hover:bg-gray-800 transition-transform active:scale-95">Publish Post</button>
-                        </div>
-                    </form>
-                </div>
-            `;
+                             <div class="pt-4 flex justify-between items-center">
+                                 <a href="#" class="text-sm text-red-500 font-bold hover:underline">Cancel</a>
+                                 <button type="submit" class="bg-black text-white px-8 py-3 rounded font-bold hover:bg-gray-800 transition-transform active:scale-95">${btnText}</button>
+                             </div>
+                         </form>
+                     </div>
+                 `;
 
                 document
                     .getElementById("cms-form")
                     .addEventListener("submit", async (e) => {
                         e.preventDefault();
                         const btn = e.target.querySelector("button");
-                        btn.textContent = "Publishing...";
+                        btn.textContent = "Processing...";
                         btn.disabled = true;
 
                         try {
@@ -627,18 +656,27 @@
                                     document.getElementById("p-content").value,
                                 externalLink:
                                     document.getElementById("p-link").value,
-                                createdAt: serverTimestamp(),
                                 authorId: currentUser.uid,
                             };
 
                             const colRef = collection(db, "cfod_articles");
-                            await addDoc(colRef, data);
 
-                            alert("Posted successfully!");
-                            window.location.hash = "";
+                            if (editId) {
+                                // UPDATE EXISTING
+                                const docRef = doc(db, "cfod_articles", editId);
+                                await updateDoc(docRef, data);
+                                alert("Updated successfully!");
+                                window.location.hash = `#article/${editId}`;
+                            } else {
+                                // CREATE NEW
+                                data.createdAt = serverTimestamp();
+                                await addDoc(colRef, data);
+                                alert("Posted successfully!");
+                                window.location.hash = "";
+                            }
                         } catch (err) {
                             alert("Error: " + err.message);
-                            btn.textContent = "Publish Post";
+                            btn.textContent = btnText;
                             btn.disabled = false;
                         }
                     });
