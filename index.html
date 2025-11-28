@@ -239,7 +239,7 @@
             // --- LEGACY CONTENT ---
             const legacyArticles = [
                 {
-                    id: "legacy-1",
+                    id: "legacy-3",
                     type: "standard",
                     source: "Portfolio",
                     date: "2023-10-05",
@@ -292,12 +292,24 @@
                 }
             }
 
+            // --- HELPER: ROBUST DATE PARSING ---
+            function parseFirebaseDate(val) {
+                if (!val) return new Date().toISOString();
+
+                // Case 1: Firestore Timestamp (has .toDate() method)
+                if (typeof val.toDate === "function") {
+                    return val.toDate().toISOString();
+                }
+
+                // Case 2: String or Number
+                return new Date(val).toISOString();
+            }
+
             // --- DATA FETCHING (REAL-TIME SNAPSHOTS) ---
             function setupFeedListeners() {
                 unifiedFeed = [...legacyArticles]; // Start with legacy
 
                 // 1. CFOD Listener (Using standard collection name)
-                // No filter needed here as only you have access to post to this collection
                 const cfodRef = collection(db, "cfod_articles");
 
                 unsubCfod = onSnapshot(
@@ -314,9 +326,8 @@
                                 id: doc.id,
                                 type: "dynamic",
                                 source: "Portfolio",
-                                date: data.createdAt?.toDate
-                                    ? data.createdAt.toDate().toISOString()
-                                    : new Date().toISOString(),
+                                // UPDATED: Use the helper function to handle both Strings and Timestamps
+                                date: parseFirebaseDate(data.createdAt),
                                 imageUrl: data.imageUrl,
                                 title: data.title,
                                 description: data.summary,
@@ -359,9 +370,8 @@
                                 id: doc.id,
                                 type: "external",
                                 source: "JCJournal",
-                                date: data.createdAt?.toDate
-                                    ? data.createdAt.toDate().toISOString()
-                                    : new Date().toISOString(),
+                                // UPDATED: Use the helper function here too
+                                date: parseFirebaseDate(data.createdAt),
                                 imageUrl: data.imageUrl,
                                 title: data.title,
                                 description: data.summary,
