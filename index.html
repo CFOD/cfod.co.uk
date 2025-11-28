@@ -216,7 +216,7 @@
                 getFirestore,
                 collection,
                 addDoc,
-                updateDoc, // Added
+                updateDoc,
                 getDoc,
                 onSnapshot,
                 doc,
@@ -253,25 +253,29 @@
             // --- APP INITIALIZATION ---
             async function init() {
                 try {
-                    // Initialize Firebase - FORCE LIVE CONFIG
-                    // We ignore the environment variable here to ensure we connect to your real data
                     app = initializeApp(firebaseConfig);
                     auth = getAuth(app);
                     db = getFirestore(app);
 
-                    // Auth Listener
+                    // Auth Listener with UI Refresh
                     onAuthStateChanged(auth, (user) => {
                         currentUser = user;
                         updateUIForUser();
+                        // CRITICAL FIX: Re-render the current view now that we know who the user is
+                        // This ensures the Edit button appears if the user was already on an article page
+                        if (currentView === "article") {
+                            const hash = window.location.hash;
+                            if (hash.startsWith("#article/")) {
+                                const id = hash.split("/")[1];
+                                renderArticleDetail(id);
+                            }
+                        } else if (currentView === "submit") {
+                            handleRouting();
+                        }
                     });
 
-                    // Router Listener
                     window.addEventListener("hashchange", handleRouting);
-
-                    // Start Real-time Feed Listeners
                     setupFeedListeners();
-
-                    // Initial Route
                     handleRouting();
                 } catch (e) {
                     console.error("Init Error:", e);
@@ -283,27 +287,22 @@
             // --- HELPER: ROBUST DATE PARSING ---
             function parseFirebaseDate(val) {
                 if (!val) return new Date().toISOString();
-
-                // Case 1: Firestore Timestamp (has .toDate() method)
                 if (typeof val.toDate === "function") {
                     return val.toDate().toISOString();
                 }
-
-                // Case 2: String or Number
                 return new Date(val).toISOString();
             }
 
             // --- DATA FETCHING (REAL-TIME SNAPSHOTS) ---
             function setupFeedListeners() {
-                unifiedFeed = [...legacyArticles]; // Start with legacy
+                unifiedFeed = [...legacyArticles];
 
-                // 1. CFOD Listener (Using standard collection name)
+                // 1. CFOD Listener
                 const cfodRef = collection(db, "cfod_articles");
 
                 unsubCfod = onSnapshot(
                     query(cfodRef, orderBy("createdAt", "desc"), limit(20)),
                     (snapshot) => {
-                        // Filter out existing dynamic items before re-adding
                         unifiedFeed = unifiedFeed.filter(
                             (i) => i.type !== "dynamic",
                         );
@@ -314,7 +313,6 @@
                                 id: doc.id,
                                 type: "dynamic",
                                 source: "Portfolio",
-                                // UPDATED: Use the helper function to handle both Strings and Timestamps
                                 date: parseFirebaseDate(data.createdAt),
                                 imageUrl: data.imageUrl,
                                 title: data.title,
@@ -332,12 +330,8 @@
                     },
                 );
 
-                // 2. JCJournal Listener (Using standard collection name)
-                // FILTER: Only show articles by "Connor O'Donnell"
+                // 2. JCJournal Listener
                 const jcRef = collection(db, "articles");
-
-                // Note: This 'where' + 'orderBy' query requires a Composite Index in Firestore.
-                // Check your browser console for a link to create it if it fails.
                 const jcQuery = query(
                     jcRef,
                     where("author", "==", "Connor O'Donnell"),
@@ -358,12 +352,10 @@
                                 id: doc.id,
                                 type: "external",
                                 source: "JCJournal",
-                                // UPDATED: Use the helper function here too
                                 date: parseFirebaseDate(data.createdAt),
                                 imageUrl: data.imageUrl,
                                 title: data.title,
                                 description: data.summary,
-                                // Ensure clean URL structure
                                 linkUrl: `https://jcjournal.co.uk/#article/${doc.id}`,
                             });
                         });
@@ -382,12 +374,16 @@
 
             function refreshFeed() {
                 unifiedFeed.sort((a, b) => new Date(b.date) - new Date(a.date));
-                if (
-                    currentView === "home" &&
-                    (window.location.hash === "" ||
-                        window.location.hash === "#")
-                ) {
+                // Only refresh home if we are there, otherwise we might disrupt reading
+                if (currentView === "home") {
                     renderHome();
+                } else if (currentView === "article") {
+                    // If we are reading an article, check if we need to reload it (e.g. after edit)
+                    const hash = window.location.hash;
+                    if (hash.startsWith("#article/")) {
+                        const id = hash.split("/")[1];
+                        renderArticleDetail(id);
+                    }
                 }
             }
 
@@ -410,7 +406,6 @@
                     }
                     renderSubmitForm();
                 } else if (hash.startsWith("#edit/")) {
-                    // NEW: Handle Edit Route
                     currentView = "submit";
                     if (!currentUser) {
                         window.location.hash = "#login";
@@ -421,7 +416,12 @@
                 } else if (hash.startsWith("#article/")) {
                     currentView = "article";
                     const id = hash.split("/")[1];
-                    renderArticleDetail(id);
+                    // Small delay to ensure feed is populated if hitting directly
+                    if (unifiedFeed.length === 0) {
+                        setTimeout(() => renderArticleDetail(id), 500);
+                    } else {
+                        renderArticleDetail(id);
+                    }
                 } else if (hash === "#logout") {
                     signOut(auth).then(() => (window.location.hash = ""));
                 }
@@ -523,7 +523,7 @@
                 const container = document.getElementById("main-container");
 
                 if (!item) {
-                    container.innerHTML = `<div class="text-center py-20">Article not found. <a href="#" class="underline">Go Home</a></div>`;
+                    container.innerHTML = `<div class="text-center py-20">Loading article... (or not found) <br><a href="#" class="underline mt-4 inline-block">Go Home</a></div>`;
                     return;
                 }
 
@@ -541,14 +541,26 @@
                           .join("")
                     : "<p>No content provided.</p>";
 
-                // EDIT BUTTON: Only show if logged in AND it's a native Portfolio item
+                // EDIT BUTTON LOGIC
                 let editAction = "";
-                if (
+                // Checks: 1. User logged in? 2. Is Portfolio Item? 3. Not legacy?
+                const canEdit =
                     currentUser &&
                     item.source === "Portfolio" &&
-                    !item.id.startsWith("legacy")
-                ) {
+                    !item.id.startsWith("legacy");
+
+                if (canEdit) {
                     editAction = `<a href="#edit/${item.id}" class="text-blue-600 hover:text-blue-800 font-bold ml-4 border-l pl-4 border-gray-300"><i class="fa-solid fa-pen"></i> Edit Post</a>`;
+                }
+
+                // DEBUG INFO (Visible only to Admin)
+                let debugInfo = "";
+                if (currentUser && !canEdit) {
+                    debugInfo = `<div class="mt-8 p-4 bg-gray-100 text-xs text-gray-500 rounded">
+                        <strong>Admin Debug:</strong> Edit hidden because:
+                        Source=${item.source} (Must be Portfolio),
+                        ID=${item.id} (Must not be legacy)
+                    </div>`;
                 }
 
                 container.innerHTML = `
@@ -556,6 +568,7 @@
                     <a href="#" onclick="window.location.hash=''; return false;" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-black mb-8 uppercase tracking-wide">
                         <i class="fa-solid fa-arrow-left mr-2"></i> Back to Home
                     </a>
+                    ${editAction}
 
                     <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title}</h1>
 
@@ -571,6 +584,7 @@
                         <p class="font-bold text-xl mb-8 text-gray-900 italic">${item.description}</p>
                         ${formattedBody}
                     </div>
+                    ${debugInfo}
                 </div>
             `;
             }
@@ -670,8 +684,6 @@
                                 authorId: currentUser.uid,
                             };
 
-                            const colRef = collection(db, "cfod_articles");
-
                             if (editId) {
                                 // UPDATE EXISTING
                                 const docRef = doc(db, "cfod_articles", editId);
@@ -681,6 +693,7 @@
                             } else {
                                 // CREATE NEW
                                 data.createdAt = serverTimestamp();
+                                const colRef = collection(db, "cfod_articles");
                                 await addDoc(colRef, data);
                                 alert("Posted successfully!");
                                 window.location.hash = "";
