@@ -601,7 +601,6 @@
                     imageUrl: "",
                     summary: "",
                     content: "",
-                    externalLink: "",
                 };
 
                 // If editing, try to fetch data
@@ -642,15 +641,10 @@
                                  <textarea id="p-summary" required rows="2" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">${articleData.summary || ""}</textarea>
                              </div>
 
-                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded border border-gray-200">
+                             <div class="bg-gray-50 p-4 rounded border border-gray-200">
                                  <div>
-                                     <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option A: Write Article</label>
+                                     <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Article Content</label>
                                      <textarea id="p-content" rows="6" placeholder="Write content here. Use '##' for headers." class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all">${articleData.content || ""}</textarea>
-                                 </div>
-                                 <div class="flex flex-col justify-center border-l border-gray-200 pl-4">
-                                     <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option B: External Link</label>
-                                     <input type="text" id="p-link" value="${articleData.externalLink || ""}" placeholder="e.g. ./about-me.html" class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all mb-2">
-                                     <p class="text-xs text-gray-400">If you fill this in, the card will link here INSTEAD of opening the article text.</p>
                                  </div>
                              </div>
 
@@ -679,8 +673,6 @@
                                     document.getElementById("p-summary").value,
                                 content:
                                     document.getElementById("p-content").value,
-                                externalLink:
-                                    document.getElementById("p-link").value,
                                 authorId: currentUser.uid,
                             };
 
