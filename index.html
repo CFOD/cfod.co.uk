@@ -407,6 +407,15 @@
                         return;
                     }
                     renderSubmitForm();
+                } else if (hash.startsWith("#edit/")) {
+                    // NEW: Handle Edit Route
+                    currentView = "submit";
+                    if (!currentUser) {
+                        window.location.hash = "#login";
+                        return;
+                    }
+                    const id = hash.split("/")[1];
+                    renderSubmitForm(id);
                 } else if (hash.startsWith("#article/")) {
                     currentView = "article";
                     const id = hash.split("/")[1];
