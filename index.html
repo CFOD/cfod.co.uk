@@ -1,305 +1,691 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CFOD - Home</title>
-    <!-- Use a placeholder for the favicon as the original path is local -->
-    <link rel="icon" type="image/png" href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif">
-    
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Load Google Fonts (Inter) and Font Awesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/0b745d7406.js" crossorigin="anonymous"></script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CFOD - Home</title>
+        <link
+            rel="icon"
+            type="image/png"
+            href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif"
+        />
 
-    <script>
-        // Custom Tailwind configuration
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        montserrat: ['Montserrat', 'sans-serif'],
+        <!-- Load Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Load Fonts & Icons -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <script
+            src="https://kit.fontawesome.com/0b745d7406.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ["Inter", "sans-serif"],
+                            montserrat: ["Montserrat", "sans-serif"],
+                        },
+                        colors: {
+                            primary: {
+                                600: "#374151",
+                                700: "#1f2937",
+                                800: "#111827",
+                            },
+                        },
                     },
-                    colors: {
-                        'primary': {
-                            '600': '#374151', // gray-700
-                            '700': '#1f2937', // gray-800
-                            '800': '#111827', // gray-900
-                        }
-                    }
                 },
-            },
-        }
-    </script>
+            };
+        </script>
 
-    <style>
-        /* A little custom CSS for the table to ensure it looks good */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb; /* gray-200 */
-        }
-        th {
-            background-color: #f9fafb; /* gray-50 */
-            font-weight: 600;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #f9fafb; /* gray-50 */
-        }
-    </style>
-</head>
-<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+        <style>
+            .loader {
+                border: 3px solid #f3f3f3;
+                border-top: 3px solid #374151;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                animation: spin 1s linear infinite;
+                display: inline-block;
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
 
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
-                <a href="./index.html" class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors">CFOD</a>
-            </div>
-            <div class="flex space-x-6">
-                <!-- Standardize relative links -->
-                <a href="./index.html" class="text-base font-medium text-primary-700 border-b-2 border-primary-700">HOME</a>
-                <a href="./about-me.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">ABOUT ME</a>
-                <a href="./map.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">MAP</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Main Content Grid -->
-    <main class="container mx-auto px-6 py-12">
-        
-        <!-- Grid for article sections -->
-        <!-- This grid will be populated by JavaScript -->
-        <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Articles will be injected here -->
-        </div>
-
-        <!-- Load More Button -->
-        <div class="text-center mt-12">
-            <button id="load-more-btn" class="bg-primary-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors">
-                Load More Articles
-            </button>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 mt-16">
-        <div class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0">
-                <a href="./index.html" class="text-2xl font-bold text-white hover:text-primary-700 transition-colors">CFOD</a>
-                <p class="text-sm text-gray-400 mt-1">&copy; 2023-2025 CFOD. All Rights Reserved.</p>
-            </div>
-            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
-                <div class="flex space-x-6">
-                    <a href="./index.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">HOME</a>
-                    <a href="./about-me.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">ABOUT ME</a>
-					<a href="./map.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">MAP</a>
+            /* Markdown-ish styling for dynamic article content */
+            .prose p {
+                margin-bottom: 1.5em;
+                line-height: 1.8;
+            }
+            .prose h2 {
+                font-size: 1.5em;
+                font-weight: bold;
+                margin-top: 2em;
+                margin-bottom: 1em;
+                color: #111827;
+            }
+            .prose ul {
+                list-style-type: disc;
+                padding-left: 1.5em;
+                margin-bottom: 1.5em;
+            }
+            .prose blockquote {
+                border-left: 4px solid #e5e7eb;
+                padding-left: 1em;
+                font-style: italic;
+                color: #4b5563;
+            }
+            .fade-in {
+                animation: fadeIn 0.3s ease-in;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="bg-gray-50 font-sans text-gray-800 antialiased min-h-screen flex flex-col"
+    >
+        <!-- Header -->
+        <header
+            class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm"
+        >
+            <nav
+                class="container mx-auto px-6 py-4 flex justify-between items-center"
+            >
+                <div class="flex items-center gap-4">
+                    <a
+                        href="#"
+                        onclick="window.location.hash=''; return false;"
+                        class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors tracking-tight"
+                        >CFOD</a
+                    >
+                    <span
+                        id="admin-badge"
+                        class="hidden bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider"
+                        >Staff Mode</span
+                    >
                 </div>
-                <a href="mailto:connor-odonnell@hotmail.co.uk" class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium">
-                    <i class="fa-regular fa-envelope mr-2"></i>
-                    CONTACT ME
-                </a>
+
+                <div class="flex items-center space-x-6">
+                    <!-- Navigation -->
+                    <div class="hidden md:flex space-x-6">
+                        <a
+                            href="#"
+                            onclick="window.location.hash=''; return false;"
+                            class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors"
+                            >HOME</a
+                        >
+                        <a
+                            href="./about-me.html"
+                            class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors"
+                            >ABOUT ME</a
+                        >
+                    </div>
+
+                    <!-- Admin Action Button -->
+                    <button
+                        id="new-post-btn"
+                        onclick="window.location.hash='#submit'"
+                        class="hidden flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-800 transition-colors"
+                    >
+                        <i class="fa-solid fa-pen-nib"></i> New Post
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main
+            id="main-container"
+            class="container mx-auto px-6 py-12 flex-grow"
+        >
+            <!-- Views will be injected here via JavaScript -->
+            <div id="loading-view" class="text-center py-20">
+                <div class="loader mb-4"></div>
+                <p class="text-gray-500">Initializing Content Feed...</p>
             </div>
-        </div>
-    </footer>
+        </main>
 
-    <!-- Article Loading JavaScript -->
-    <script>
-        // --- ARTICLE DATABASE ---
-        // To add new articles, just add a new object to this array.
-        const allArticles = [
-            {
-                type: 'standard', // 'standard' or 'table'
-                imageUrl: './imgs/kosovo-header.jpg',
-                altText: 'Pristina skyline',
-                title: 'A Bipolar Exploration of Kosovo',
-                description: 'The reasoning behind my visit to Kosovo is admittedly rather vague. There have been many times in life where I have been bestowed with a small sum of money... Both my family and associates alike seem to avoid me...',
-                linkUrl: './kosovo.html',
-                contentHtml: '' // No special content for standard cards
-            },
-            {
-                type: 'standard',
-                imageUrl: './imgs/books_2.jpg',
-                altText: 'Pile of books',
-                title: 'Essay - "The Changing Nature of War"',
-                description: 'Throughout the 21st century, video games, memes and social media have become a mainstream part of culture and society. With this comes a variety of complex issues...',
-                linkUrl: './changing-nature-of-war.html',
-                contentHtml: `
-                    <p class="text-sm italic text-center mb-2">The following essay was written as the sole coursework piece for the module "The Changing Nature of War"... receiving first class honours.</p>
-                    <p class="font-semibold text-gray-900 text-center mb-4">Critically consider the implications of warfare increasingly migrating to the extended battlefield of social media and video gaming.</p>
-                `
-            },
-            {
-                type: 'standard',
-                imageUrl: './imgs/f35-image.jpg',
-                altText: 'F35 Jet',
-                title: 'World Hunger Story - in Progress',
-                description: 'I feel the answer to this question can be answered both globally and in regard to the United States specifically. From some very rough calculations, around 1 in 10 people are experiencing hunger...',
-                linkUrl: './world-hunger-story.html',
-                contentHtml: `
-                    <p class="text-sm italic text-center mb-4">The following article was written in response to a question given in an internship interview</p>
-                `
-            },
-            {
-                type: 'standard',
-                imageUrl: './imgs/rishi_sunak.jpg',
-                altText: 'Rishi Sunak',
-                title: 'UK Political Uncertainty Ahead of 2024...',
-                description: 'As the UK gears up for the 2024 general election, a recent article regarding a YouGov poll published by The Telegraph has ignited speculation about the potential shift in leadership...',
-                linkUrl: './rishi-story.html',
-                contentHtml: `
-                    <p class="text-sm italic text-center mb-4">The following article serves as my initial submission as content writer/reporter for otb.news</p>
-                `
-            },
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/9ca3af/FFF?text=Article+Image',
-                altText: 'Pile of books',
-                title: 'The English School - A 14 Day essay',
-                description: 'This essay will argue the core elements of the English School’s approach to International Relations (IR), how they are based around and emphasise social cooperation...',
-                linkUrl: './english-school.html',
-                contentHtml: `
-                    <p class="text-sm italic mb-2">This essay served as a significant milestone in my pursuit of a Master's degree... within a strict 14-day timeframe...</p>
-                    <p class="font-semibold text-gray-900 text-center mb-4">What are the core elements of the English School’s approach to IR? How, if at all, does it differ from realism?</p>
-                `
-            },
-            {
-                type: 'table', // Special type for the wide table card
-                imageUrl: 'https://placehold.co/800x400/9ca3af/FFF?text=Pacific+Islands+Map',
-                altText: 'Map of pacific islands',
-                title: 'Pacific island cup 2024',
-                description: 'The Pacific Island Cup 2024 is a personal endeavor born out of interest in Geography, Politics, Flags and History. After receiving exposure to nations within the Pacific through informal means, I have created a personal ranking system based on subjective factors, such as independence, location, rating looks and island usage.',
-                linkUrl: './pacific-cup.html',
-                colSpan: 'md:col-span-2 lg:col-span-3', // Special class for this card
-                contentHtml: `
-                    <div class="table-responsive rounded-lg border mb-6">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Island/Country</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owned or Independent?</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flag Rating</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Atoll?</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Island Rating</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Just a military base?</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr><td class="px-6 py-4">Kiribati</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.85</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.8</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">4.65</td></tr>
-                                <tr><td class="px-6 py-4">The Marshall Islands</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.85</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">4.05</td></tr>
-                                <tr><td class="px-6 py-4">Palau</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.2</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.8</td></tr>
-                                <tr><td class="px-6 py-4">Micronesia</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.8</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.45</td><td class="px-6 py-4">0.4</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.65</td></tr>
-                                <tr><td class="px-6 py-4">Tuvalu</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.15</td><td class="px-6 py-4">1</td><td class="px-6 py-4">0.6</td><td class="px-6 py-4">0.5</td><td class="px-6 py-4">0</td><td class="px-6 py-4 font-bold">3.25</td></tr>
-                            </tbody>
-                        </table>
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-gray-300 mt-auto">
+            <div
+                class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center"
+            >
+                <div class="mb-6 md:mb-0">
+                    <span class="text-2xl font-bold text-white">CFOD</span>
+                    <p class="text-sm text-gray-400 mt-1">&copy; 2025 CFOD.</p>
+                </div>
+                <div
+                    class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8"
+                >
+                    <div id="auth-links">
+                        <!-- Dynamic Login/Logout Link -->
+                        <a
+                            href="#login"
+                            class="text-xs font-bold text-gray-500 hover:text-white uppercase transition-colors"
+                            >Staff Login</a
+                        >
                     </div>
-                `
-            },
-            // --- DUMMY ARTICLES TO SHOW PAGINATION ---
-            // You can remove these and add your own
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+1',
-                altText: 'Dummy Article',
-                title: 'This is a New Dummy Article',
-                description: 'This article was loaded dynamically. Add as many as you want to the `allArticles` list, and the "Load More" button will handle them.',
-                linkUrl: '#',
-                contentHtml: ''
-            },
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+2',
-                altText: 'Dummy Article',
-                title: 'Another Article Post',
-                description: 'This is the eighth article in the list. The button will load this and the next one, and then disappear since there are no more to load.',
-                linkUrl: '#',
-                contentHtml: ''
-            },
-            {
-                type: 'standard',
-                imageUrl: 'https://placehold.co/600x400/6b7280/FFF?text=Dummy+Article+3',
-                altText: 'Dummy Article',
-                title: 'The Final Dummy Post',
-                description: 'Once this post is loaded, the "Load More" button will be hidden automatically because the end of the `allArticles` list has been reached.',
-                linkUrl: '#',
-                contentHtml: ''
+                    <a
+                        href="mailto:connor-odonnell@hotmail.co.uk"
+                        class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium"
+                    >
+                        <i class="fa-regular fa-envelope mr-2"></i> CONTACT
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- LOGIC -->
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+            import {
+                getAuth,
+                onAuthStateChanged,
+                signInWithEmailAndPassword,
+                signOut,
+                setPersistence,
+                browserLocalPersistence,
+            } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+            import {
+                getFirestore,
+                collection,
+                addDoc,
+                getDocs,
+                getDoc,
+                doc,
+                query,
+                orderBy,
+                limit,
+                serverTimestamp,
+            } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+            // CONFIGURATION (Same as JCJournal)
+            const firebaseConfig = {
+                apiKey: "AIzaSyBjyAYAyQI4rGQviWbH1Dx8o2hFoe7jAS4",
+                authDomain: "jc-journal.firebaseapp.com",
+                projectId: "jc-journal",
+                storageBucket: "jc-journal.firebasestorage.app",
+                messagingSenderId: "931803753012",
+                appId: "1:931803753012:web:fce867abf6794c180ff861",
+            };
+
+            // --- LEGACY CONTENT (The stuff that used to be hardcoded) ---
+            // We keep this so your old site content doesn't vanish.
+            const legacyArticles = [
+                {
+                    id: "legacy-1",
+                    type: "standard",
+                    source: "Portfolio",
+                    date: "2024-02-15",
+                    imageUrl: "./imgs/kosovo-header.jpg",
+                    title: "A Bipolar Exploration of Kosovo",
+                    description:
+                        "The reasoning behind my visit to Kosovo is admittedly rather vague. There have been many times in life where I have been bestowed with a small sum of money...",
+                    linkUrl: "./kosovo.html",
+                    isLegacy: true,
+                },
+                {
+                    id: "legacy-2",
+                    type: "standard",
+                    source: "Portfolio",
+                    date: "2024-01-20",
+                    imageUrl: "./imgs/books_2.jpg",
+                    title: 'Essay - "The Changing Nature of War"',
+                    description:
+                        "Throughout the 21st century, video games, memes and social media have become a mainstream part of culture and society.",
+                    linkUrl: "./changing-nature-of-war.html",
+                    isLegacy: true,
+                },
+                {
+                    id: "legacy-3",
+                    type: "standard",
+                    source: "Portfolio",
+                    date: "2023-10-05",
+                    imageUrl: "./imgs/rishi_sunak.jpg",
+                    title: "UK Political Uncertainty Ahead of 2024...",
+                    description:
+                        "As the UK gears up for the 2024 general election, a recent article regarding a YouGov poll published by The Telegraph has ignited speculation...",
+                    linkUrl: "./rishi-story.html",
+                    isLegacy: true,
+                },
+            ];
+
+            let app, auth, db;
+            let currentUser = null;
+            let unifiedFeed = [];
+            let displayedCount = 6;
+            let currentView = "home";
+
+            // --- APP INITIALIZATION ---
+            async function init() {
+                try {
+                    // Initialize Firebase
+                    const configToUse =
+                        typeof __firebase_config !== "undefined"
+                            ? JSON.parse(__firebase_config)
+                            : firebaseConfig;
+                    app = initializeApp(configToUse);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    // Auth Listener
+                    onAuthStateChanged(auth, (user) => {
+                        currentUser = user;
+                        updateUIForUser();
+                    });
+
+                    // Router Listener
+                    window.addEventListener("hashchange", handleRouting);
+
+                    // Load Data
+                    await fetchFeedData();
+
+                    // Initial Route
+                    handleRouting();
+                } catch (e) {
+                    console.error("Init Error:", e);
+                    document.getElementById("main-container").innerHTML =
+                        `<div class="text-center text-red-500">System Error: ${e.message}</div>`;
+                }
             }
-        ];
 
-        // --- ARTICLE LOADING LOGIC ---
-        const articlesPerLoad = 6;
-        let articlesLoaded = 0;
-        const articleGrid = document.getElementById('article-grid');
-        const loadMoreBtn = document.getElementById('load-more-btn');
+            // --- DATA FETCHING (THE UNIFIED FEED) ---
+            async function fetchFeedData() {
+                unifiedFeed = [...legacyArticles]; // Start with legacy
 
-        function generateArticleHtml(article) {
-            const colSpanClass = article.colSpan || '';
-            let contentHtml = '';
-            let descriptionHtml = `<p class="text-gray-700 mb-4 flex-grow">${article.description}</p>`;
-            let linkClass = 'inline-block mt-auto bg-primary-600 text-white font-medium py-2 px-4 rounded-lg text-center hover:bg-primary-700 transition-colors';
+                try {
+                    // 1. Fetch CFOD Dynamic Articles (The new collection for THIS site)
+                    // In preview: artifacts path. In live: 'cfod_articles'
+                    let cfodRef =
+                        typeof __app_id !== "undefined"
+                            ? collection(
+                                  db,
+                                  "artifacts",
+                                  __app_id,
+                                  "public",
+                                  "data",
+                                  "cfod_articles",
+                              )
+                            : collection(db, "cfod_articles");
 
-            if (article.type === 'standard') {
-                contentHtml = article.contentHtml || '';
-            } else if (article.type === 'table') {
-                descriptionHtml = `<p class="text-gray-700 mb-6">${article.description}</p>`;
-                contentHtml = article.contentHtml || '';
-                linkClass += ' w-full md:w-auto md:self-start'; // Special class for the table card's button
+                    const cfodSnap = await getDocs(
+                        query(cfodRef, orderBy("createdAt", "desc"), limit(20)),
+                    );
+                    cfodSnap.forEach((doc) => {
+                        const data = doc.data();
+                        unifiedFeed.push({
+                            id: doc.id,
+                            type: "dynamic", // This means it opens in the site, not a new file
+                            source: "Portfolio",
+                            date: data.createdAt?.toDate
+                                ? data.createdAt.toDate().toISOString()
+                                : new Date().toISOString(),
+                            imageUrl: data.imageUrl,
+                            title: data.title,
+                            description: data.summary,
+                            content: data.content,
+                            linkUrl: data.externalLink || null, // If they provided an override link
+                        });
+                    });
+
+                    // 2. Fetch JCJournal Articles (To mix in)
+                    let jcRef =
+                        typeof __app_id !== "undefined"
+                            ? collection(
+                                  db,
+                                  "artifacts",
+                                  __app_id,
+                                  "public",
+                                  "data",
+                                  "articles",
+                              )
+                            : collection(db, "articles");
+
+                    const jcSnap = await getDocs(
+                        query(jcRef, orderBy("createdAt", "desc"), limit(10)),
+                    );
+                    jcSnap.forEach((doc) => {
+                        const data = doc.data();
+                        unifiedFeed.push({
+                            id: doc.id,
+                            type: "external",
+                            source: "JCJournal",
+                            date: data.createdAt?.toDate
+                                ? data.createdAt.toDate().toISOString()
+                                : new Date().toISOString(),
+                            imageUrl: data.imageUrl,
+                            title: data.title,
+                            description: data.summary,
+                            linkUrl: `https://jcjournal.co.uk/#article/${doc.id}`,
+                        });
+                    });
+
+                    // Sort everything by date
+                    unifiedFeed.sort(
+                        (a, b) => new Date(b.date) - new Date(a.date),
+                    );
+                } catch (err) {
+                    console.error("Feed Fetch Error:", err);
+                    // We fail gracefully and just show legacy items if DB fails
+                }
             }
 
-            return `
-                <section class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:scale-[1.02] ${colSpanClass}">
-                    <img class="h-56 w-full object-cover" src="${article.imageUrl}" alt="${article.altText}">
+            // --- ROUTING & VIEWS ---
+            function handleRouting() {
+                const hash = window.location.hash;
+                window.scrollTo(0, 0);
+
+                if (hash === "" || hash === "#") {
+                    renderHome();
+                } else if (hash === "#login") {
+                    renderLogin();
+                } else if (hash === "#submit") {
+                    if (!currentUser) {
+                        window.location.hash = "#login";
+                        return;
+                    }
+                    renderSubmitForm();
+                } else if (hash.startsWith("#article/")) {
+                    const id = hash.split("/")[1];
+                    renderArticleDetail(id);
+                } else if (hash === "#logout") {
+                    signOut(auth).then(() => (window.location.hash = ""));
+                }
+            }
+
+            // --- VIEW: HOME GRID ---
+            function renderHome() {
+                const container = document.getElementById("main-container");
+
+                // Generate Cards
+                const cardsHtml = unifiedFeed
+                    .slice(0, displayedCount)
+                    .map((item) => {
+                        const badgeColor =
+                            item.source === "JCJournal"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-800";
+                        const btnText =
+                            item.source === "JCJournal"
+                                ? "VISIT JOURNAL"
+                                : "READ MORE";
+                        const btnColor =
+                            item.source === "JCJournal"
+                                ? "bg-blue-700 hover:bg-blue-800"
+                                : "bg-primary-600 hover:bg-primary-700";
+
+                        // Determine Link Logic
+                        let href = item.linkUrl;
+                        let target = "";
+
+                        if (item.type === "dynamic" && !item.linkUrl) {
+                            // It's a native CFOD post, link to the reader view
+                            href = `#article/${item.id}`;
+                        } else if (
+                            item.source === "JCJournal" ||
+                            item.linkUrl?.startsWith("http")
+                        ) {
+                            target = 'target="_blank"';
+                        }
+
+                        return `
+                <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col transition-all hover:shadow-lg hover:-translate-y-1 relative h-full">
+                    <div class="absolute top-4 right-4 z-10">
+                        <span class="${badgeColor} text-xs font-bold px-2 py-1 rounded border border-white/50 uppercase tracking-wide shadow-sm">${item.source}</span>
+                    </div>
+                    <div class="h-56 bg-gray-100 overflow-hidden relative">
+                         <img src="${item.imageUrl || "https://placehold.co/600x400/EEE/31343C?text=No+Image"}"
+                              class="w-full h-full object-cover"
+                              alt="${item.title}"
+                              onerror="this.src='https://placehold.co/600x400/EEE/31343C?text=Image+Error'">
+                    </div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <h2 class="text-2xl font-bold mb-3 text-gray-900">${article.title}</h2>
-                        <div class="text-gray-700 mb-4 flex-grow">
-                            ${contentHtml}
-                            ${descriptionHtml}
-                        </div>
-                        <a href="${article.linkUrl}" class="${linkClass}">READ MORE</a>
+                        <div class="text-xs text-gray-400 mb-2 font-mono">${new Date(item.date).toLocaleDateString()}</div>
+                        <h2 class="text-xl font-bold mb-3 text-gray-900 leading-tight">${item.title}</h2>
+                        <p class="text-gray-600 mb-6 flex-grow text-sm leading-relaxed">${item.description || "No description available."}</p>
+                        <a href="${href}" ${target} class="inline-block w-full text-center ${btnColor} text-white font-bold text-xs py-3 px-4 rounded uppercase tracking-wider transition-colors">
+                            ${btnText}
+                        </a>
                     </div>
-                </section>
+                </article>
+                `;
+                    })
+                    .join("");
+
+                container.innerHTML = `
+                <div class="flex justify-between items-end mb-8 fade-in">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Latest Updates</h1>
+                        <p class="text-gray-500 mt-1">Aggregated from across my network.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in">
+                    ${cardsHtml}
+                </div>
+                ${
+                    unifiedFeed.length > displayedCount
+                        ? `
+                <div class="text-center mt-12">
+                    <button onclick="window.displayedCount += 6; window.handleRouting()" class="text-gray-500 hover:text-black font-bold border-b-2 border-transparent hover:border-black transition-all">Load More Archives</button>
+                </div>`
+                        : ""
+                }
             `;
-        }
 
-        function loadArticles() {
-            const articlesToLoad = allArticles.slice(articlesLoaded, articlesLoaded + articlesPerLoad);
-            
-            articlesToLoad.forEach(article => {
-                const articleHtml = generateArticleHtml(article);
-                articleGrid.innerHTML += articleHtml;
-            });
-
-            articlesLoaded += articlesToLoad.length;
-
-            // Hide button if no more articles
-            if (articlesLoaded >= allArticles.length) {
-                loadMoreBtn.style.display = 'none';
+                // Expose helper for load more
+                window.displayedCount = displayedCount;
+                window.handleRouting = handleRouting;
             }
-        }
 
-        // Load initial articles
-        document.addEventListener('DOMContentLoaded', loadArticles);
+            // --- VIEW: ARTICLE READER (For new internal posts) ---
+            function renderArticleDetail(id) {
+                const item = unifiedFeed.find((i) => i.id === id);
+                const container = document.getElementById("main-container");
 
-        // Load more on button click
-        loadMoreBtn.addEventListener('click', loadArticles);
+                if (!item) {
+                    container.innerHTML = `<div class="text-center py-20">Article not found. <a href="#" class="underline">Go Home</a></div>`;
+                    return;
+                }
 
-    </script>
+                // Simple text formatter (Markdown-lite)
+                const formattedBody = item.content
+                    ? item.content
+                          .split("\n")
+                          .map((line) => {
+                              if (line.startsWith("## "))
+                                  return `<h2>${line.replace("## ", "")}</h2>`;
+                              if (line.startsWith("- "))
+                                  return `<li>${line.replace("- ", "")}</li>`;
+                              if (line.trim() === "") return "<br>";
+                              return `<p>${line}</p>`;
+                          })
+                          .join("")
+                    : "<p>No content provided.</p>";
 
-</body>
+                container.innerHTML = `
+                <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100 fade-in">
+                    <a href="#" onclick="window.location.hash=''; return false;" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-black mb-8 uppercase tracking-wide">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Back to Home
+                    </a>
+
+                    <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title}</h1>
+
+                    <div class="flex items-center text-sm text-gray-500 mb-8 pb-8 border-b border-gray-100">
+                        <span>Published ${new Date(item.date).toLocaleDateString()}</span>
+                        <span class="mx-2">•</span>
+                        <span class="bg-gray-100 px-2 py-1 rounded text-xs font-bold text-gray-700">Portfolio Update</span>
+                    </div>
+
+                    ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full h-auto rounded-lg mb-10 shadow-sm">` : ""}
+
+                    <div class="prose max-w-none text-gray-800 text-lg">
+                        <p class="font-bold text-xl mb-8 text-gray-900 italic">${item.description}</p>
+                        ${formattedBody}
+                    </div>
+                </div>
+            `;
+            }
+
+            // --- VIEW: SUBMIT FORM (The CMS) ---
+            function renderSubmitForm() {
+                const container = document.getElementById("main-container");
+                container.innerHTML = `
+                <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200 fade-in">
+                    <h2 class="text-2xl font-bold mb-6">Create New CFOD Post</h2>
+                    <form id="cms-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Title</label>
+                            <input type="text" id="p-title" required class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Image URL</label>
+                            <input type="text" id="p-image" placeholder="https://..." class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Summary (Shown on card)</label>
+                            <textarea id="p-summary" required rows="2" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded border border-gray-200">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option A: Write Article</label>
+                                <textarea id="p-content" rows="6" placeholder="Write content here. Use '##' for headers." class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all"></textarea>
+                            </div>
+                            <div class="flex flex-col justify-center border-l border-gray-200 pl-4">
+                                <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Option B: External Link</label>
+                                <input type="text" id="p-link" placeholder="e.g. ./about-me.html" class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all mb-2">
+                                <p class="text-xs text-gray-400">If you fill this in, the card will link here INSTEAD of opening the article text.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex justify-between items-center">
+                            <a href="#" class="text-sm text-red-500 font-bold hover:underline">Cancel</a>
+                            <button type="submit" class="bg-black text-white px-8 py-3 rounded font-bold hover:bg-gray-800 transition-transform active:scale-95">Publish Post</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+                document
+                    .getElementById("cms-form")
+                    .addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        const btn = e.target.querySelector("button");
+                        btn.textContent = "Publishing...";
+                        btn.disabled = true;
+
+                        try {
+                            const data = {
+                                title: document.getElementById("p-title").value,
+                                imageUrl:
+                                    document.getElementById("p-image").value,
+                                summary:
+                                    document.getElementById("p-summary").value,
+                                content:
+                                    document.getElementById("p-content").value,
+                                externalLink:
+                                    document.getElementById("p-link").value,
+                                createdAt: serverTimestamp(),
+                                authorId: currentUser.uid,
+                            };
+
+                            // Determine collection based on env
+                            let colRef =
+                                typeof __app_id !== "undefined"
+                                    ? collection(
+                                          db,
+                                          "artifacts",
+                                          __app_id,
+                                          "public",
+                                          "data",
+                                          "cfod_articles",
+                                      )
+                                    : collection(db, "cfod_articles");
+
+                            await addDoc(colRef, data);
+
+                            alert("Posted successfully!");
+                            await fetchFeedData(); // Refresh feed
+                            window.location.hash = "";
+                        } catch (err) {
+                            alert("Error: " + err.message);
+                            btn.textContent = "Publish Post";
+                            btn.disabled = false;
+                        }
+                    });
+            }
+
+            // --- VIEW: LOGIN ---
+            function renderLogin() {
+                const container = document.getElementById("main-container");
+                container.innerHTML = `
+                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200 mt-10 fade-in">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Staff Access</h2>
+                    <form id="login-form" class="space-y-4">
+                        <input type="email" id="email" placeholder="Email" required class="w-full p-3 border rounded bg-gray-50">
+                        <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded bg-gray-50">
+                        <button type="submit" class="w-full bg-black text-white py-3 rounded font-bold">Login</button>
+                    </form>
+                </div>
+            `;
+
+                document
+                    .getElementById("login-form")
+                    .addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        try {
+                            await signInWithEmailAndPassword(
+                                auth,
+                                document.getElementById("email").value,
+                                document.getElementById("password").value,
+                            );
+                            window.location.hash = "";
+                        } catch (err) {
+                            alert("Login failed: " + err.message);
+                        }
+                    });
+            }
+
+            // --- UI HELPERS ---
+            function updateUIForUser() {
+                const authLinks = document.getElementById("auth-links");
+                const newPostBtn = document.getElementById("new-post-btn");
+                const badge = document.getElementById("admin-badge");
+
+                if (currentUser) {
+                    authLinks.innerHTML = `<a href="#logout" class="text-xs font-bold text-red-400 hover:text-red-600 uppercase transition-colors">Logout</a>`;
+                    newPostBtn.classList.remove("hidden");
+                    badge.classList.remove("hidden");
+                } else {
+                    authLinks.innerHTML = `<a href="#login" class="text-xs font-bold text-gray-500 hover:text-white uppercase transition-colors">Staff Login</a>`;
+                    newPostBtn.classList.add("hidden");
+                    badge.classList.add("hidden");
+                }
+            }
+
+            // Start
+            init();
+        </script>
+    </body>
 </html>
