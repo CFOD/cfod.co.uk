@@ -162,7 +162,7 @@
             <!-- Views will be injected here via JavaScript -->
             <div id="loading-view" class="text-center py-20">
                 <div class="loader mb-4"></div>
-                <p class="text-gray-500">Initializing Content Feed...</p>
+                <p class="text-gray-500">Connecting to Live Database...</p>
             </div>
         </main>
 
@@ -211,8 +211,7 @@
                 getFirestore,
                 collection,
                 addDoc,
-                getDocs,
-                getDoc,
+                onSnapshot,
                 doc,
                 query,
                 orderBy,
@@ -220,7 +219,7 @@
                 serverTimestamp,
             } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-            // CONFIGURATION (Same as JCJournal)
+            // CONFIGURATION (Forcing Live Connection)
             const firebaseConfig = {
                 apiKey: "AIzaSyBjyAYAyQI4rGQviWbH1Dx8o2hFoe7jAS4",
                 authDomain: "jc-journal.firebaseapp.com",
@@ -230,8 +229,7 @@
                 appId: "1:931803753012:web:fce867abf6794c180ff861",
             };
 
-            // --- LEGACY CONTENT (The stuff that used to be hardcoded) ---
-            // We keep this so your old site content doesn't vanish.
+            // --- LEGACY CONTENT ---
             const legacyArticles = [
                 {
                     id: "legacy-1",
@@ -277,15 +275,16 @@
             let displayedCount = 6;
             let currentView = "home";
 
+            let unsubCfod = null;
+            let unsubJc = null;
+            let feedError = null;
+
             // --- APP INITIALIZATION ---
             async function init() {
                 try {
-                    // Initialize Firebase
-                    const configToUse =
-                        typeof __firebase_config !== "undefined"
-                            ? JSON.parse(__firebase_config)
-                            : firebaseConfig;
-                    app = initializeApp(configToUse);
+                    // Initialize Firebase - FORCE LIVE CONFIG
+                    // We ignore the environment variable here to ensure we connect to your real data
+                    app = initializeApp(firebaseConfig);
                     auth = getAuth(app);
                     db = getFirestore(app);
 
@@ -298,8 +297,8 @@
                     // Router Listener
                     window.addEventListener("hashchange", handleRouting);
 
-                    // Load Data
-                    await fetchFeedData();
+                    // Start Real-time Feed Listeners
+                    setupFeedListeners();
 
                     // Initial Route
                     handleRouting();
@@ -310,84 +309,87 @@
                 }
             }
 
-            // --- DATA FETCHING (THE UNIFIED FEED) ---
-            async function fetchFeedData() {
+            // --- DATA FETCHING (REAL-TIME SNAPSHOTS) ---
+            function setupFeedListeners() {
                 unifiedFeed = [...legacyArticles]; // Start with legacy
 
-                try {
-                    // 1. Fetch CFOD Dynamic Articles (The new collection for THIS site)
-                    // In preview: artifacts path. In live: 'cfod_articles'
-                    let cfodRef =
-                        typeof __app_id !== "undefined"
-                            ? collection(
-                                  db,
-                                  "artifacts",
-                                  __app_id,
-                                  "public",
-                                  "data",
-                                  "cfod_articles",
-                              )
-                            : collection(db, "cfod_articles");
+                // 1. CFOD Listener (Using standard collection name)
+                const cfodRef = collection(db, "cfod_articles");
 
-                    const cfodSnap = await getDocs(
-                        query(cfodRef, orderBy("createdAt", "desc"), limit(20)),
-                    );
-                    cfodSnap.forEach((doc) => {
-                        const data = doc.data();
-                        unifiedFeed.push({
-                            id: doc.id,
-                            type: "dynamic", // This means it opens in the site, not a new file
-                            source: "Portfolio",
-                            date: data.createdAt?.toDate
-                                ? data.createdAt.toDate().toISOString()
-                                : new Date().toISOString(),
-                            imageUrl: data.imageUrl,
-                            title: data.title,
-                            description: data.summary,
-                            content: data.content,
-                            linkUrl: data.externalLink || null, // If they provided an override link
+                unsubCfod = onSnapshot(
+                    query(cfodRef, orderBy("createdAt", "desc"), limit(20)),
+                    (snapshot) => {
+                        // Filter out existing dynamic items before re-adding
+                        unifiedFeed = unifiedFeed.filter(
+                            (i) => i.type !== "dynamic",
+                        );
+
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            unifiedFeed.push({
+                                id: doc.id,
+                                type: "dynamic",
+                                source: "Portfolio",
+                                date: data.createdAt?.toDate
+                                    ? data.createdAt.toDate().toISOString()
+                                    : new Date().toISOString(),
+                                imageUrl: data.imageUrl,
+                                title: data.title,
+                                description: data.summary,
+                                content: data.content,
+                                linkUrl: data.externalLink || null,
+                            });
                         });
-                    });
+                        refreshFeed();
+                    },
+                    (error) => {
+                        console.error("CFOD Feed Error:", error);
+                        feedError = "Error loading CFOD posts: " + error.code;
+                        refreshFeed();
+                    },
+                );
 
-                    // 2. Fetch JCJournal Articles (To mix in)
-                    let jcRef =
-                        typeof __app_id !== "undefined"
-                            ? collection(
-                                  db,
-                                  "artifacts",
-                                  __app_id,
-                                  "public",
-                                  "data",
-                                  "articles",
-                              )
-                            : collection(db, "articles");
+                // 2. JCJournal Listener (Using standard collection name)
+                const jcRef = collection(db, "articles");
 
-                    const jcSnap = await getDocs(
-                        query(jcRef, orderBy("createdAt", "desc"), limit(10)),
-                    );
-                    jcSnap.forEach((doc) => {
-                        const data = doc.data();
-                        unifiedFeed.push({
-                            id: doc.id,
-                            type: "external",
-                            source: "JCJournal",
-                            date: data.createdAt?.toDate
-                                ? data.createdAt.toDate().toISOString()
-                                : new Date().toISOString(),
-                            imageUrl: data.imageUrl,
-                            title: data.title,
-                            description: data.summary,
-                            linkUrl: `https://jcjournal.co.uk/#article/${doc.id}`,
+                unsubJc = onSnapshot(
+                    query(jcRef, orderBy("createdAt", "desc"), limit(10)),
+                    (snapshot) => {
+                        unifiedFeed = unifiedFeed.filter(
+                            (i) => i.type !== "external",
+                        );
+
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            unifiedFeed.push({
+                                id: doc.id,
+                                type: "external",
+                                source: "JCJournal",
+                                date: data.createdAt?.toDate
+                                    ? data.createdAt.toDate().toISOString()
+                                    : new Date().toISOString(),
+                                imageUrl: data.imageUrl,
+                                title: data.title,
+                                description: data.summary,
+                                linkUrl: `https://jcjournal.co.uk/#article/${doc.id}`,
+                            });
                         });
-                    });
+                        refreshFeed();
+                    },
+                    (error) => {
+                        console.error("JC Feed Error:", error);
+                    },
+                );
+            }
 
-                    // Sort everything by date
-                    unifiedFeed.sort(
-                        (a, b) => new Date(b.date) - new Date(a.date),
-                    );
-                } catch (err) {
-                    console.error("Feed Fetch Error:", err);
-                    // We fail gracefully and just show legacy items if DB fails
+            function refreshFeed() {
+                unifiedFeed.sort((a, b) => new Date(b.date) - new Date(a.date));
+                if (
+                    currentView === "home" &&
+                    (window.location.hash === "" ||
+                        window.location.hash === "#")
+                ) {
+                    renderHome();
                 }
             }
 
@@ -397,16 +399,20 @@
                 window.scrollTo(0, 0);
 
                 if (hash === "" || hash === "#") {
+                    currentView = "home";
                     renderHome();
                 } else if (hash === "#login") {
+                    currentView = "login";
                     renderLogin();
                 } else if (hash === "#submit") {
+                    currentView = "submit";
                     if (!currentUser) {
                         window.location.hash = "#login";
                         return;
                     }
                     renderSubmitForm();
                 } else if (hash.startsWith("#article/")) {
+                    currentView = "article";
                     const id = hash.split("/")[1];
                     renderArticleDetail(id);
                 } else if (hash === "#logout") {
@@ -418,7 +424,6 @@
             function renderHome() {
                 const container = document.getElementById("main-container");
 
-                // Generate Cards
                 const cardsHtml = unifiedFeed
                     .slice(0, displayedCount)
                     .map((item) => {
@@ -435,12 +440,10 @@
                                 ? "bg-blue-700 hover:bg-blue-800"
                                 : "bg-primary-600 hover:bg-primary-700";
 
-                        // Determine Link Logic
                         let href = item.linkUrl;
                         let target = "";
 
                         if (item.type === "dynamic" && !item.linkUrl) {
-                            // It's a native CFOD post, link to the reader view
                             href = `#article/${item.id}`;
                         } else if (
                             item.source === "JCJournal" ||
@@ -473,6 +476,15 @@
                     })
                     .join("");
 
+                let statusHtml = "";
+                if (feedError) {
+                    statusHtml = `<div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-8 text-sm flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> ${feedError}</div>`;
+                } else if (unifiedFeed.length === legacyArticles.length) {
+                    statusHtml = `<div class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded mb-8 text-sm">
+                    <strong>Connected to Live Database.</strong> No additional posts found in 'articles' or 'cfod_articles'. Use "New Post" to create one.
+                </div>`;
+                }
+
                 container.innerHTML = `
                 <div class="flex justify-between items-end mb-8 fade-in">
                     <div>
@@ -480,6 +492,7 @@
                         <p class="text-gray-500 mt-1">Aggregated from across my network.</p>
                     </div>
                 </div>
+                ${statusHtml}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in">
                     ${cardsHtml}
                 </div>
@@ -493,12 +506,11 @@
                 }
             `;
 
-                // Expose helper for load more
                 window.displayedCount = displayedCount;
                 window.handleRouting = handleRouting;
             }
 
-            // --- VIEW: ARTICLE READER (For new internal posts) ---
+            // --- VIEW: ARTICLE READER ---
             function renderArticleDetail(id) {
                 const item = unifiedFeed.find((i) => i.id === id);
                 const container = document.getElementById("main-container");
@@ -508,7 +520,6 @@
                     return;
                 }
 
-                // Simple text formatter (Markdown-lite)
                 const formattedBody = item.content
                     ? item.content
                           .split("\n")
@@ -547,7 +558,7 @@
             `;
             }
 
-            // --- VIEW: SUBMIT FORM (The CMS) ---
+            // --- VIEW: SUBMIT FORM ---
             function renderSubmitForm() {
                 const container = document.getElementById("main-container");
                 container.innerHTML = `
@@ -610,23 +621,10 @@
                                 authorId: currentUser.uid,
                             };
 
-                            // Determine collection based on env
-                            let colRef =
-                                typeof __app_id !== "undefined"
-                                    ? collection(
-                                          db,
-                                          "artifacts",
-                                          __app_id,
-                                          "public",
-                                          "data",
-                                          "cfod_articles",
-                                      )
-                                    : collection(db, "cfod_articles");
-
+                            const colRef = collection(db, "cfod_articles");
                             await addDoc(colRef, data);
 
                             alert("Posted successfully!");
-                            await fetchFeedData(); // Refresh feed
                             window.location.hash = "";
                         } catch (err) {
                             alert("Error: " + err.message);
@@ -647,6 +645,7 @@
                         <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded bg-gray-50">
                         <button type="submit" class="w-full bg-black text-white py-3 rounded font-bold">Login</button>
                     </form>
+                    <p id="login-error" class="text-center text-red-500 text-sm mt-4"></p>
                 </div>
             `;
 
@@ -654,6 +653,9 @@
                     .getElementById("login-form")
                     .addEventListener("submit", async (e) => {
                         e.preventDefault();
+                        const errorBox = document.getElementById("login-error");
+                        errorBox.textContent = "";
+
                         try {
                             await signInWithEmailAndPassword(
                                 auth,
@@ -662,7 +664,10 @@
                             );
                             window.location.hash = "";
                         } catch (err) {
-                            alert("Login failed: " + err.message);
+                            let msg = err.message;
+                            if (err.code === "auth/invalid-credential")
+                                msg = "Incorrect email or password.";
+                            errorBox.textContent = msg;
                         }
                     });
             }
