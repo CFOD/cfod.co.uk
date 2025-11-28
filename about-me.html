@@ -1,212 +1,264 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>CFOD - About Me</title>
-    
-    <link rel="icon" type="image/png" href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif">
-    
-    <!-- Load Tailwind CSS and Typography Plugin -->
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    
-    <!-- Load Google Fonts (Inter) and Font Awesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/0b745d7406.js" crossorigin="anonymous"></script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script>
-        // Custom Tailwind configuration
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        montserrat: ['Montserrat', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary': {
-                            '600': '#374151', // gray-700
-                            '700': '#1f2937', // gray-800
-                            '800': '#111827', // gray-900
-                        }
-                    },
-                    // Typography plugin styles for articles
-                    typography: (theme) => ({
-                        DEFAULT: {
-                            css: {
-                                color: theme('colors.gray.700'),
-                                'font-size': '1.125rem', // text-lg
-                                'line-height': '1.75',
-                                a: {
-                                    color: theme('colors.primary.600'),
-                                    '&:hover': {
-                                        color: theme('colors.primary.700'),
-                                    },
-                                },
-                                h1: {
-                                    color: theme('colors.gray.900'),
-                                    fontWeight: '800',
-                                    'font-size': '2.25rem', // text-4xl
-                                },
-                                h2: {
-                                    color: theme('colors.gray.900'),
-                                    fontWeight: '700',
-                                },
-                                'p.italic': {
-                                    fontStyle: 'italic',
-                                    color: theme('colors.gray.600'),
-                                    borderLeft: `4px solid ${theme('colors.gray.300')}`,
-                                    paddingLeft: theme('spacing.4'),
-                                },
-                                'p.font-bold': {
-                                    fontWeight: '700',
-                                    color: theme('colors.gray.800'),
-                                    textAlign: 'center',
-                                },
-                                ul: {
-                                    listStyleType: 'disc',
-                                    paddingLeft: theme('spacing.6'),
-                                },
-                                'ul li': {
-                                    marginTop: theme('spacing.2'),
-                                    marginBottom: theme('spacing.2'),
-                                },
-                                img: {
-                                    borderRadius: theme('borderRadius.lg'),
-                                    marginTop: theme('spacing.8'),
-                                    marginBottom: theme('spacing.8'),
-                                }
+        <title>CFOD - About Me</title>
+
+        <link
+            rel="icon"
+            type="image/png"
+            href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif"
+        />
+
+        <!-- Load Tailwind CSS and Typography Plugin -->
+        <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+        <!-- Load Google Fonts (Inter) and Font Awesome -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Montserrat:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <script
+            src="https://kit.fontawesome.com/0b745d7406.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <script>
+            // Custom Tailwind configuration
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ["Inter", "sans-serif"],
+                            montserrat: ["Montserrat", "sans-serif"],
+                        },
+                        colors: {
+                            primary: {
+                                600: "#374151", // gray-700
+                                700: "#1f2937", // gray-800
+                                800: "#111827", // gray-900
                             },
                         },
-                    }),
+                        // Typography plugin styles for articles
+                        typography: (theme) => ({
+                            DEFAULT: {
+                                css: {
+                                    color: theme("colors.gray.700"),
+                                    "font-size": "1.125rem", // text-lg
+                                    "line-height": "1.75",
+                                    a: {
+                                        color: theme("colors.primary.600"),
+                                        "&:hover": {
+                                            color: theme("colors.primary.700"),
+                                        },
+                                    },
+                                    h1: {
+                                        color: theme("colors.gray.900"),
+                                        fontWeight: "800",
+                                        "font-size": "2.25rem", // text-4xl
+                                    },
+                                    h2: {
+                                        color: theme("colors.gray.900"),
+                                        fontWeight: "700",
+                                    },
+                                    "p.italic": {
+                                        fontStyle: "italic",
+                                        color: theme("colors.gray.600"),
+                                        borderLeft: `4px solid ${theme("colors.gray.300")}`,
+                                        paddingLeft: theme("spacing.4"),
+                                    },
+                                    "p.font-bold": {
+                                        fontWeight: "700",
+                                        color: theme("colors.gray.800"),
+                                        textAlign: "center",
+                                    },
+                                    ul: {
+                                        listStyleType: "disc",
+                                        paddingLeft: theme("spacing.6"),
+                                    },
+                                    "ul li": {
+                                        marginTop: theme("spacing.2"),
+                                        marginBottom: theme("spacing.2"),
+                                    },
+                                    img: {
+                                        borderRadius: theme("borderRadius.lg"),
+                                        marginTop: theme("spacing.8"),
+                                        marginBottom: theme("spacing.8"),
+                                    },
+                                },
+                            },
+                        }),
+                    },
                 },
-            },
-        }
-    </script>
+            };
+        </script>
 
-    <style>
-        /* Custom styles for article layout */
-        .article-content {
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            overflow: hidden;
-        }
-        /* DELETED the .article-content img.article-header style block */
+        <style>
+            /* Custom styles for article layout */
+            .article-content {
+                background-color: white;
+                border-radius: 0.5rem;
+                box-shadow:
+                    0 10px 15px -3px rgb(0 0 0 / 0.1),
+                    0 4px 6px -4px rgb(0 0 0 / 0.1);
+                overflow: hidden;
+            }
+            /* DELETED the .article-content img.article-header style block */
 
-        .article-body {
-            /* 'prose' enables Tailwind's typography styles */
-            max-width: 800px; /* Sets max width for readability */
-            margin: 0 auto;
-            padding: 2.5rem 1.5rem; /* Padding for mobile */
-        }
-        
-        /* Fix for inline images inside the article body */
-        .article-body img.inline-pic, 
-        .article-body img.flag-image {
-            width: 100%;
-        }
+            .article-body {
+                /* 'prose' enables Tailwind's typography styles */
+                max-width: 800px; /* Sets max width for readability */
+                margin: 0 auto;
+                padding: 2.5rem 1.5rem; /* Padding for mobile */
+            }
 
-        .article-body .audio-container {
-            display: flex;
-            justify-content: center;
-            margin: 1.5rem 0;
-        }
-        .article-body .map-iframe {
-            width: 100%;
-            height: 600px;
-            border: 0;
-            border-radius: 0.5rem;
-            margin-top: 2rem;
-        }
-        
-        /* Table styles (for Pacific Cup, etc.) */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            margin: 2rem 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb; /* gray-200 */
-        }
-        th {
-            background-color: #f9fafb; /* gray-50 */
-            font-weight: 600;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #f9fafb; /* gray-50 */
-        }
-    </style>
-</head>
-<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+            /* Fix for inline images inside the article body */
+            .article-body img.inline-pic,
+            .article-body img.flag-image {
+                width: 100%;
+            }
 
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
-                <a href="./index.html" class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors">CFOD</a>
-            </div>
-            <div class="flex space-x-6">
-                <a href="./index.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">HOME</a>
-                
-                <!-- Set 'About Me' as the active link -->
-                <a href="./about-me.html" class="text-base font-medium text-primary-700 border-b-2 border-primary-700">ABOUT ME</a>
-                
-                <a href="./map.html" class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors">MAP</a>
-            </div>
-        </nav>
-    </header>
+            .article-body .audio-container {
+                display: flex;
+                justify-content: center;
+                margin: 1.5rem 0;
+            }
+            .article-body .map-iframe {
+                width: 100%;
+                height: 600px;
+                border: 0;
+                border-radius: 0.5rem;
+                margin-top: 2rem;
+            }
 
-    <!-- Main Content Area -->
-    <main class="container mx-auto px-6 py-12">
+            /* Table styles (for Pacific Cup, etc.) */
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                margin: 2rem 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th,
+            td {
+                padding: 0.75rem;
+                text-align: left;
+                border-bottom: 1px solid #e5e7eb; /* gray-200 */
+            }
+            th {
+                background-color: #f9fafb; /* gray-50 */
+                font-weight: 600;
+            }
+            tbody tr:nth-child(even) {
+                background-color: #f9fafb; /* gray-50 */
+            }
+        </style>
+    </head>
+    <body class="bg-gray-50 font-sans text-gray-800 antialiased">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+            <nav
+                class="container mx-auto px-6 py-4 flex justify-between items-center"
+            >
+                <div>
+                    <a
+                        href="./index.html"
+                        class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors"
+                        >CFOD</a
+                    >
+                </div>
+                <div class="flex space-x-6">
+                    <a
+                        href="./index.html"
+                        class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors"
+                        >HOME</a
+                    >
 
-        <!-- Your 'About Me' content -->
-        <div class="article-content">
-            <!-- Header Image - DELETED -->
-            
-            <!-- Article Body -->
-            <div class="article-body prose lg:prose-lg">
-                <h1>Connor O'Donnell</h1>
+                    <!-- Set 'About Me' as the active link -->
+                    <a
+                        href="./about-me.html"
+                        class="text-base font-medium text-primary-700 border-b-2 border-primary-700"
+                        >ABOUT ME</a
+                    >
+
+                    <a
+                        href="./map.html"
+                        class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors"
+                        >MAP</a
+                    >
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="container mx-auto px-6 py-12">
+            <!-- Your 'About Me' content -->
+            <div class="article-content">
+                <!-- Header Image - DELETED -->
+
+                <!-- Article Body -->
+                <div class="article-body prose lg:prose-lg">
+                    <!-- -- <h1>Connor O'Donnell</h1>
                 <p>I am a student of International Relations at Warwick University,&nbsp; also holding a Bachelor's degree in Politics and International Relations from Goldsmiths University of London. My professional background includes serving as a Web Content Editor at Europe's largest supplier of cinema and film production equipment, as well as contributing to 'Outside the Bubble' news as a content writer/reporter, analysing and communicating diverse perspectives of UK current affairs.</p>
                 <p>I have a robust foundation in political theory, with a keen interest in theories such as Realism, The English School and Utilitarianism, as well as the historical foundations that underpin them. Originating from the viewing of a <i>Vice Media</i> YouTube video as an early teenager, my entry into political academia began with a fascination with nuclear politics, North Korea and as an onlooker into the 'Creeping Border' of Russia and Georgia, which would not only become the subject of my undergraduate dissertation but also be the focus of a self-funded research trip undertaken nearly a decade later. Beyond these specialised focuses, my broad knowledge of Politics and International Relations extends to the domestic and international politics of most nations, as part of a commitment to staying abreast of current affairs and my dedication to a comprehensive understanding of International Relations and the field of Political Science.</p>
-                <p>Beyond academia and professional endeavours, my interests and skills paint a more comprehensive picture of myself. Proficient in writing and research, I delve into diverse topics with a keen eye for detail as well as genuine curiosity. I possess HTML/CSS coding proficiency as evidenced through the creation and hosting of this website, as well as a small YouTube channel, showcasing my interest in technology and its seamless merging with content creation and delivery. My fascination towards varied cultures helps foster a global perspective when paired with an interest in history, politics and current affairs, as well as dedication towards field-work and travelling - key in gaining first-hand experience to afford myself a well-rounded and informed foundation for shaping impartial and insightful opinions. </p>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 mt-16">
-        <div class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0">
-                <a href="./index.html" class="text-2xl font-bold text-white hover:text-primary-700 transition-colors">CFOD</a>
-                <p class="text-sm text-gray-400 mt-1">&copy; 2023-2025 CFOD. All Rights Reserved.</p>
-            </div>
-            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
-                <div class="flex space-x-6">
-                    <a href="./index.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">HOME</a>
-                    <a href="./about-me.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">ABOUT ME</a>
-                    <a href="./map.html" class="text-base font-medium text-gray-300 hover:text-white transition-colors">MAP</a>
+                <p>Beyond academia and professional endeavours, my interests and skills paint a more comprehensive picture of myself. Proficient in writing and research, I delve into diverse topics with a keen eye for detail as well as genuine curiosity. I possess HTML/CSS coding proficiency as evidenced through the creation and hosting of this website, as well as a small YouTube channel, showcasing my interest in technology and its seamless merging with content creation and delivery. My fascination towards varied cultures helps foster a global perspective when paired with an interest in history, politics and current affairs, as well as dedication towards field-work and travelling - key in gaining first-hand experience to afford myself a well-rounded and informed foundation for shaping impartial and insightful opinions. </p> -->
                 </div>
-                <a href="mailto:connor-odonnell@hotmail.co.uk" class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium">
-                    <i class="fa-regular fa-envelope mr-2"></i>
-                    CONTACT ME
-                </a>
             </div>
-        </div>
-    </footer>
+        </main>
 
-</body>
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-gray-300 mt-16">
+            <div
+                class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center"
+            >
+                <div class="mb-6 md:mb-0">
+                    <a
+                        href="./index.html"
+                        class="text-2xl font-bold text-white hover:text-primary-700 transition-colors"
+                        >CFOD</a
+                    >
+                    <p class="text-sm text-gray-400 mt-1">
+                        &copy; 2023-2025 CFOD. All Rights Reserved.
+                    </p>
+                </div>
+                <div
+                    class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8"
+                >
+                    <div class="flex space-x-6">
+                        <a
+                            href="./index.html"
+                            class="text-base font-medium text-gray-300 hover:text-white transition-colors"
+                            >HOME</a
+                        >
+                        <a
+                            href="./about-me.html"
+                            class="text-base font-medium text-gray-300 hover:text-white transition-colors"
+                            >ABOUT ME</a
+                        >
+                        <a
+                            href="./map.html"
+                            class="text-base font-medium text-gray-300 hover:text-white transition-colors"
+                            >MAP</a
+                        >
+                    </div>
+                    <a
+                        href="mailto:connor-odonnell@hotmail.co.uk"
+                        class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium"
+                    >
+                        <i class="fa-regular fa-envelope mr-2"></i>
+                        CONTACT ME
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </body>
 </html>
