@@ -207,6 +207,7 @@
                 setPersistence,
                 browserLocalPersistence,
             } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+            // Added 'where' to the imports
             import {
                 getFirestore,
                 collection,
@@ -216,6 +217,7 @@
                 query,
                 orderBy,
                 limit,
+                where,
                 serverTimestamp,
             } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -314,6 +316,7 @@
                 unifiedFeed = [...legacyArticles]; // Start with legacy
 
                 // 1. CFOD Listener (Using standard collection name)
+                // No filter needed here as only you have access to post to this collection
                 const cfodRef = collection(db, "cfod_articles");
 
                 unsubCfod = onSnapshot(
@@ -350,10 +353,20 @@
                 );
 
                 // 2. JCJournal Listener (Using standard collection name)
+                // FILTER: Only show articles by "Connor O'Donnell"
                 const jcRef = collection(db, "articles");
 
+                // Note: This 'where' + 'orderBy' query requires a Composite Index in Firestore.
+                // Check your browser console for a link to create it if it fails.
+                const jcQuery = query(
+                    jcRef,
+                    where("author", "==", "Connor O'Donnell"),
+                    orderBy("createdAt", "desc"),
+                    limit(10),
+                );
+
                 unsubJc = onSnapshot(
-                    query(jcRef, orderBy("createdAt", "desc"), limit(10)),
+                    jcQuery,
                     (snapshot) => {
                         unifiedFeed = unifiedFeed.filter(
                             (i) => i.type !== "external",
@@ -371,6 +384,7 @@
                                 imageUrl: data.imageUrl,
                                 title: data.title,
                                 description: data.summary,
+                                // Ensure clean URL structure
                                 linkUrl: `https://jcjournal.co.uk/#article/${doc.id}`,
                             });
                         });
@@ -378,6 +392,11 @@
                     },
                     (error) => {
                         console.error("JC Feed Error:", error);
+                        if (error.code === "failed-precondition") {
+                            feedError =
+                                "Missing Index. Check Console for link.";
+                            refreshFeed();
+                        }
                     },
                 );
             }
@@ -481,7 +500,7 @@
                     statusHtml = `<div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-8 text-sm flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> ${feedError}</div>`;
                 } else if (unifiedFeed.length === legacyArticles.length) {
                     statusHtml = `<div class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded mb-8 text-sm">
-                    <strong>Connected to Live Database.</strong> No additional posts found in 'articles' or 'cfod_articles'. Use "New Post" to create one.
+                    <strong>Connected to Live Database.</strong> No posts found by 'Connor O'Donnell' or in 'cfod_articles'. Use "New Post" to create one.
                 </div>`;
                 }
 
