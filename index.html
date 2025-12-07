@@ -178,9 +178,7 @@
             >
                 <div class="mb-6 md:mb-0">
                     <span class="text-2xl font-bold text-white">CFOD</span>
-                    <p class="text-sm text-gray-400 mt-1">
-                        &copy; 2023-2025 CFOD. All Rights Reserved.
-                    </p>
+                    <p class="text-sm text-gray-400 mt-1">&copy; 2025 CFOD.</p>
                 </div>
                 <div
                     class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8"
@@ -263,16 +261,24 @@
                     onAuthStateChanged(auth, (user) => {
                         currentUser = user;
                         updateUIForUser();
-                        // CRITICAL FIX: Re-render the current view now that we know who the user is
-                        // This ensures the Edit button appears if the user was already on an article page
-                        if (currentView === "article") {
+                        // Re-trigger feed setup to apply draft/live filters based on login status
+                        if(unsubCfod && unsubJc) {
+                            unsubCfod();
+                            unsubJc();
+                            setupFeedListeners();
+                        }
+                        
+                        // Re-render views
+                        if (currentView === 'article') {
                             const hash = window.location.hash;
-                            if (hash.startsWith("#article/")) {
-                                const id = hash.split("/")[1];
+                            if(hash.startsWith('#article/')) {
+                                const id = hash.split('/')[1];
                                 renderArticleDetail(id);
                             }
-                        } else if (currentView === "submit") {
+                        } else if (currentView === 'submit') {
                             handleRouting();
+                        } else if (currentView === 'home') {
+                            renderHome();
                         }
                     });
 
@@ -297,7 +303,7 @@
 
             // --- DATA FETCHING (REAL-TIME SNAPSHOTS) ---
             function setupFeedListeners() {
-                unifiedFeed = [...legacyArticles];
+                unifiedFeed = [...legacyArticles]; 
 
                 // 1. CFOD Listener
                 const cfodRef = collection(db, "cfod_articles");
@@ -305,12 +311,16 @@
                 unsubCfod = onSnapshot(
                     query(cfodRef, orderBy("createdAt", "desc"), limit(20)),
                     (snapshot) => {
-                        unifiedFeed = unifiedFeed.filter(
-                            (i) => i.type !== "dynamic",
-                        );
+                        unifiedFeed = unifiedFeed.filter((i) => i.type !== "dynamic");
 
                         snapshot.forEach((doc) => {
                             const data = doc.data();
+                            
+                            // FILTER: Hide if explicitly "draft" and user not logged in
+                            // Safe for legacy items (undefined status is visible)
+                            const isDraft = (data.status === 'draft' || data.status === 'Draft');
+                            if (!currentUser && isDraft) return;
+
                             unifiedFeed.push({
                                 id: doc.id,
                                 type: "dynamic",
@@ -321,6 +331,7 @@
                                 description: data.summary,
                                 content: data.content,
                                 linkUrl: data.externalLink || null,
+                                status: data.status || 'live'
                             });
                         });
                         refreshFeed();
@@ -344,12 +355,15 @@
                 unsubJc = onSnapshot(
                     jcQuery,
                     (snapshot) => {
-                        unifiedFeed = unifiedFeed.filter(
-                            (i) => i.type !== "external",
-                        );
+                        unifiedFeed = unifiedFeed.filter((i) => i.type !== "external");
 
                         snapshot.forEach((doc) => {
                             const data = doc.data();
+                            
+                            // FILTER: Hide if explicitly "draft" or "Draft" and user not logged in
+                            const isDraft = (data.status === 'draft' || data.status === 'Draft');
+                            if (!currentUser && isDraft) return;
+
                             unifiedFeed.push({
                                 id: doc.id,
                                 type: "external",
@@ -359,6 +373,7 @@
                                 title: data.title,
                                 description: data.summary,
                                 linkUrl: `https://jcjournal.co.uk/#article/${doc.id}`,
+                                status: isDraft ? 'draft' : 'live'
                             });
                         });
                         refreshFeed();
@@ -366,8 +381,7 @@
                     (error) => {
                         console.error("JC Feed Error:", error);
                         if (error.code === "failed-precondition") {
-                            feedError =
-                                "Missing Index. Check Console for link.";
+                            feedError = "Missing Index. Check Console for link.";
                             refreshFeed();
                         }
                     },
@@ -376,14 +390,12 @@
 
             function refreshFeed() {
                 unifiedFeed.sort((a, b) => new Date(b.date) - new Date(a.date));
-                // Only refresh home if we are there, otherwise we might disrupt reading
                 if (currentView === "home") {
                     renderHome();
                 } else if (currentView === "article") {
-                    // If we are reading an article, check if we need to reload it (e.g. after edit)
                     const hash = window.location.hash;
-                    if (hash.startsWith("#article/")) {
-                        const id = hash.split("/")[1];
+                    if(hash.startsWith('#article/')) {
+                        const id = hash.split('/')[1];
                         renderArticleDetail(id);
                     }
                 }
@@ -461,8 +473,15 @@
                             target = 'target="_blank"';
                         }
 
+                        // Status Badge for Admin
+                        let statusBadge = "";
+                        if (currentUser && item.status !== 'live') {
+                            statusBadge = `<div class="absolute top-4 left-4 z-20"><span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">DRAFT</span></div>`;
+                        }
+
                         return `
                 <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col transition-all hover:shadow-lg hover:-translate-y-1 relative h-full">
+                    ${statusBadge}
                     <div class="absolute top-4 right-4 z-10">
                         <span class="${badgeColor} text-xs font-bold px-2 py-1 rounded border border-white/50 uppercase tracking-wide shadow-sm">${item.source}</span>
                     </div>
@@ -485,14 +504,14 @@
                     })
                     .join("");
 
-                /*    let statusHtml = "";
+                let statusHtml = "";
                 if (feedError) {
                     statusHtml = `<div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-8 text-sm flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> ${feedError}</div>`;
                 } else if (unifiedFeed.length === legacyArticles.length) {
                     statusHtml = `<div class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded mb-8 text-sm">
                     <strong>Connected to Live Database.</strong> No posts found by 'Connor O'Donnell' or in 'cfod_articles'. Use "New Post" to create one.
                 </div>`;
-                } */
+                }
 
                 container.innerHTML = `
                 <div class="flex justify-between items-end mb-8 fade-in">
@@ -501,7 +520,7 @@
                         <p class="text-gray-500 mt-1">Aggregated from across my network.</p>
                     </div>
                 </div>
-
+                ${statusHtml}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in">
                     ${cardsHtml}
                 </div>
@@ -545,24 +564,16 @@
 
                 // EDIT BUTTON LOGIC
                 let editAction = "";
-                // Checks: 1. User logged in? 2. Is Portfolio Item? 3. Not legacy?
-                const canEdit =
-                    currentUser &&
-                    item.source === "Portfolio" &&
-                    !item.id.startsWith("legacy");
-
+                const canEdit = currentUser && item.source === "Portfolio" && !item.id.startsWith("legacy");
+                
                 if (canEdit) {
                     editAction = `<a href="#edit/${item.id}" class="text-blue-600 hover:text-blue-800 font-bold ml-4 border-l pl-4 border-gray-300"><i class="fa-solid fa-pen"></i> Edit Post</a>`;
                 }
 
-                // DEBUG INFO (Visible only to Admin)
-                let debugInfo = "";
-                if (currentUser && !canEdit) {
-                    debugInfo = `<div class="mt-8 p-4 bg-gray-100 text-xs text-gray-500 rounded">
-                        <strong>Admin Debug:</strong> Edit hidden because:
-                        Source=${item.source} (Must be Portfolio),
-                        ID=${item.id} (Must not be legacy)
-                    </div>`;
+                // DRAFT INDICATOR
+                let draftIndicator = "";
+                if(item.status !== 'live') {
+                    draftIndicator = `<span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full ml-3 align-middle">DRAFT MODE</span>`;
                 }
 
                 container.innerHTML = `
@@ -572,7 +583,7 @@
                     </a>
                     ${editAction}
 
-                    <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title}</h1>
+                    <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title} ${draftIndicator}</h1>
 
                     <div class="flex items-center text-sm text-gray-500 mb-8 pb-8 border-b border-gray-100">
                         <span>Published ${new Date(item.date).toLocaleDateString()}</span>
@@ -586,7 +597,6 @@
                         <p class="font-bold text-xl mb-8 text-gray-900 italic">${item.description}</p>
                         ${formattedBody}
                     </div>
-                    ${debugInfo}
                 </div>
             `;
             }
@@ -603,6 +613,7 @@
                     imageUrl: "",
                     summary: "",
                     content: "",
+                    status: "live" // Default
                 };
 
                 // If editing, try to fetch data
@@ -630,10 +641,20 @@
                      <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200 fade-in">
                          <h2 class="text-2xl font-bold mb-6">${formTitle}</h2>
                          <form id="cms-form" class="space-y-4">
-                             <div>
-                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Title</label>
-                                 <input type="text" id="p-title" required value="${articleData.title}" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                             <div class="flex gap-4">
+                                <div class="flex-grow">
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Title</label>
+                                    <input type="text" id="p-title" required value="${articleData.title}" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                                </div>
+                                <div class="w-1/3">
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Status</label>
+                                    <select id="p-status" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                                        <option value="live" ${articleData.status === 'live' ? 'selected' : ''}>Live (Visible)</option>
+                                        <option value="draft" ${articleData.status === 'draft' ? 'selected' : ''}>Draft (Hidden)</option>
+                                    </select>
+                                </div>
                              </div>
+                             
                              <div>
                                  <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Image URL</label>
                                  <input type="text" id="p-image" value="${articleData.imageUrl || ""}" placeholder="https://..." class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
@@ -675,6 +696,8 @@
                                     document.getElementById("p-summary").value,
                                 content:
                                     document.getElementById("p-content").value,
+                                status:
+                                    document.getElementById("p-status").value,
                                 authorId: currentUser.uid,
                             };
 
