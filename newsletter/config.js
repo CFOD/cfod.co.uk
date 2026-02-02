@@ -1,4 +1,4 @@
-const firebaseConfig = {
+window.siteConfig = { = {
   apiKey: "AIzaSyAQDrbejR6PTnKd9fpH7asHvLRKSaCVvvk",
   authDomain: "global-stratum.firebaseapp.com",
   projectId: "global-stratum",
