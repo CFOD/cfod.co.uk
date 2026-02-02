@@ -338,12 +338,22 @@
         const wrapper = document.getElementById("wrapper");
 
         function showArticle(id) {
-            articles.forEach((art) => {
-                art.classList.remove("active");
-            });
-            
             const targetId = id.startsWith("#") ? id : "#" + id;
             const target = document.querySelector(targetId);
+
+            // KEY FIX: Hide ANY other active article immediately from being clickable, then fade it
+            articles.forEach((art) => {
+                if (art !== target) {
+                    art.classList.remove("active");
+                    // Important: Wait for transition to end before setting display:none
+                    // otherwise fading breaks. But since we need clicks to work immediately,
+                    // the new one will sit on top due to DOM order or z-index.
+                    // To be safe, we ensure the old one is hidden after transition.
+                    setTimeout(() => {
+                        if (!art.classList.contains("active")) art.style.display = "none";
+                    }, 350); 
+                }
+            });
 
             if (target) {
                 target.style.display = "block";
@@ -393,10 +403,6 @@
                 window.closeArticles();
             });
         });
-        
-        // REMOVED: Background click closing logic. 
-        // We only listen to stop propagation from children if needed, or just let it be.
-        // Clicking #main now does nothing.
         
         document.addEventListener("keydown", (e) => { if (e.key === "Escape") window.closeArticles(); });
 
