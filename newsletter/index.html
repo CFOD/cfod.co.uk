@@ -116,7 +116,6 @@
         nav ul li a:hover { background: rgba(255, 255, 255, 0.15); }
 
         /* Modals (Articles) */
-        /* FIX: Ensure #main captures clicks so we can detect background clicks */
         #main { 
             display: none; 
             z-index: 50; 
@@ -150,7 +149,7 @@
         }
         article.active { display: block !important; opacity: 1; animation: fadeIn 0.4s forwards; }
 
-        /* Close Button */
+        /* Close Button (The X) */
         .close {
             display: block; position: absolute; top: 0; right: 0; width: 4rem; height: 4rem;
             cursor: pointer; text-indent: -9999px; transition: background 0.2s;
@@ -172,44 +171,27 @@
         @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
 
         /* --- FIREBASE CONTENT SPECIFIC STYLES --- */
-        /* Override Tailwind Preflight collisions if necessary, but mostly utility classes */
         .article-body p { margin-bottom: 1.5em; }
         .article-body ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5em; }
         .article-body strong { color: #4db6ac; font-weight: 600; }
         
-        /* Custom inputs for dark theme form */
         .dark-input {
             width: 100%; background: rgba(255, 255, 255, 0.05); border: solid 1px rgba(255, 255, 255, 0.3);
             color: #fff; padding: 0.75rem 1rem; border-radius: 4px; outline: none; transition: 0.2s;
         }
         .dark-input:focus { border-color: #4db6ac; background: rgba(255, 255, 255, 0.1); }
-        /* Disabled input state for submitting */
-        input[type="submit"]:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        input[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* Tabs for Login/Register */
-        .auth-tab {
-            cursor: pointer;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid transparent;
-            opacity: 0.5;
-            transition: 0.3s;
-        }
-        .auth-tab.active {
-            opacity: 1;
-            border-bottom-color: #4db6ac;
-        }
+        .auth-tab { cursor: pointer; padding-bottom: 0.5rem; border-bottom: 2px solid transparent; opacity: 0.5; transition: 0.3s; }
+        .auth-tab.active { opacity: 1; border-bottom-color: #4db6ac; }
 
-        /* Loader */
         .loader {
             border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #4db6ac;
             border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Footer Specifics */
         #footer {
             position: absolute; bottom: 1rem; width: 100%; text-align: center;
             font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2rem;
@@ -225,11 +207,8 @@
 
     <!-- Wrapper -->
     <div id="wrapper">
-        <!-- Header (The Card) -->
         <header id="header">
-            <div class="logo">
-                <span class="icon fas fa-globe-americas"></span>
-            </div>
+            <div class="logo"><span class="icon fas fa-globe-americas"></span></div>
             <div class="content">
                 <div class="inner">
                     <h1>Global Stratum</h1>
@@ -244,14 +223,13 @@
             </nav>
         </header>
 
-        <!-- Footer -->
         <footer id="footer">
             <p class="copyright mb-2">&copy; Global Stratum.</p>
             <a href="#login" id="login-link" class="border-none opacity-20 hover:opacity-100 transition-opacity">Subscriber Login</a>
         </footer>
     </div>
 
-    <!-- Main Articles (MOVED OUTSIDE WRAPPER) -->
+    <!-- Main Articles -->
     <div id="main">
         
         <!-- 1. FEED MODAL -->
@@ -260,40 +238,38 @@
             <div id="feed-search" class="mb-6 flex gap-2">
                 <input type="text" id="search-input" placeholder="SEARCH DATABASE..." class="dark-input uppercase text-xs tracking-widest">
             </div>
-            
             <div id="feed-content" class="min-h-[200px]">
                 <div class="loader"></div>
             </div>
+            <!-- Bottom Close Button -->
+            <button class="w-full mt-8 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors close-trigger">Close Window</button>
             <div class="close">Close</div>
         </article>
 
         <!-- 2. ARTICLE READER MODAL -->
         <article id="reader">
-            <!-- Content injected via JS -->
             <div id="reader-content"></div>
+            <!-- Bottom Close added via renderReader function -->
             <div class="close" onclick="window.location.hash='#feed'">Close</div>
         </article>
 
-        <!-- 3. LOGIN / DASHBOARD MODAL -->
+        <!-- 3. LOGIN MODAL -->
         <article id="login">
             <h2 class="major" id="auth-title">Account Access</h2>
-            <div id="auth-content">
-                <!-- Login Form or Dashboard injected here -->
-            </div>
+            <div id="auth-content"></div>
+            <button class="w-full mt-8 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors close-trigger">Close Window</button>
             <div class="close">Close</div>
         </article>
 
-            <!-- 4. EDITOR MODAL -->
-            <article id="editor">
+        <!-- 4. EDITOR MODAL -->
+        <article id="editor">
             <h2 class="major" id="editor-title">Editor</h2>
-            <div id="editor-content">
-                <!-- CMS Form injected here -->
-            </div>
-            <!-- NOTE: No default close button inside HTML structure to force save/cancel flow, JS adds it dynamically or handles via UI -->
+            <div id="editor-content"></div>
+            <!-- Editor uses built-in Cancel button -->
             <div class="close" id="editor-close-btn">Close</div>
         </article>
 
-        <!-- 5. STATIC ABOUT -->
+        <!-- 5. ABOUT MODAL -->
         <article id="about">
             <h2 class="major">Manifesto</h2>
             <p>We believe that understanding the world requires digging beneath the surface narrative.</p>
@@ -304,6 +280,7 @@
                 <li>Secure, decentralized distribution.</li>
             </ul>
             <p class="text-xs uppercase tracking-widest opacity-50">Established 2025.</p>
+            <button class="w-full mt-8 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors close-trigger">Close Window</button>
             <div class="close">Close</div>
         </article>
 
@@ -342,9 +319,8 @@
         let app, auth, db;
         let currentUser = null;
         let allArticles = [];
-        let authMode = 'login'; // 'login' or 'register'
+        let authMode = 'login'; 
 
-        // Try to init, but don't break if it fails
         try {
             if (firebaseConfig) {
                 app = initializeApp(firebaseConfig);
@@ -358,10 +334,10 @@
         const main = document.getElementById("main");
         const articles = document.querySelectorAll("article");
         const closeButtons = document.querySelectorAll(".close");
+        const closeTriggers = document.querySelectorAll(".close-trigger");
         const wrapper = document.getElementById("wrapper");
 
         function showArticle(id) {
-            // Don't close others immediately to avoid flicker, just mark new one active
             articles.forEach((art) => {
                 art.classList.remove("active");
             });
@@ -371,7 +347,6 @@
 
             if (target) {
                 target.style.display = "block";
-                
                 body.classList.add("is-article-visible");
                 main.style.display = "block";
                 
@@ -384,7 +359,8 @@
             }
         }
 
-        function closeArticles() {
+        // EXPOSE CLOSE FUNCTION GLOBALLY FOR INLINE BUTTONS
+        window.closeArticles = function() {
             // PROTECTION: If editor is open, confirm before closing
             const editor = document.getElementById('editor');
             if(editor.classList.contains('active')) {
@@ -399,21 +375,30 @@
             });
             setTimeout(() => { if (!body.classList.contains("is-article-visible")) main.style.display = "none"; }, 350);
             history.replaceState(null, null, " ");
-        }
+        };
 
-        closeButtons.forEach(btn => btn.addEventListener("click", closeArticles));
-        
-        main.addEventListener("click", (e) => {
-             // Protection: Do not close if editor is active and user clicks background
-             const editor = document.getElementById('editor');
-             if(editor.classList.contains('active')) return;
+        // Attach listeners to 'X' buttons
+        closeButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Ensure clean event handling
+                window.closeArticles();
+            });
+        });
 
-             if(e.target.id === 'main') {
-                 closeArticles();
-             }
+        // Attach listeners to new bottom buttons
+        closeTriggers.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                window.closeArticles();
+            });
         });
         
-        document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeArticles(); });
+        // REMOVED: Background click closing logic. 
+        // We only listen to stop propagation from children if needed, or just let it be.
+        // Clicking #main now does nothing.
+        
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") window.closeArticles(); });
 
         // --- 4. DATA LOGIC ---
         function setupDataListener() {
@@ -556,6 +541,9 @@
                 <div class="mt-12 pt-8 border-t border-gray-700 text-center">
                     <a href="#feed" class="text-xs uppercase tracking-widest hover:text-stratum-accent transition-colors">&larr; Return to Archives</a>
                 </div>
+                
+                <!-- NEW: Explicit Close Button at bottom of reader -->
+                <button onclick="window.closeArticles()" class="w-full mt-12 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors">Close Reader</button>
             `;
         }
 
@@ -593,7 +581,6 @@
                 const loginClass = authMode === 'login' ? 'active' : '';
                 const regClass = authMode === 'register' ? 'active' : '';
 
-                // Form HTML
                 const btnText = authMode === 'login' ? 'Login' : 'Create Account';
                 
                 container.innerHTML = `
@@ -643,7 +630,6 @@
                 } else {
                     await createUserWithEmailAndPassword(auth, email, pass);
                 }
-                // Hash update logic handles view refresh
                 window.location.hash = '#login';
             } catch(err) {
                 console.error("Auth Error:", err);
@@ -662,8 +648,6 @@
         function renderEditor(id = null) {
             const container = document.getElementById('editor-content');
             const article = id ? allArticles.find(a => a.id === id) : null;
-            
-            // REMOVED Author Field
             
             container.innerHTML = `
                 <form onsubmit="handleSave(event, '${id || ''}')">
@@ -704,7 +688,6 @@
             e.preventDefault();
             const data = {
                 title: document.getElementById('edit-title').value,
-                // Removed author field read
                 imageUrl: document.getElementById('edit-image').value,
                 summary: document.getElementById('edit-summary').value,
                 content: document.getElementById('edit-content').value,
@@ -719,7 +702,6 @@
             try {
                 if(id) await updateDoc(doc(col, id), data);
                 else await addDoc(col, data);
-                // Manually close editor logic to skip confirmation prompt
                 const editor = document.getElementById('editor');
                 editor.classList.remove('active');
                 setTimeout(() => { editor.style.display = 'none'; }, 300);
@@ -734,14 +716,13 @@
             const hash = window.location.hash;
             
             if(hash === '' || hash === '#') {
-                closeArticles();
+                window.closeArticles();
             }
             else if (hash.startsWith('#article/')) {
                 showArticle('reader');
                 renderReader(hash.split('/')[1]);
             }
             else if (hash.startsWith('#edit/') || hash === '#submit') {
-                // Security Check: Only Admin can access editor
                 if(!currentUser || currentUser.email !== ADMIN_EMAIL) { 
                     window.location.hash = '#login'; 
                     return; 
