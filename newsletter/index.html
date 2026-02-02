@@ -101,14 +101,27 @@
         nav ul li a:hover { background: rgba(255, 255, 255, 0.15); }
 
         /* Modals (Articles) */
-        #main { display: none; z-index: 3; }
+        /* FIX: Moved #main out of wrapper, ensured fixed positioning works relative to viewport */
+        #main { display: none; z-index: 50; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        
         article {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 50rem; max-width: 90vw; max-height: 90vh;
-            background: rgba(27, 31, 34, 0.98); /* Almost opaque dark bg */
-            padding: 4rem 3rem 2rem 3rem; border-radius: 4px;
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            width: 50rem; 
+            max-width: 90vw; 
+            max-height: 90vh;
+            background: rgba(27, 31, 34, 0.98); 
+            padding: 4rem 3rem 2rem 3rem; 
+            border-radius: 4px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            overflow-y: auto; opacity: 0; transition: opacity 0.4s ease-in-out; z-index: 10;
+            overflow-y: auto; 
+            opacity: 0; 
+            transition: opacity 0.4s ease-in-out; 
+            z-index: 51;
+            pointer-events: auto; /* Re-enable clicks on the article itself */
         }
         article.active { display: block; opacity: 1; animation: fadeIn 0.4s forwards; }
 
@@ -116,6 +129,7 @@
         .close {
             display: block; position: absolute; top: 0; right: 0; width: 4rem; height: 4rem;
             cursor: pointer; text-indent: -9999px; transition: background 0.2s;
+            z-index: 60;
         }
         .close:before, .close:after {
             content: ""; display: block; position: absolute; top: 50%; left: 50%; width: 1.5rem; height: 1px;
@@ -188,68 +202,68 @@
             </nav>
         </header>
 
-        <!-- Main Articles (The Dynamic Containers) -->
-        <div id="main">
-            
-            <!-- 1. FEED MODAL -->
-            <article id="feed">
-                <h2 class="major">Latest Dispatches</h2>
-                <div id="feed-search" class="mb-6 flex gap-2">
-                    <input type="text" id="search-input" placeholder="SEARCH ARCHIVES..." class="dark-input uppercase text-xs tracking-widest">
-                </div>
-                
-                <div id="feed-content" class="min-h-[200px]">
-                    <div class="loader"></div>
-                </div>
-                <div class="close">Close</div>
-            </article>
-
-            <!-- 2. ARTICLE READER MODAL -->
-            <article id="reader">
-                <!-- Content injected via JS -->
-                <div id="reader-content"></div>
-                <div class="close" onclick="window.location.hash='#feed'">Close</div>
-            </article>
-
-            <!-- 3. LOGIN / DASHBOARD MODAL -->
-            <article id="login">
-                <h2 class="major" id="auth-title">Staff Access</h2>
-                <div id="auth-content">
-                    <!-- Login Form or Dashboard injected here -->
-                </div>
-                <div class="close">Close</div>
-            </article>
-
-             <!-- 4. EDITOR MODAL -->
-             <article id="editor">
-                <h2 class="major" id="editor-title">Editor</h2>
-                <div id="editor-content">
-                    <!-- CMS Form injected here -->
-                </div>
-                <div class="close">Close</div>
-            </article>
-
-            <!-- 5. STATIC ABOUT -->
-            <article id="about">
-                <h2 class="major">Manifesto</h2>
-                <p>We believe that understanding the world requires digging beneath the surface narrative.</p>
-                <h3 class="text-lg font-bold mt-4 mb-2 text-stratum-accent">Mission</h3>
-                <ul class="text-sm opacity-80 mb-6">
-                    <li>Unbiased geopolitical analysis.</li>
-                    <li>Data-driven policy review.</li>
-                    <li>Secure, decentralized distribution.</li>
-                </ul>
-                <p class="text-xs uppercase tracking-widest opacity-50">Established 2025.</p>
-                <div class="close">Close</div>
-            </article>
-
-        </div>
-
         <!-- Footer -->
         <footer id="footer">
             <p class="copyright mb-2">&copy; Global Stratum. Secure Node.</p>
             <a href="#login" id="login-link" class="border-none opacity-20 hover:opacity-100 transition-opacity">System Access</a>
         </footer>
+    </div>
+
+    <!-- Main Articles (MOVED OUTSIDE WRAPPER) -->
+    <div id="main">
+        
+        <!-- 1. FEED MODAL -->
+        <article id="feed">
+            <h2 class="major">Latest Dispatches</h2>
+            <div id="feed-search" class="mb-6 flex gap-2">
+                <input type="text" id="search-input" placeholder="SEARCH ARCHIVES..." class="dark-input uppercase text-xs tracking-widest">
+            </div>
+            
+            <div id="feed-content" class="min-h-[200px]">
+                <div class="loader"></div>
+            </div>
+            <div class="close">Close</div>
+        </article>
+
+        <!-- 2. ARTICLE READER MODAL -->
+        <article id="reader">
+            <!-- Content injected via JS -->
+            <div id="reader-content"></div>
+            <div class="close" onclick="window.location.hash='#feed'">Close</div>
+        </article>
+
+        <!-- 3. LOGIN / DASHBOARD MODAL -->
+        <article id="login">
+            <h2 class="major" id="auth-title">Staff Access</h2>
+            <div id="auth-content">
+                <!-- Login Form or Dashboard injected here -->
+            </div>
+            <div class="close">Close</div>
+        </article>
+
+            <!-- 4. EDITOR MODAL -->
+            <article id="editor">
+            <h2 class="major" id="editor-title">Editor</h2>
+            <div id="editor-content">
+                <!-- CMS Form injected here -->
+            </div>
+            <div class="close">Close</div>
+        </article>
+
+        <!-- 5. STATIC ABOUT -->
+        <article id="about">
+            <h2 class="major">Manifesto</h2>
+            <p>We believe that understanding the world requires digging beneath the surface narrative.</p>
+            <h3 class="text-lg font-bold mt-4 mb-2 text-stratum-accent">Mission</h3>
+            <ul class="text-sm opacity-80 mb-6">
+                <li>Unbiased geopolitical analysis.</li>
+                <li>Data-driven policy review.</li>
+                <li>Secure, decentralized distribution.</li>
+            </ul>
+            <p class="text-xs uppercase tracking-widest opacity-50">Established 2025.</p>
+            <div class="close">Close</div>
+        </article>
+
     </div>
 
     <!-- FIREBASE LOGIC -->
@@ -327,8 +341,11 @@
                 main.style.display = "block";
                 
                 // Specific Render Logic based on Modal ID
-                if(targetId === '#feed') renderFeed();
-                if(targetId === '#login') renderAuth();
+                // Wrapped in try-catch so one error doesn't stop the visual transition
+                try {
+                    if(targetId === '#feed') renderFeed();
+                    if(targetId === '#login') renderAuth();
+                } catch(e) { console.error(e); }
                 
                 setTimeout(() => { target.classList.add("active"); }, 10);
             }
@@ -346,9 +363,13 @@
 
         // Close Event Listeners
         closeButtons.forEach(btn => btn.addEventListener("click", closeArticles));
-        wrapper.addEventListener("click", (e) => {
-            if (body.classList.contains("is-article-visible") && e.target.id === "wrapper") closeArticles();
+        // Note: Wrapper click listener removed for main area as main is now outside wrapper
+        // We add listener to main specifically for clicking "outside" the article
+        main.addEventListener("click", (e) => {
+             // If user clicks the 'main' background (which covers screen) but not an article inside it
+             if(e.target.id === 'main') closeArticles();
         });
+        
         document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeArticles(); });
 
         // --- 4. DATA LOGIC ---
@@ -382,7 +403,8 @@
         // A. THE FEED
         function renderFeed() {
             const container = document.getElementById('feed-content');
-            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            const searchInput = document.getElementById('search-input');
+            const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
             
             // USE MOCK DATA IF NO LIVE DATA
             const dataSource = (allArticles.length > 0) ? allArticles : MOCK_DATA;
@@ -442,7 +464,8 @@
             container.innerHTML = html;
         }
 
-        document.getElementById('search-input').addEventListener('input', renderFeed);
+        const searchEl = document.getElementById('search-input');
+        if(searchEl) searchEl.addEventListener('input', renderFeed);
 
         // B. THE READER
         function renderReader(id) {
