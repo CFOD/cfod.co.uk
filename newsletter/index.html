@@ -25,8 +25,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,600,600italic" rel="stylesheet" />
 
-    <!-- 3. Load External Config -->
-    <script src="config.js"></script>
+    <!-- 3. CONFIGURATION (Embedded) -->
+    <script>
+        // I have embedded your keys here directly to fix the loading error.
+        // You can keep them here, or move them to config.js later.
+        window.siteConfig = {
+            apiKey: "AIzaSyAQDrbejR6PTnKd9fpH7asHvLRKSaCVvvk",
+            authDomain: "global-stratum.firebaseapp.com",
+            projectId: "global-stratum",
+            storageBucket: "global-stratum.firebasestorage.app",
+            messagingSenderId: "291491694109",
+            appId: "1:291491694109:web:e808b699d3fb6cb2c9a8f4",
+            measurementId: "G-6SRT0XEHCN"
+        };
+    </script>
 
     <style>
         /* --- GLOBAL STRATUM BASE STYLES --- */
@@ -579,6 +591,12 @@
 
         window.handleLogin = async (e) => {
             e.preventDefault();
+            // Safety check: if auth is missing, we can't login.
+            if (!auth) {
+                document.getElementById('login-error').innerText = "Error: Auth not initialized. Check configuration.";
+                return;
+            }
+            
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             try {
