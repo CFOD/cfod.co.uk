@@ -585,7 +585,9 @@
                 await signInWithEmailAndPassword(auth, email, pass);
                 window.location.hash = '#login'; // Refresh view
             } catch(err) {
-                document.getElementById('login-error').innerText = "Authentication Failed: Invalid Credentials.";
+                console.error("Login Error:", err);
+                // Display the specific error message from Firebase
+                document.getElementById('login-error').innerText = "Error: " + err.message;
             }
         }
 
