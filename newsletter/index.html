@@ -101,8 +101,18 @@
         nav ul li a:hover { background: rgba(255, 255, 255, 0.15); }
 
         /* Modals (Articles) */
-        /* FIX: Moved #main out of wrapper, ensured fixed positioning works relative to viewport */
-        #main { display: none; z-index: 50; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        /* FIX: Ensure #main captures clicks (pointer-events: auto) so we can detect background clicks */
+        #main { 
+            display: none; 
+            z-index: 50; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: auto; /* IMPORTANT: Allows clicking the background */
+            background-color: rgba(0,0,0,0.4); /* Slight dim to show it's active */
+        }
         
         article {
             display: none; 
@@ -121,9 +131,9 @@
             opacity: 0; 
             transition: opacity 0.4s ease-in-out; 
             z-index: 51;
-            pointer-events: auto; /* Re-enable clicks on the article itself */
+            pointer-events: auto;
         }
-        article.active { display: block; opacity: 1; animation: fadeIn 0.4s forwards; }
+        article.active { display: block !important; opacity: 1; animation: fadeIn 0.4s forwards; }
 
         /* Close Button */
         .close {
@@ -330,18 +340,24 @@
         const wrapper = document.getElementById("wrapper");
 
         function showArticle(id) {
-            articles.forEach((art) => art.classList.remove("active"));
+            // Deactivate all first
+            articles.forEach((art) => {
+                art.classList.remove("active");
+                // We don't hide immediately to allow fade out if switching
+            });
             
             // Handle simple ID or hash
             const targetId = id.startsWith("#") ? id : "#" + id;
             const target = document.querySelector(targetId);
 
             if (target) {
+                // FIX: Explicitly clear any inline 'display: none' left over from closing
+                target.style.display = "block";
+                
                 body.classList.add("is-article-visible");
                 main.style.display = "block";
                 
-                // Specific Render Logic based on Modal ID
-                // Wrapped in try-catch so one error doesn't stop the visual transition
+                // Specific Render Logic
                 try {
                     if(targetId === '#feed') renderFeed();
                     if(targetId === '#login') renderAuth();
@@ -363,11 +379,14 @@
 
         // Close Event Listeners
         closeButtons.forEach(btn => btn.addEventListener("click", closeArticles));
-        // Note: Wrapper click listener removed for main area as main is now outside wrapper
-        // We add listener to main specifically for clicking "outside" the article
+        
+        // --- KEY FIX: Detect clicks on the main background overlay ---
         main.addEventListener("click", (e) => {
-             // If user clicks the 'main' background (which covers screen) but not an article inside it
-             if(e.target.id === 'main') closeArticles();
+             // If user clicks the 'main' background (which now captures clicks) 
+             // but NOT an article (which is a child of main), close everything.
+             if(e.target.id === 'main') {
+                 closeArticles();
+             }
         });
         
         document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeArticles(); });
