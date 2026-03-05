@@ -1,37 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Global Stratum | International Relations</title>
+    <title>Global Stratum | International Relations & Policy Analysis</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="description" content="Deep-layer analysis on international relations, geopolitics, and global policy." />
+    <meta property="og:title" content="Global Stratum" />
+    <meta property="og:description" content="Deep-layer analysis on international relations, geopolitics, and global policy." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" />
+    <meta property="og:url" content="https://newsletter.cfod.co.uk/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- 1. Tailwind (Utility classes for the dynamic content) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'stratum-dark': '#1b1f22',
-                        'stratum-border': 'rgba(255, 255, 255, 0.5)',
-                        'stratum-accent': '#4db6ac'
+                        'gs-dark': '#1b1f22',
+                        'gs-card': '#20252a',
+                        'gs-border': 'rgba(255,255,255,0.12)',
+                        'gs-accent': '#4db6ac',
+                        'gs-accent-dim': 'rgba(77,182,172,0.15)'
+                    },
+                    fontFamily: {
+                        sans: ['"Source Sans Pro"', 'sans-serif'],
+                        serif: ['Georgia', 'serif']
                     }
                 }
             }
         }
     </script>
 
-    <!-- 2. Fonts and Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,600,600italic" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet" />
 
-    <!-- 3. CONFIGURATION (Embedded) -->
     <script>
-        // --- ADMIN CONFIGURATION ---
-        // REPLACE THIS with the email address you will use to log in.
-        // Only this email will see the "Edit" and "New Article" buttons.
-        const ADMIN_EMAIL = "connor-odonnell@hotmail.co.uk"; 
-
+        const ADMIN_EMAIL = "connor-odonnell@hotmail.co.uk";
         window.siteConfig = {
             apiKey: "AIzaSyAQDrbejR6PTnKd9fpH7asHvLRKSaCVvvk",
             authDomain: "global-stratum.firebaseapp.com",
@@ -44,722 +50,684 @@
     </script>
 
     <style>
-        /* --- GLOBAL STRATUM BASE STYLES --- */
         *, *:before, *:after { box-sizing: border-box; }
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
         body {
             background: #1b1f22;
-            color: #ffffff;
+            color: #fff;
             font-family: "Source Sans Pro", sans-serif;
             font-weight: 300;
-            font-size: 16pt;
+            font-size: 16px;
             line-height: 1.65;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
-        /* Typography */
-        h1, h2, h3 { font-weight: 600; text-transform: uppercase; letter-spacing: 0.2rem; margin: 0 0 1rem 0; color: #fff; }
-        h1 { font-size: 2.25rem; line-height: 1.3; letter-spacing: 0.5rem; margin-bottom: 0.5rem; }
-        h2 { font-size: 1.5rem; border-bottom: solid 1px #fff; padding-bottom: 0.5rem; margin-bottom: 2rem; display: inline-block; }
-        p { margin-bottom: 2rem; }
-        a { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(255, 255, 255, 0.5); transition: 0.2s; cursor: pointer; }
-        a:hover { border-bottom-color: transparent; color: #4db6ac; }
-
-        /* Background */
+        /* ---------- BACKGROUND ---------- */
         #bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
             background-image: url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop");
-            background-position: center; background-size: cover; background-repeat: no-repeat;
-            transition: transform 0.3s, filter 0.3s;
+            background-position: center; background-size: cover;
+            transition: transform 0.4s, filter 0.4s;
         }
         #bg::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(19, 21, 25, 0.5);
-            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0JyBoZWlnaHQ9JzQnPgo8cmVjdCB3aWR0aD0nNCcgaGVpZ2h0PSc0JyBmaWxsPSJyZ2JhKDAsMCwwLDAuMikiLz4KPC9zdmc+");
+            content: ""; position: absolute; inset: 0;
+            background: rgba(19,21,25,0.6);
         }
 
-        /* Wrapper */
+        /* ---------- WRAPPER / LANDING ---------- */
         #wrapper {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             position: relative; z-index: 2; min-height: 100vh; width: 100%; padding: 2rem;
-            transition: opacity 0.5s;
+            transition: opacity 0.4s;
         }
-
-        /* Header (Card) */
-        #header {
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            transition: transform 0.325s, opacity 0.325s, filter 0.325s;
-        }
+        #header { display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.325s, opacity 0.325s, filter 0.325s; }
         .logo {
-            width: 5.5rem; height: 5.5rem; border: solid 1px #ffffff; border-radius: 100%;
-            margin-bottom: 2rem; background: rgba(255, 255, 255, 0.05);
-            display: flex; align-items: center; justify-content: center;
+            width: 5.5rem; height: 5.5rem; border: 1px solid #fff; border-radius: 50%;
+            margin-bottom: 1.75rem; background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center; font-size: 2.25rem; color: #4db6ac;
         }
-        .logo .icon { font-size: 2.5rem; }
-        .content {
-            border-top: solid 1px #ffffff; border-bottom: solid 1px #ffffff;
-            padding: 3rem 2rem; max-width: 550px; background: rgba(19, 21, 25, 0.4);
-            backdrop-filter: blur(2px);
+        .site-name {
+            font-size: 2.5rem; font-weight: 600; letter-spacing: 0.5rem;
+            text-transform: uppercase; margin: 0 0 0.4rem;
         }
-        .content p { text-transform: uppercase; letter-spacing: 0.2rem; font-size: 0.8rem; line-height: 2; margin-bottom: 0; }
-
-        /* Navigation */
-        nav { margin-top: 2rem; }
-        nav ul { display: flex; list-style: none; padding: 0; margin: 0; border: solid 1px #ffffff; border-radius: 4px; }
-        nav ul li { border-left: solid 1px #ffffff; }
+        .site-tagline {
+            border-top: 1px solid rgba(255,255,255,0.3); border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding: 1.25rem 2rem; max-width: 520px;
+            background: rgba(19,21,25,0.35); backdrop-filter: blur(3px);
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.25rem;
+            opacity: 0.8; line-height: 2;
+        }
+        nav { margin-top: 1.75rem; }
+        nav ul { display: flex; list-style: none; padding: 0; margin: 0; border: 1px solid rgba(255,255,255,0.4); border-radius: 3px; }
+        nav ul li { border-left: 1px solid rgba(255,255,255,0.4); }
         nav ul li:first-child { border-left: none; }
         nav ul li a {
-            display: block; min-width: 7.5rem; height: 2.75rem; line-height: 2.75rem;
-            padding: 0 1.25rem; text-transform: uppercase; letter-spacing: 0.2rem;
-            font-size: 0.8rem; border-bottom: none; transition: background 0.2s;
+            display: block; min-width: 8rem; height: 2.75rem; line-height: 2.75rem;
+            padding: 0 1.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2rem;
+            text-decoration: none; color: #fff; transition: background 0.2s;
         }
-        nav ul li a:hover { background: rgba(255, 255, 255, 0.15); }
+        nav ul li a:hover { background: rgba(255,255,255,0.12); color: #4db6ac; }
 
-        /* Modals (Articles) */
-        #main { 
-            display: none; 
-            z-index: 50; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            pointer-events: auto; 
-            background-color: rgba(0,0,0,0.4); 
+        /* ---------- MODAL OVERLAY ---------- */
+        #main {
+            display: none; z-index: 50;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(2px);
         }
-        
         article {
-            display: none; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
+            display: none;
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 50rem; 
-            max-width: 90vw; 
-            max-height: 90vh;
-            background: rgba(27, 31, 34, 0.98); 
-            padding: 4rem 3rem 2rem 3rem; 
-            border-radius: 4px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            overflow-y: auto; 
-            opacity: 0; 
-            transition: opacity 0.4s ease-in-out; 
+            width: 56rem; max-width: 92vw; max-height: 88vh;
+            background: #20252a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            box-shadow: 0 32px 64px rgba(0,0,0,0.6);
+            overflow-y: auto;
+            opacity: 0; transition: opacity 0.35s ease;
             z-index: 51;
-            pointer-events: auto;
+            padding: 3.5rem 3rem 2.5rem;
         }
-        article.active { display: block !important; opacity: 1; animation: fadeIn 0.4s forwards; }
+        article.active { display: block !important; opacity: 1; animation: modalIn 0.35s forwards; }
+        @keyframes modalIn { from { opacity:0; transform: translate(-50%,-47%); } to { opacity:1; transform: translate(-50%,-50%); } }
 
-        /* Close Button (The X) */
+        /* Modal close X */
         .close {
-            display: block; position: absolute; top: 0; right: 0; width: 4rem; height: 4rem;
-            cursor: pointer; text-indent: -9999px; transition: background 0.2s;
-            z-index: 60;
+            position: absolute; top: 0; right: 0; width: 3.5rem; height: 3.5rem;
+            cursor: pointer; z-index: 60;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; border-radius: 0 6px 0 0;
         }
-        .close:before, .close:after {
-            content: ""; display: block; position: absolute; top: 50%; left: 50%; width: 1.5rem; height: 1px;
-            background: #fff; transform-origin: center;
+        .close::before, .close::after {
+            content: ""; position: absolute;
+            width: 1.25rem; height: 1px; background: rgba(255,255,255,0.6);
         }
-        .close:before { transform: translate(-50%, -50%) rotate(45deg); }
-        .close:after { transform: translate(-50%, -50%) rotate(-45deg); }
-        .close:hover { background: rgba(255, 255, 255, 0.1); }
+        .close::before { transform: rotate(45deg); }
+        .close::after { transform: rotate(-45deg); }
+        .close:hover { background: rgba(255,255,255,0.08); }
 
-        /* State Classes */
-        body.is-article-visible #header { transform: scale(0.95); filter: blur(0.2rem); opacity: 0; pointer-events: none; }
-        body.is-article-visible #bg { transform: scale(1.1); filter: blur(0.5rem); }
-        body.is-article-visible #footer { opacity: 0; }
+        /* Modal heading */
+        .modal-heading {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.3rem; border-bottom: 1px solid rgba(255,255,255,0.12);
+            padding-bottom: 0.75rem; margin-bottom: 2rem; color: rgba(255,255,255,0.5);
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+        /* Body state */
+        body.modal-open #header { transform: scale(0.96); filter: blur(2px); opacity: 0; pointer-events: none; }
+        body.modal-open #bg { transform: scale(1.05); filter: blur(4px); }
+        body.modal-open #footer { opacity: 0; }
 
-        /* --- FIREBASE CONTENT SPECIFIC STYLES --- */
-        .article-body p { margin-bottom: 1.5em; }
-        .article-body ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5em; }
-        .article-body strong { color: #4db6ac; font-weight: 600; }
-        
+        /* ---------- FEED CARDS ---------- */
+        .feed-card {
+            display: flex; gap: 1.25rem; padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer; transition: background 0.2s; border-radius: 4px;
+            text-decoration: none; color: inherit;
+        }
+        .feed-card:hover { background: rgba(255,255,255,0.03); padding-left: 0.5rem; }
+        .feed-card:hover .card-title { color: #4db6ac; }
+        .feed-thumb {
+            flex-shrink: 0; width: 7rem; height: 5.25rem;
+            background: #2a2f35; border-radius: 3px; overflow: hidden;
+        }
+        .feed-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.75; transition: opacity 0.2s; }
+        .feed-card:hover .feed-thumb img { opacity: 1; }
+        .card-category {
+            font-size: 0.6rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.2rem; color: #4db6ac; margin-bottom: 0.3rem;
+        }
+        .card-title {
+            font-size: 1rem; font-weight: 600; line-height: 1.35;
+            margin-bottom: 0.35rem; transition: color 0.2s;
+        }
+        .card-meta {
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15rem;
+            color: rgba(255,255,255,0.35); margin-bottom: 0.4rem;
+        }
+        .card-lede { font-size: 0.8rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+        /* Draft badge */
+        .badge-draft {
+            display: inline-block; font-size: 0.55rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1rem;
+            border: 1px solid #ef4444; color: #ef4444;
+            padding: 1px 5px; border-radius: 2px; margin-right: 0.4rem; vertical-align: middle;
+        }
+
+        /* Search */
+        .search-wrap { position: relative; margin-bottom: 1.5rem; }
+        .search-wrap i { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+        #search-input {
+            width: 100%; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.12); color: #fff;
+            padding: 0.6rem 1rem 0.6rem 2.25rem; border-radius: 3px;
+            font-family: "Source Sans Pro", sans-serif; font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 0.15rem; outline: none; transition: border 0.2s;
+        }
+        #search-input::placeholder { color: rgba(255,255,255,0.25); }
+        #search-input:focus { border-color: #4db6ac; }
+
+        /* ---------- AUTH FORMS ---------- */
         .dark-input {
-            width: 100%; background: rgba(255, 255, 255, 0.05); border: solid 1px rgba(255, 255, 255, 0.3);
-            color: #fff; padding: 0.75rem 1rem; border-radius: 4px; outline: none; transition: 0.2s;
+            width: 100%; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15); color: #fff;
+            padding: 0.7rem 1rem; border-radius: 3px; outline: none;
+            font-family: "Source Sans Pro", sans-serif; font-size: 0.9rem;
+            transition: border 0.2s;
         }
-        .dark-input:focus { border-color: #4db6ac; background: rgba(255, 255, 255, 0.1); }
-        input[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Tabs for Login/Register */
-        .auth-tab { cursor: pointer; padding-bottom: 0.5rem; border-bottom: 2px solid transparent; opacity: 0.5; transition: 0.3s; }
+        .dark-input:focus { border-color: #4db6ac; background: rgba(255,255,255,0.08); }
+        .dark-input::placeholder { color: rgba(255,255,255,0.3); }
+        select.dark-input { background-color: #20252a; cursor: pointer; }
+        textarea.dark-input { resize: vertical; line-height: 1.6; }
+        .auth-tab { cursor: pointer; padding-bottom: 0.5rem; border-bottom: 2px solid transparent; opacity: 0.45; transition: 0.25s; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2rem; }
         .auth-tab.active { opacity: 1; border-bottom-color: #4db6ac; }
 
+        /* ---------- BUTTONS ---------- */
+        .btn-primary {
+            display: block; width: 100%; padding: 0.75rem 1.5rem;
+            background: #4db6ac; color: #1b1f22; font-weight: 600;
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2rem;
+            border: none; border-radius: 3px; cursor: pointer; transition: background 0.2s;
+            font-family: "Source Sans Pro", sans-serif;
+        }
+        .btn-primary:hover { background: #5ecfc4; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-ghost {
+            display: block; width: 100%; padding: 0.75rem;
+            background: transparent; color: rgba(255,255,255,0.4);
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2rem;
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 3px;
+            cursor: pointer; transition: 0.2s; font-family: "Source Sans Pro", sans-serif;
+        }
+        .btn-ghost:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+        .btn-danger {
+            display: block; width: 100%; padding: 0.75rem;
+            background: transparent; color: #ef4444;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2rem;
+            border: 1px solid #ef4444; border-radius: 3px;
+            cursor: pointer; transition: 0.2s; font-family: "Source Sans Pro", sans-serif;
+        }
+        .btn-danger:hover { background: #ef4444; color: #fff; }
+
+        /* ---------- EDITOR ---------- */
+        .editor-field { margin-bottom: 1.25rem; }
+        .editor-label {
+            display: block; font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.2rem; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;
+        }
+        .editor-hint { font-size: 0.65rem; color: rgba(255,255,255,0.3); margin-top: 0.25rem; }
+        .editor-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        /* ---------- LOADER ---------- */
         .loader {
-            border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #4db6ac;
-            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto;
+            border: 2px solid rgba(255,255,255,0.08); border-top: 2px solid #4db6ac;
+            border-radius: 50%; width: 28px; height: 28px;
+            animation: spin 0.9s linear infinite; margin: 2.5rem auto;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ---------- FOOTER ---------- */
         #footer {
-            position: absolute; bottom: 1rem; width: 100%; text-align: center;
+            position: fixed; bottom: 1rem; width: 100%; text-align: center;
             font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2rem;
-            opacity: 0.5; transition: opacity 0.3s;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0.4; transition: opacity 0.3s; z-index: 3;
+            display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
         }
+        #footer a { color: inherit; text-decoration: none; transition: opacity 0.2s; }
+        #footer a:hover { opacity: 1; }
+
+        /* ---------- ABOUT ---------- */
+        .about-section { margin-bottom: 2rem; }
+        .about-section h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.25rem; color: #4db6ac; margin-bottom: 0.75rem; }
+        .about-section ul { list-style: none; padding: 0; }
+        .about-section ul li { font-size: 0.85rem; color: rgba(255,255,255,0.7); padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .about-section ul li::before { content: "—  "; color: #4db6ac; }
     </style>
 </head>
 <body>
 
-    <!-- Background -->
-    <div id="bg"></div>
+<div id="bg"></div>
 
-    <!-- Wrapper -->
-    <div id="wrapper">
-        <header id="header">
-            <div class="logo"><span class="icon fas fa-globe-americas"></span></div>
-            <div class="content">
-                <div class="inner">
-                    <h1>Global Stratum</h1>
-                    <p>Deep Layer Analysis on<br />International Relations &amp; Policy.</p>
-                </div>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#feed">Latest Articles</a></li>
-                    <li><a href="#about">Manifesto</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <footer id="footer">
-            <p class="copyright mb-2">&copy; Global Stratum.</p>
-            <a href="#login" id="login-link" class="border-none opacity-20 hover:opacity-100 transition-opacity">Subscriber Login</a>
-        </footer>
-    </div>
-
-    <!-- Main Articles -->
-    <div id="main">
-        
-        <!-- 1. FEED MODAL -->
-        <article id="feed">
-            <h2 class="major">Latest Articles</h2>
-            <div id="feed-search" class="mb-6 flex gap-2">
-                <input type="text" id="search-input" placeholder="SEARCH DATABASE..." class="dark-input uppercase text-xs tracking-widest">
-            </div>
-            <div id="feed-content" class="min-h-[200px]">
-                <div class="loader"></div>
-            </div>
-            <!-- Bottom Close Button -->
-            <button class="w-full mt-8 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors close-trigger">Close Window</button>
-            <div class="close">Close</div>
-        </article>
-
-        <!-- 2. ARTICLE READER MODAL -->
-        <article id="reader">
-            <div id="reader-content"></div>
-            <!-- Bottom Close added via renderReader function -->
-            <div class="close" onclick="window.location.hash='#feed'">Close</div>
-        </article>
-
-        <!-- 3. LOGIN MODAL -->
-        <article id="login">
-            <h2 class="major" id="auth-title">Account Access</h2>
-            <div id="auth-content"></div>
-            <button class="w-full mt-8 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors close-trigger">Close Window</button>
-            <div class="close">Close</div>
-        </article>
-
-        <!-- 4. EDITOR MODAL -->
-        <article id="editor">
-            <h2 class="major" id="editor-title">Editor</h2>
-            <div id="editor-content"></div>
-            <!-- Editor uses built-in Cancel button -->
-            <div class="close" id="editor-close-btn">Close</div>
-        </article>
-
-        <!-- 5. ABOUT MODAL -->
-        <article id="about">
-            <h2 class="major">Manifesto</h2>
-            <p>We believe that understanding the world requires digging beneath the surface narrative.</p>
-            <h3 class="text-lg font-bold mt-4 mb-2 text-stratum-accent">Mission</h3>
-            <ul class="text-sm opacity-80 mb-6">
-                <li>Unbiased geopolitical analysis.</li>
-                <li>Data-driven policy review.</li>
-                <li>Secure, decentralized distribution.</li>
+<div id="wrapper">
+    <header id="header">
+        <div class="logo"><i class="fas fa-globe-americas"></i></div>
+        <h1 class="site-name">Global Stratum</h1>
+        <div class="site-tagline">
+            Deep-Layer Analysis on<br />International Relations &amp; Global Policy
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#feed">Latest Articles</a></li>
+                <li><a href="#about">Manifesto</a></li>
             </ul>
-            <p class="text-xs uppercase tracking-widest opacity-50">Established 2025.</p>
-            <button class="w-full mt-8 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors close-trigger">Close Window</button>
-            <div class="close">Close</div>
-        </article>
+        </nav>
+    </header>
+    <footer id="footer">
+        <span>&copy; Global Stratum</span>
+        <a href="#login" id="login-link">Subscriber Login</a>
+    </footer>
+</div>
 
-    </div>
+<!-- MODAL CONTAINER -->
+<div id="main">
 
-    <!-- FIREBASE LOGIC -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, onSnapshot, doc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- FEED -->
+    <article id="feed">
+        <div class="close"></div>
+        <p class="modal-heading">Latest Articles</p>
+        <div class="search-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-input" placeholder="Search the archive...">
+        </div>
+        <div id="feed-content"><div class="loader"></div></div>
+        <button class="btn-ghost mt-8" onclick="window.closeModals()">Close</button>
+    </article>
 
-        // --- 1. CONFIGURATION ---
-        let firebaseConfig;
-        if (window.siteConfig) {
-            firebaseConfig = window.siteConfig;
-        } else if (typeof __firebase_config !== 'undefined') {
-            try { firebaseConfig = JSON.parse(__firebase_config); } catch(e) {}
-        } else {
-            console.warn("Config Missing.");
+    <!-- LOGIN / DASHBOARD -->
+    <article id="login">
+        <div class="close"></div>
+        <p class="modal-heading" id="auth-title">Account Access</p>
+        <div id="auth-content"></div>
+        <button class="btn-ghost mt-6" onclick="window.closeModals()">Close</button>
+    </article>
+
+    <!-- EDITOR -->
+    <article id="editor">
+        <div class="close" id="editor-close-x"></div>
+        <p class="modal-heading" id="editor-title">New Article</p>
+        <div id="editor-content"></div>
+    </article>
+
+    <!-- ABOUT -->
+    <article id="about">
+        <div class="close"></div>
+        <p class="modal-heading">Manifesto</p>
+        <div class="about-section">
+            <p style="font-size:0.9rem; color:rgba(255,255,255,0.7);">We believe that understanding the world requires digging beneath the surface narrative. Global Stratum exists to provide rigorous, unbiased analysis on the forces shaping international affairs.</p>
+        </div>
+        <div class="about-section">
+            <h3>Mission</h3>
+            <ul>
+                <li>Unbiased geopolitical analysis</li>
+                <li>Data-driven policy review</li>
+                <li>Clarity on complex international dynamics</li>
+                <li>No agenda. No noise.</li>
+            </ul>
+        </div>
+        <div class="about-section">
+            <h3>Coverage Areas</h3>
+            <ul>
+                <li>Geopolitics &amp; Great Power Competition</li>
+                <li>Policy &amp; Governance</li>
+                <li>Conflict &amp; Security</li>
+                <li>Economics &amp; Sanctions</li>
+                <li>Intelligence &amp; Covert Affairs</li>
+            </ul>
+        </div>
+        <p style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.2rem; color:rgba(255,255,255,0.25); margin-top:2rem;">Established 2025</p>
+        <button class="btn-ghost mt-6" onclick="window.closeModals()">Close</button>
+    </article>
+
+</div>
+
+<!-- FIREBASE + APP LOGIC -->
+<script type="module">
+    import { initializeApp }           from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAnalytics, logEvent }  from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut }
+                                       from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, onSnapshot, doc, query, getDocs }
+                                       from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // ── 1. INIT ──────────────────────────────────────────────────────────────
+    let app, analytics, auth, db;
+    let currentUser = null;
+    let allArticles = [];
+    let authMode = 'login';
+
+    try {
+        app       = initializeApp(window.siteConfig);
+        analytics = getAnalytics(app);
+        auth      = getAuth(app);
+        db        = getFirestore(app);
+        logEvent(analytics, 'page_view', { page: 'index' });
+    } catch(e) { console.warn("Firebase init failed:", e); }
+
+    // ── 2. HELPERS ───────────────────────────────────────────────────────────
+    function slugify(str) {
+        return str.toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim().replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+    }
+
+    function readingTime(text) {
+        const words = (text || '').split(/\s+/).length;
+        return Math.max(1, Math.ceil(words / 200));
+    }
+
+    function formatDate(ts) {
+        return new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function categoryColor(cat) {
+        const map = {
+            'Geopolitics': '#4db6ac', 'Policy': '#81c784', 'Analysis': '#64b5f6',
+            'Conflict': '#e57373',    'Economics': '#ffb74d', 'Intelligence': '#ba68c8'
+        };
+        return map[cat] || '#4db6ac';
+    }
+
+    // ── 3. MODAL ROUTING ─────────────────────────────────────────────────────
+    const body     = document.body;
+    const mainEl   = document.getElementById('main');
+    const allArt   = document.querySelectorAll('article');
+    const closeXs  = document.querySelectorAll('.close');
+
+    window.closeModals = function() {
+        if (document.getElementById('editor').classList.contains('active')) {
+            if (!confirm('Unsaved changes will be lost. Close anyway?')) return;
+        }
+        body.classList.remove('modal-open');
+        allArt.forEach(a => {
+            a.classList.remove('active');
+            setTimeout(() => { if (!a.classList.contains('active')) a.style.display = 'none'; }, 350);
+        });
+        setTimeout(() => { if (!body.classList.contains('modal-open')) mainEl.style.display = 'none'; }, 350);
+        history.replaceState(null, null, ' ');
+    };
+
+    function showModal(id) {
+        const target = document.querySelector(id.startsWith('#') ? id : '#' + id);
+        if (!target) return;
+
+        allArt.forEach(a => {
+            if (a !== target) {
+                a.classList.remove('active');
+                setTimeout(() => { if (!a.classList.contains('active')) a.style.display = 'none'; }, 350);
+            }
+        });
+
+        target.style.display = 'block';
+        mainEl.style.display = 'block';
+        body.classList.add('modal-open');
+
+        if (id === 'feed' || id === '#feed') renderFeed();
+        if (id === 'login' || id === '#login') renderAuth();
+
+        setTimeout(() => target.classList.add('active'), 10);
+    }
+
+    closeXs.forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); window.closeModals(); }));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeModals(); });
+    mainEl.addEventListener('click', e => { if (e.target === mainEl) window.closeModals(); });
+
+    // ── 4. DATA ───────────────────────────────────────────────────────────────
+    function articlesRef() {
+        return collection(db, 'articles');
+    }
+
+    function setupListener() {
+        if (!db) return;
+        onSnapshot(articlesRef(), snap => {
+            allArticles = [];
+            snap.forEach(d => allArticles.push({ id: d.id, ...d.data() }));
+            allArticles.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            if (document.getElementById('feed').classList.contains('active')) renderFeed();
+        });
+    }
+
+    // ── 5. RENDER FEED ────────────────────────────────────────────────────────
+    function renderFeed() {
+        const container = document.getElementById('feed-content');
+        const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+        const isAdmin = currentUser?.email === ADMIN_EMAIL;
+
+        const visible = allArticles.filter(a => {
+            if (!isAdmin && a.status !== 'published') return false;
+            if (!q) return true;
+            return (a.title + ' ' + (a.lede || a.summary || '') + ' ' + (a.category || '')).toLowerCase().includes(q);
+        });
+
+        if (visible.length === 0) {
+            container.innerHTML = `<p style="text-align:center;opacity:0.35;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.2rem;margin-top:2rem;">${q ? 'No results found.' : 'No articles published yet.'}</p>`;
+            return;
         }
 
-        // --- MOCK DATA FOR DEMO MODE ---
-        const MOCK_DATA = [
-            {
-                id: "demo-1",
-                title: "The Silent Ocean: Subsea Cable Vulnerabilities",
-                createdAt: Date.now(),
-                imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1740&auto=format&fit=crop",
-                summary: "99% of international data traffic travels through undersea cables. Recent naval exercises suggest these arteries are more exposed than previously thought.",
-                content: "Most of the internet isn't in the cloud; it's under the ocean. \n\nRecent analysis shows that reliance on a few narrow straits for cable routing creates strategic choke points. \n\n- Choke Point A: The Malacca Strait\n- Choke Point B: The Red Sea\n\nThis dossier explores the redundancy measures currently being proposed by NATO and private consortiums.",
-                status: "published"
-            }
-        ];
+        const html = visible.map(a => {
+            const slug = a.slug || slugify(a.title);
+            const lede = a.lede || a.summary || '';
+            const rt   = readingTime(a.body || a.content || '');
+            const cat  = a.category || 'Analysis';
+            const catCol = categoryColor(cat);
+            const draft = (!isAdmin && a.status !== 'published') ? '' :
+                          (a.status === 'draft' ? `<span class="badge-draft">Draft</span>` : '');
+            const editBtn = isAdmin
+                ? `<a href="#edit/${a.id}" style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.15rem;color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.15);padding:2px 7px;border-radius:2px;text-decoration:none;margin-left:auto;flex-shrink:0;align-self:flex-start;transition:0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Edit</a>`
+                : '';
 
-        // --- 2. INIT FIREBASE ---
-        let app, auth, db;
-        let currentUser = null;
-        let allArticles = [];
-        let authMode = 'login'; 
+            return `
+                <a class="feed-card" href="/article/${slug}" onclick="event.preventDefault(); window.location='/article/${slug}'">
+                    <div class="feed-thumb">
+                        <img src="${a.imageUrl || 'https://placehold.co/150x100/2a2f35/4db6ac?text=GS'}" alt="${a.title}" loading="lazy">
+                    </div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:0;">
+                        <div style="display:flex;align-items:flex-start;gap:0.5rem;">
+                            <div style="flex:1;">
+                                <div class="card-category" style="color:${catCol}">${cat}</div>
+                                <div class="card-title">${draft}${a.title}</div>
+                            </div>
+                            ${editBtn}
+                        </div>
+                        <div class="card-meta">${formatDate(a.createdAt)} &bull; ${rt} min read</div>
+                        <div class="card-lede">${lede}</div>
+                    </div>
+                </a>`;
+        }).join('');
+
+        container.innerHTML = html;
+    }
+
+    document.getElementById('search-input')?.addEventListener('input', renderFeed);
+
+    // ── 6. RENDER AUTH ────────────────────────────────────────────────────────
+    window.switchAuth = mode => { authMode = mode; renderAuth(); };
+
+    function renderAuth() {
+        const container = document.getElementById('auth-content');
+        const titleEl   = document.getElementById('auth-title');
+
+        if (currentUser) {
+            titleEl.innerText = 'Dashboard';
+            const isAdmin = currentUser.email === ADMIN_EMAIL;
+            container.innerHTML = `
+                <div style="text-align:center;">
+                    <p style="margin-bottom:1.5rem;font-size:0.85rem;">
+                        Signed in as <strong style="color:#4db6ac">${currentUser.email}</strong><br>
+                        <span style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.2rem;opacity:0.4;">${isAdmin ? 'Administrator' : 'Subscriber'}</span>
+                    </p>
+                    <div style="max-width:22rem;margin:0 auto;display:flex;flex-direction:column;gap:0.75rem;">
+                        ${isAdmin ? `<button onclick="window.location.hash='#submit'" class="btn-primary">New Article</button>` : ''}
+                        <button onclick="doSignOut()" class="btn-danger">Sign Out</button>
+                    </div>
+                </div>`;
+        } else {
+            titleEl.innerText = 'Account Access';
+            container.innerHTML = `
+                <div style="display:flex;justify-content:center;gap:2.5rem;margin-bottom:2rem;">
+                    <div class="auth-tab ${authMode==='login'?'active':''}" onclick="switchAuth('login')">Login</div>
+                    <div class="auth-tab ${authMode==='register'?'active':''}" onclick="switchAuth('register')">Register</div>
+                </div>
+                <form id="auth-form" onsubmit="doAuth(event)" style="max-width:22rem;margin:0 auto;">
+                    <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                        <input type="email" id="auth-email" class="dark-input" placeholder="Email address" required>
+                        <input type="password" id="auth-pass" class="dark-input" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top:1.25rem;">${authMode==='login'?'Sign In':'Create Account'}</button>
+                    <p id="auth-error" style="text-align:center;color:#ef4444;font-size:0.75rem;margin-top:0.75rem;min-height:1rem;"></p>
+                </form>`;
+        }
+    }
+
+    window.doAuth = async e => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]');
+        const orig = btn.innerText;
+        btn.disabled = true; btn.innerText = '...';
+        const email = document.getElementById('auth-email').value;
+        const pass  = document.getElementById('auth-pass').value;
+        try {
+            if (authMode === 'login') await signInWithEmailAndPassword(auth, email, pass);
+            else await createUserWithEmailAndPassword(auth, email, pass);
+        } catch(err) {
+            document.getElementById('auth-error').innerText = err.message.replace('Firebase: ', '');
+            btn.disabled = false; btn.innerText = orig;
+        }
+    };
+
+    window.doSignOut = () => signOut(auth).then(() => { window.location.hash = ''; });
+
+    // ── 7. RENDER EDITOR ─────────────────────────────────────────────────────
+    function renderEditor(id = null) {
+        const a = id ? allArticles.find(x => x.id === id) : null;
+        document.getElementById('editor-title').innerText = a ? 'Edit Article' : 'New Article';
+
+        const cats = ['Geopolitics','Policy','Analysis','Conflict','Economics','Intelligence'];
+        const catOpts = cats.map(c => `<option value="${c}" ${(a?.category||'Analysis')===c?'selected':''}>${c}</option>`).join('');
+
+        document.getElementById('editor-content').innerHTML = `
+            <form onsubmit="handleSave(event,'${id||''}')">
+                <div class="editor-field">
+                    <label class="editor-label">Headline *</label>
+                    <input type="text" id="ed-title" class="dark-input" value="${a?.title||''}" required placeholder="Article headline" oninput="autoSlug(this.value)">
+                </div>
+                <div class="editor-row">
+                    <div class="editor-field">
+                        <label class="editor-label">Slug *</label>
+                        <input type="text" id="ed-slug" class="dark-input" value="${a?.slug||''}" required placeholder="url-friendly-slug">
+                        <p class="editor-hint">Auto-generated. Edit if needed.</p>
+                    </div>
+                    <div class="editor-field">
+                        <label class="editor-label">Category</label>
+                        <select id="ed-category" class="dark-input">${catOpts}</select>
+                    </div>
+                </div>
+                <div class="editor-row">
+                    <div class="editor-field">
+                        <label class="editor-label">Status</label>
+                        <select id="ed-status" class="dark-input">
+                            <option value="published" ${(a?.status||'')!=='draft'?'selected':''}>Published</option>
+                            <option value="draft" ${a?.status==='draft'?'selected':''}>Draft</option>
+                        </select>
+                    </div>
+                    <div class="editor-field">
+                        <label class="editor-label">Cover Image URL</label>
+                        <input type="text" id="ed-image" class="dark-input" value="${a?.imageUrl||''}" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="editor-field">
+                    <label class="editor-label">Summary <span style="opacity:0.4">(feed card teaser)</span></label>
+                    <textarea id="ed-summary" class="dark-input" rows="2" placeholder="One or two sentences shown on the feed card...">${a?.summary||''}</textarea>
+                </div>
+                <div class="editor-field">
+                    <label class="editor-label">Lede <span style="opacity:0.4">(opening hook — shown large)</span></label>
+                    <textarea id="ed-lede" class="dark-input" rows="2" placeholder="The single most compelling sentence. Draws readers in.">${a?.lede||''}</textarea>
+                </div>
+                <div class="editor-field">
+                    <label class="editor-label">Body *</label>
+                    <textarea id="ed-body" class="dark-input" rows="14" placeholder="Write each paragraph separated by a blank line.&#10;&#10;Paragraph two starts here.&#10;&#10;And so on..." required>${a?.body||a?.content||''}</textarea>
+                    <p class="editor-hint">Separate paragraphs with a blank line. No markdown needed.</p>
+                </div>
+                <div class="editor-field">
+                    <label class="editor-label">Pull Quote <span style="opacity:0.4">(optional — highlighted in article)</span></label>
+                    <input type="text" id="ed-pullquote" class="dark-input" value="${a?.pullQuote||''}" placeholder="A striking quote from the piece...">
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+                    <button type="button" onclick="window.closeModals()" class="btn-ghost" style="flex:1">Cancel</button>
+                    ${id ? `<button type="button" onclick="handleDelete('${id}')" class="btn-danger" style="flex:0 0 auto;width:auto;padding:0 1.5rem;">Delete</button>` : ''}
+                    <button type="submit" class="btn-primary" style="flex:1">${a ? 'Update' : 'Publish'}</button>
+                </div>
+            </form>`;
+    }
+
+    window.autoSlug = title => {
+        const slugEl = document.getElementById('ed-slug');
+        if (slugEl && !slugEl.dataset.manualEdit) slugEl.value = slugify(title);
+    };
+    // Allow manual slug editing
+    document.addEventListener('input', e => {
+        if (e.target.id === 'ed-slug') e.target.dataset.manualEdit = '1';
+    });
+
+    window.handleSave = async (e, id) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type=submit]');
+        btn.disabled = true; btn.innerText = 'Saving...';
+
+        const existing = id ? allArticles.find(a => a.id === id) : null;
+        const data = {
+            title:     document.getElementById('ed-title').value.trim(),
+            slug:      document.getElementById('ed-slug').value.trim(),
+            category:  document.getElementById('ed-category').value,
+            status:    document.getElementById('ed-status').value,
+            imageUrl:  document.getElementById('ed-image').value.trim(),
+            summary:   document.getElementById('ed-summary').value.trim(),
+            lede:      document.getElementById('ed-lede').value.trim(),
+            body:      document.getElementById('ed-body').value.trim(),
+            pullQuote: document.getElementById('ed-pullquote').value.trim(),
+            createdAt: existing?.createdAt || Date.now(),
+            updatedAt: Date.now()
+        };
 
         try {
-            if (firebaseConfig) {
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-            }
-        } catch(e) { console.log("Running in offline/demo mode"); }
+            if (id) await updateDoc(doc(articlesRef(), id), data);
+            else await addDoc(articlesRef(), data);
+            window.closeModals();
+        } catch(err) {
+            alert('Error: ' + err.message);
+            btn.disabled = false; btn.innerText = id ? 'Update' : 'Publish';
+        }
+    };
 
-        // --- 3. UI HANDLERS ---
-        const body = document.body;
-        const main = document.getElementById("main");
-        const articles = document.querySelectorAll("article");
-        const closeButtons = document.querySelectorAll(".close");
-        const closeTriggers = document.querySelectorAll(".close-trigger");
-        const wrapper = document.getElementById("wrapper");
+    window.handleDelete = async id => {
+        if (!confirm('Permanently delete this article? This cannot be undone.')) return;
+        try {
+            await deleteDoc(doc(articlesRef(), id));
+            window.closeModals();
+        } catch(err) { alert('Delete failed: ' + err.message); }
+    };
 
-        function showArticle(id) {
-            const targetId = id.startsWith("#") ? id : "#" + id;
-            const target = document.querySelector(targetId);
+    // ── 8. ROUTER ─────────────────────────────────────────────────────────────
+    function route() {
+        const hash = window.location.hash;
+        if (!hash || hash === '#') { window.closeModals(); return; }
 
-            // KEY FIX: Hide ANY other active article immediately from being clickable, then fade it
-            articles.forEach((art) => {
-                if (art !== target) {
-                    art.classList.remove("active");
-                    // Important: Wait for transition to end before setting display:none
-                    // otherwise fading breaks. But since we need clicks to work immediately,
-                    // the new one will sit on top due to DOM order or z-index.
-                    // To be safe, we ensure the old one is hidden after transition.
-                    setTimeout(() => {
-                        if (!art.classList.contains("active")) art.style.display = "none";
-                    }, 350); 
-                }
-            });
-
-            if (target) {
-                target.style.display = "block";
-                body.classList.add("is-article-visible");
-                main.style.display = "block";
-                
-                try {
-                    if(targetId === '#feed') renderFeed();
-                    if(targetId === '#login') renderAuth();
-                } catch(e) { console.error(e); }
-                
-                setTimeout(() => { target.classList.add("active"); }, 10);
-            }
+        if (hash.startsWith('#edit/') || hash === '#submit') {
+            if (!currentUser || currentUser.email !== ADMIN_EMAIL) { window.location.hash = '#login'; return; }
+            showModal('editor');
+            renderEditor(hash.startsWith('#edit/') ? hash.split('/')[1] : null);
+            return;
         }
 
-        // EXPOSE CLOSE FUNCTION GLOBALLY FOR INLINE BUTTONS
-        window.closeArticles = function() {
-            // PROTECTION: If editor is open, confirm before closing
-            const editor = document.getElementById('editor');
-            if(editor.classList.contains('active')) {
-                const confirmClose = confirm("You have the editor open. Unsaved changes will be lost. Close anyway?");
-                if(!confirmClose) return;
-            }
+        showModal(hash.replace('#',''));
+    }
 
-            body.classList.remove("is-article-visible");
-            articles.forEach((art) => {
-                art.classList.remove("active");
-                setTimeout(() => { if (!art.classList.contains("active")) art.style.display = "none"; }, 350);
-            });
-            setTimeout(() => { if (!body.classList.contains("is-article-visible")) main.style.display = "none"; }, 350);
-            history.replaceState(null, null, " ");
-        };
+    window.addEventListener('hashchange', route);
 
-        // Attach listeners to 'X' buttons
-        closeButtons.forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation(); // Ensure clean event handling
-                window.closeArticles();
-            });
+    // ── 9. BOOTSTRAP ──────────────────────────────────────────────────────────
+    if (auth) {
+        onAuthStateChanged(auth, user => {
+            currentUser = user;
+            const link = document.getElementById('login-link');
+            if (link) link.innerText = user ? 'Dashboard' : 'Subscriber Login';
+            if (document.getElementById('login').classList.contains('active')) renderAuth();
+            setupListener();
         });
+    }
 
-        // Attach listeners to new bottom buttons
-        closeTriggers.forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                window.closeArticles();
-            });
-        });
-        
-        document.addEventListener("keydown", (e) => { if (e.key === "Escape") window.closeArticles(); });
-
-        // --- 4. DATA LOGIC ---
-        function setupDataListener() {
-            if(!db) return;
-            let articlesRef;
-            if (typeof __app_id !== 'undefined') {
-                articlesRef = collection(db, 'artifacts', __app_id, 'public', 'data', 'articles');
-            } else {
-                articlesRef = collection(db, "articles");
-            }
-
-            onSnapshot(articlesRef, (snapshot) => {
-                allArticles = [];
-                snapshot.forEach((doc) => { allArticles.push({ id: doc.id, ...doc.data() }); });
-                
-                allArticles.sort((a, b) => {
-                    const dateA = (a.status === 'scheduled' && a.scheduledAt) ? a.scheduledAt : a.createdAt;
-                    const dateB = (b.status === 'scheduled' && b.scheduledAt) ? b.scheduledAt : b.createdAt;
-                    return (dateB || 0) - (dateA || 0);
-                });
-
-                if(document.getElementById('feed').classList.contains('active')) renderFeed();
-            });
-        }
-
-        // --- 5. RENDER FUNCTIONS ---
-
-        // A. THE FEED
-        function renderFeed() {
-            const container = document.getElementById('feed-content');
-            const searchInput = document.getElementById('search-input');
-            const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
-            
-            const dataSource = (allArticles.length > 0) ? allArticles : MOCK_DATA;
-            const isDemo = (allArticles.length === 0);
-
-            if(dataSource.length === 0) {
-                container.innerHTML = `<p class="text-center opacity-50 mt-10">Establishing secure connection...</p>`;
-                return;
-            }
-
-            const filtered = dataSource.filter(a => {
-                // Visibility: Guests only see published
-                if(!currentUser && a.status === 'draft') return false;
-                if(!currentUser && a.status === 'scheduled' && (a.scheduledAt > Date.now())) return false;
-                
-                return (a.title?.toLowerCase().includes(searchVal) || a.content?.toLowerCase().includes(searchVal));
-            });
-
-            if(filtered.length === 0) {
-                container.innerHTML = `<p class="text-center text-red-400 mt-10 uppercase tracking-widest">No articles found.</p>`;
-                return;
-            }
-
-            let html = `<div class="space-y-8">`;
-            
-            if(isDemo) {
-                html += `<div class="bg-gray-800 text-gray-400 text-xs p-2 text-center uppercase tracking-widest mb-4">Demo Mode - Database Not Connected</div>`;
-            }
-
-            filtered.forEach(article => {
-                const date = new Date(article.createdAt).toLocaleDateString();
-                
-                // Badge Logic (Only visible to Admin)
-                let badge = "";
-                const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
-                
-                if(isAdmin) {
-                    if(article.status === 'draft') badge = `<span class="text-red-500 text-xs border border-red-500 px-1 mr-2">DRAFT</span>`;
-                }
-
-                html += `
-                    <div class="border-b border-gray-700 pb-6 group cursor-pointer" onclick="window.location.hash='#article/${article.id}'">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <!-- Thumb -->
-                            <div class="sm:w-32 sm:h-24 w-full h-48 flex-shrink-0 bg-gray-800 rounded overflow-hidden">
-                                <img src="${article.imageUrl || 'https://placehold.co/150x150/333/666?text=N/A'}" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity">
-                            </div>
-                            <!-- Text -->
-                            <div>
-                                <h3 class="text-xl mb-1 group-hover:text-stratum-accent transition-colors">${badge}${article.title}</h3>
-                                <div class="text-xs uppercase tracking-widest opacity-50 mb-2">${date} // Global Stratum</div>
-                                <p class="text-sm opacity-80 line-clamp-2 mb-0">${article.summary || 'Click to read full article...'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            html += `</div>`;
-            container.innerHTML = html;
-        }
-
-        const searchEl = document.getElementById('search-input');
-        if(searchEl) searchEl.addEventListener('input', renderFeed);
-
-        // B. THE READER
-        function renderReader(id) {
-            let article = allArticles.find(a => a.id === id);
-            if (!article) article = MOCK_DATA.find(a => a.id === id);
-
-            const container = document.getElementById('reader-content');
-
-            if(!article) {
-                container.innerHTML = "<p>Article not found.</p>";
-                return;
-            }
-
-            // Edit controls (Admin Only)
-            let controls = "";
-            if(currentUser && currentUser.email === ADMIN_EMAIL && !MOCK_DATA.find(a => a.id === id)) {
-                controls = `<button onclick="window.location.hash='#edit/${id}'" class="mb-4 text-xs border border-stratum-accent text-stratum-accent px-3 py-1 uppercase hover:bg-stratum-accent hover:text-black transition-colors">Edit Article</button>`;
-            }
-
-            const fmtContent = article.content
-                .split('\n').filter(line => line.trim() !== '')
-                .map(line => {
-                    if(line.startsWith('IMAGE:')) {
-                        const url = line.replace('IMAGE:','').split('|')[0].trim();
-                        return `<img src="${url}" class="w-full rounded my-4 opacity-90">`;
-                    }
-                    if(line.startsWith('-')) return `<li>${line.substring(1)}</li>`;
-                    return `<p>${line}</p>`;
-                }).join('');
-
-            container.innerHTML = `
-                ${controls}
-                <div class="mb-6 border-b border-gray-600 pb-4">
-                    <h2 class="text-3xl sm:text-4xl text-white mb-2 border-0 pb-0">${article.title}</h2>
-                    <div class="text-xs uppercase tracking-widest text-stratum-accent">
-                        Global Stratum &bull; ${new Date(article.createdAt).toLocaleDateString()}
-                    </div>
-                </div>
-                
-                <img src="${article.imageUrl}" class="w-full max-h-[400px] object-cover rounded mb-8 shadow-lg">
-                
-                <div class="article-body text-lg text-gray-300 font-light">
-                    ${fmtContent}
-                </div>
-
-                <div class="mt-12 pt-8 border-t border-gray-700 text-center">
-                    <a href="#feed" class="text-xs uppercase tracking-widest hover:text-stratum-accent transition-colors">&larr; Return to Archives</a>
-                </div>
-                
-                <!-- NEW: Explicit Close Button at bottom of reader -->
-                <button onclick="window.closeArticles()" class="w-full mt-12 border border-gray-600 text-gray-400 font-bold uppercase py-3 hover:bg-gray-800 hover:text-white transition-colors">Close Reader</button>
-            `;
-        }
-
-        // C. AUTH UI
-        window.switchAuth = (mode) => {
-            authMode = mode;
-            renderAuth();
-        }
-
-        function renderAuth() {
-            const container = document.getElementById('auth-content');
-            const title = document.getElementById('auth-title');
-            
-            if(currentUser) {
-                title.innerText = "Dashboard";
-                const isAdmin = currentUser.email === ADMIN_EMAIL;
-                
-                let adminControls = "";
-                if(isAdmin) {
-                    adminControls = `<button onclick="window.location.hash='#submit'" class="bg-white text-black font-bold uppercase py-3 px-6 hover:bg-gray-200 transition-colors w-full mb-3">New Article</button>`;
-                }
-
-                container.innerHTML = `
-                    <div class="text-center">
-                        <p class="mb-6">Logged in as: <strong>${currentUser.email}</strong><br><span class="text-xs uppercase opacity-50">${isAdmin ? 'Administrator' : 'Subscriber'}</span></p>
-                        <div class="flex flex-col gap-2 max-w-sm mx-auto">
-                            ${adminControls}
-                            <button onclick="logout()" class="border border-red-500 text-red-500 font-bold uppercase py-3 px-6 hover:bg-red-500 hover:text-white transition-colors">Sign Out</button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                title.innerText = "Account Access";
-                
-                const loginClass = authMode === 'login' ? 'active' : '';
-                const regClass = authMode === 'register' ? 'active' : '';
-
-                const btnText = authMode === 'login' ? 'Login' : 'Create Account';
-                
-                container.innerHTML = `
-                    <div class="flex justify-center gap-8 mb-8 text-sm uppercase tracking-widest font-bold">
-                        <div onclick="switchAuth('login')" class="auth-tab ${loginClass}">Login</div>
-                        <div onclick="switchAuth('register')" class="auth-tab ${regClass}">Register</div>
-                    </div>
-
-                    <form id="login-form" onsubmit="handleAuthAction(event)" class="max-w-sm mx-auto">
-                        <div class="fields flex flex-col gap-4">
-                            <div class="field">
-                                <label>Email Address</label>
-                                <input type="email" id="email" required class="dark-input">
-                            </div>
-                            <div class="field">
-                                <label>Password</label>
-                                <input type="password" id="password" required class="dark-input">
-                            </div>
-                        </div>
-                        <div class="mt-6">
-                            <input type="submit" value="${btnText}" class="primary w-full" />
-                        </div>
-                        <p id="login-error" class="text-center text-red-500 text-xs mt-4 h-4"></p>
-                    </form>
-                `;
-            }
-        }
-
-        window.handleAuthAction = async (e) => {
-            e.preventDefault();
-            if (!auth) {
-                document.getElementById('login-error').innerText = "Error: Config missing.";
-                return;
-            }
-
-            const btn = e.target.querySelector('input[type="submit"]');
-            const originalText = btn.value;
-            btn.value = "Processing...";
-            btn.disabled = true;
-            
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            
-            try {
-                if(authMode === 'login') {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                } else {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                }
-                window.location.hash = '#login';
-            } catch(err) {
-                console.error("Auth Error:", err);
-                document.getElementById('login-error').innerText = err.message.replace("Firebase: ", "");
-                btn.value = originalText;
-                btn.disabled = false;
-            }
-        }
-
-        window.logout = () => {
-            signOut(auth);
-            window.location.hash = '';
-        };
-
-        // D. EDITOR
-        function renderEditor(id = null) {
-            const container = document.getElementById('editor-content');
-            const article = id ? allArticles.find(a => a.id === id) : null;
-            
-            container.innerHTML = `
-                <form onsubmit="handleSave(event, '${id || ''}')">
-                    <div class="fields">
-                        <div class="field">
-                            <label>Article Headline</label>
-                            <input type="text" id="edit-title" class="dark-input" value="${article ? article.title : ''}" required>
-                        </div>
-                        <div class="field">
-                            <label>Cover Image URL</label>
-                            <input type="text" id="edit-image" class="dark-input" value="${article ? article.imageUrl : ''}">
-                        </div>
-                        <div class="field">
-                            <label>Short Summary</label>
-                            <textarea id="edit-summary" rows="2" class="dark-input">${article ? article.summary || '' : ''}</textarea>
-                        </div>
-                        <div class="field">
-                            <label>Content Body</label>
-                            <textarea id="edit-content" rows="12" class="dark-input font-mono text-sm">${article ? article.content : ''}</textarea>
-                        </div>
-                        <div class="field half">
-                            <label>Visibility</label>
-                            <select id="edit-status" class="dark-input bg-[#1b1f22]">
-                                <option value="published" ${article?.status === 'published' ? 'selected' : ''}>Published</option>
-                                <option value="draft" ${article?.status === 'draft' ? 'selected' : ''}>Draft</option>
-                            </select>
-                        </div>
-                    </div>
-                    <ul class="actions flex justify-between mt-6">
-                        <li><button type="button" onclick="window.location.hash='#feed'" class="border border-gray-500 text-gray-500">Cancel</button></li>
-                        <li><input type="submit" value="${id ? 'Update' : 'Publish'}" class="primary" /></li>
-                    </ul>
-                </form>
-            `;
-        }
-
-        window.handleSave = async (e, id) => {
-            e.preventDefault();
-            const data = {
-                title: document.getElementById('edit-title').value,
-                imageUrl: document.getElementById('edit-image').value,
-                summary: document.getElementById('edit-summary').value,
-                content: document.getElementById('edit-content').value,
-                status: document.getElementById('edit-status').value,
-                createdAt: id ? (allArticles.find(a=>a.id===id).createdAt) : Date.now()
-            };
-
-            const col = (typeof __app_id !== 'undefined') 
-                ? collection(db, 'artifacts', __app_id, 'public', 'data', 'articles')
-                : collection(db, 'articles');
-
-            try {
-                if(id) await updateDoc(doc(col, id), data);
-                else await addDoc(col, data);
-                const editor = document.getElementById('editor');
-                editor.classList.remove('active');
-                setTimeout(() => { editor.style.display = 'none'; }, 300);
-                window.location.hash = '#feed';
-            } catch(err) {
-                alert("Error saving: " + err.message);
-            }
-        }
-
-        // --- 6. ROUTER ---
-        function handleHash() {
-            const hash = window.location.hash;
-            
-            if(hash === '' || hash === '#') {
-                window.closeArticles();
-            }
-            else if (hash.startsWith('#article/')) {
-                showArticle('reader');
-                renderReader(hash.split('/')[1]);
-            }
-            else if (hash.startsWith('#edit/') || hash === '#submit') {
-                if(!currentUser || currentUser.email !== ADMIN_EMAIL) { 
-                    window.location.hash = '#login'; 
-                    return; 
-                }
-                showArticle('editor');
-                renderEditor(hash.startsWith('#edit/') ? hash.split('/')[1] : null);
-            }
-            else {
-                showArticle(hash);
-            }
-        }
-
-        // --- 7. BOOTSTRAP ---
-        window.addEventListener('hashchange', handleHash);
-        
-        if(auth) {
-            onAuthStateChanged(auth, (user) => {
-                currentUser = user;
-                const loginLink = document.getElementById('login-link');
-                if(loginLink) loginLink.innerText = user ? "Dashboard" : "Subscriber Login";
-                
-                if(window.location.hash === '#login') {
-                    renderAuth();
-                }
-
-                setupDataListener();
-            });
-        }
-        
-        setTimeout(handleHash, 200);
-
-    </script>
+    setTimeout(route, 150);
+</script>
 </body>
 </html>

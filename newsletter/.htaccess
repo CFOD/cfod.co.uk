@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+
+# Route /article/[slug] to article.html?slug=[slug]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^article/(.+)$ /article.html?slug=$1 [L,QSA]
