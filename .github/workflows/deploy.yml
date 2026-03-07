@@ -21,10 +21,14 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        security: loose
-        timeout: 60000
+        
+        # Upload from the root of your repo
         local-dir: ./
+        
+        # Destination: Main public folder
         server-dir: /htdocs/
+        
+        # EXCLUDE the git history and subdomains!
         exclude: |
           **/.git/**
           **/.git*
@@ -32,7 +36,6 @@ jobs:
           mw2/**
           newsletter/**
           node_modules/**
-          tools/**
 
     # ---------------------------------------------------------
     # STEP 2: Deploy MW2 Subdomain
@@ -43,10 +46,14 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        security: loose
-        timeout: 60000
+        
+        # Source: Only look inside the 'mw2' folder
         local-dir: ./mw2/
+        
+        # Destination: Your subdomain folder
         server-dir: /mw2.cfod.co.uk/htdocs/
+        
+        # Prevent git folder upload here too
         exclude: |
           **/.git/**
           **/.git*
@@ -60,10 +67,14 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        security: loose
-        timeout: 60000
+        
+        # Source: Only look inside the 'newsletter' folder
         local-dir: ./newsletter/
+        
+        # Destination: Your subdomain folder
         server-dir: /newsletter.cfod.co.uk/htdocs/
+        
+        # Prevent git folder upload here too
         exclude: |
           **/.git/**
           **/.git*
