@@ -233,6 +233,47 @@
         .error-state h1 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--muted); }
         .error-state a { color: var(--accent); text-decoration: none; }
 
+
+        /* ── PDF VIEWER ── */
+        .pdf-wrap {
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+        .pdf-embed {
+            width: 100%;
+            height: 78vh;
+            min-height: 520px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: block;
+        }
+        .pdf-fallback {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+        .pdf-fallback p { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+        .btn-download {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            border: 1px solid var(--accent); color: var(--accent);
+            border-radius: 3px; text-decoration: none;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2rem;
+            transition: 0.2s;
+        }
+        .btn-download:hover { background: var(--accent); color: var(--bg); }
+        .btn-download-full {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            margin-top: 1rem; padding: 0.7rem;
+            border: 1px solid var(--border); color: var(--muted);
+            border-radius: 3px; text-decoration: none;
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2rem;
+            transition: 0.2s;
+        }
+        .btn-download-full:hover { border-color: var(--accent); color: var(--accent); }
         /* ── RESPONSIVE ── */
         @media (max-width: 640px) {
             nav.site-nav { padding: 0 1rem; }
@@ -413,14 +454,34 @@
             ledeEl.style.display = 'block';
         }
 
-        // Body — split on double newlines into paragraphs
-        const rawBody = article.body || article.content || '';
-        const paragraphs = rawBody.split(/\n\n+/).filter(p => p.trim());
-        const bodyHtml = paragraphs.map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
-        document.getElementById('art-body').innerHTML = bodyHtml;
+        // Body or PDF embed
+        const bodyEl = document.getElementById('art-body');
+        if (article.pdfUrl) {
+            bodyEl.innerHTML = `
+                <div class="pdf-wrap">
+                    <embed src="${article.pdfUrl}#toolbar=0&navpanes=0&scrollbar=1"
+                           type="application/pdf" class="pdf-embed">
+                    <div class="pdf-fallback" id="pdf-fallback">
+                        <p>Your browser doesn't support inline PDF viewing.</p>
+                        <a href="${article.pdfUrl}" target="_blank" class="btn-download">
+                            <i class="fas fa-file-pdf"></i> Open PDF
+                        </a>
+                    </div>
+                </div>
+                <a href="${article.pdfUrl}" download="${article.slug || 'article'}.pdf" class="btn-download-full">
+                    <i class="fas fa-download"></i> Download PDF
+                </a>`;
+        } else {
+            const rawBody = article.body || article.content || '';
+            const paragraphs = rawBody.split(/
 
-        // Pull quote (inserted after second paragraph if it exists)
-        if (article.pullQuote) {
++/).filter(p => p.trim());
+            bodyEl.innerHTML = paragraphs.map(p => `<p>${p.replace(/
+/g, '<br>')}</p>`).join('');
+        }
+
+        // Pull quote — only for text articles (PDFs have pull quotes baked in)
+        if (article.pullQuote && !article.pdfUrl) {
             const pqEl = document.getElementById('art-pullquote');
             document.getElementById('art-pullquote-text').textContent = `"${article.pullQuote}"`;
             pqEl.style.display = 'block';

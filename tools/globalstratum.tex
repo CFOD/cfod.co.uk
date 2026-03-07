@@ -1,0 +1,158 @@
+$-- Global Stratum Article Template for pandoc + pdflatex
+$-- Usage: pandoc input.docx --template=globalstratum.tex --pdf-engine=pdflatex -V category="..." -V lede="..." -o output.pdf
+
+\documentclass[12pt,a4paper]{article}
+
+%% ── PACKAGES ──────────────────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathpazo}                    % Palatino — elegant policy-journal body font
+\usepackage[scaled=0.92]{helvet}         % Helvetica — clean sans-serif for labels/headings
+\usepackage[dvipsnames,svgnames]{xcolor}
+\usepackage[top=1.1in,bottom=1.25in,left=1.25in,right=1.25in,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{mdframed}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+
+%% Pandoc table compatibility
+\usepackage{calc}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+%% ── COLORS ────────────────────────────────────────────────────────────────
+\definecolor{gsAccent}{HTML}{4DB6AC}
+\definecolor{gsDark}{HTML}{1B1F22}
+\definecolor{gsMuted}{HTML}{757575}
+\definecolor{gsLight}{HTML}{F4F7F7}
+
+%% ── HYPERREF ──────────────────────────────────────────────────────────────
+\hypersetup{colorlinks=true,linkcolor=gsAccent,urlcolor=gsAccent,citecolor=gsAccent}
+
+%% ── HEADER / FOOTER ───────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\fontsize{7}{9}\selectfont\sffamily\color{gsMuted}\MakeUppercase{Global Stratum}}
+\fancyhead[R]{\fontsize{7}{9}\selectfont\sffamily\color{gsMuted}newsletter.cfod.co.uk}
+\fancyfoot[C]{\fontsize{8}{10}\selectfont\sffamily\color{gsMuted}\thepage}
+
+%% ── SECTION HEADINGS ──────────────────────────────────────────────────────
+\titleformat{\section}
+  {\normalfont\large\bfseries\sffamily\color{gsDark}}
+  {}{0em}{}
+  [\vspace{3pt}\textcolor{gsAccent}{\rule{\linewidth}{1pt}}\vspace{2pt}]
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\sffamily}
+  {}{0em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\itshape}
+  {}{0em}{}
+
+\titlespacing*{\section}{0pt}{1.75em}{0.75em}
+\titlespacing*{\subsection}{0pt}{1.25em}{0.5em}
+
+%% ── LISTS ─────────────────────────────────────────────────────────────────
+\setlist[itemize]{leftmargin=1.5em,itemsep=0.25em,topsep=0.5em}
+\setlist[enumerate]{leftmargin=1.5em,itemsep=0.25em,topsep=0.5em}
+\setlist[itemize,1]{label=\textcolor{gsAccent}{\textbullet}}
+
+%% ── BLOCKQUOTE (pull quote style) ─────────────────────────────────────────
+\newmdenv[
+  topline=false, bottomline=false, rightline=false,
+  linewidth=3pt, linecolor=gsAccent,
+  skipabove=1.25em, skipbelow=1.25em,
+  innerleftmargin=1em, innerrightmargin=0.5em,
+  innertopmargin=0.5em, innerbottommargin=0.5em,
+  backgroundcolor=gsLight,
+]{quotebox}
+\renewenvironment{quote}{\begin{quotebox}\large\itshape\color{gsDark}}{\end{quotebox}}
+
+%% ── SPACING ───────────────────────────────────────────────────────────────
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0pt}
+\setkeys{Gin}{width=\linewidth,keepaspectratio}
+
+%% ═════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\thispagestyle{empty}
+
+%% TOP ACCENT RULE
+\noindent\textcolor{gsAccent}{\rule{\linewidth}{2.5pt}}
+\vspace{0.4em}
+
+%% MASTHEAD
+\noindent
+\begin{minipage}[c]{0.65\linewidth}
+  {\fontsize{7.5}{10}\selectfont\sffamily\color{gsMuted}%
+  \MakeUppercase{Global Stratum}\enspace\textperiodcentered\enspace
+  International Relations \& Policy}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.33\linewidth}
+  \raggedleft
+  {\fontsize{7.5}{10}\selectfont\sffamily\color{gsMuted}newsletter.cfod.co.uk}
+\end{minipage}
+
+\vspace{0.6em}
+\noindent\textcolor{gsAccent!30}{\rule{\linewidth}{0.5pt}}
+\vspace{2em}
+
+%% CATEGORY BADGE
+$if(category)$
+{\fontsize{8.5}{11}\selectfont\sffamily\bfseries\textcolor{gsAccent}{\MakeUppercase{$category$}}}
+\vspace{0.65em}
+
+$endif$
+%% TITLE
+\begin{spacing}{1.05}
+{\fontsize{28}{33}\selectfont\bfseries $title$\par}
+\end{spacing}
+
+\vspace{0.8em}
+
+%% BYLINE
+{\fontsize{8.5}{11}\selectfont\sffamily\color{gsMuted}%
+Global Stratum%
+$if(date)$\enspace\textperiodcentered\enspace $date$$endif$%
+$if(readtime)$\enspace\textperiodcentered\enspace $readtime$\,min read$endif$}
+
+\vspace{0.9em}
+\noindent\textcolor{gsAccent!40}{\rule{\linewidth}{0.5pt}}
+\vspace{1.25em}
+
+%% LEDE
+$if(lede)$
+\begin{spacing}{1.25}
+{\large\itshape $lede$\par}
+\end{spacing}
+\vspace{0.9em}
+\noindent\textcolor{gsMuted!40}{\rule{\linewidth}{0.4pt}}
+\vspace{1em}
+
+$endif$
+%% BODY
+\begin{spacing}{1.22}
+$body$
+\end{spacing}
+
+%% CLOSING RULE
+\vspace{2.5em}
+\noindent\textcolor{gsAccent!30}{\rule{\linewidth}{0.5pt}}
+\vspace{0.4em}
+
+{\fontsize{7}{9}\selectfont\sffamily\color{gsMuted}%
+\MakeUppercase{Global Stratum}\enspace\textperiodcentered\enspace
+All analysis represents the views of the author and does not constitute policy advice.\enspace
+\textcopyright\enspace Global Stratum.}
+
+\end{document}
