@@ -38,6 +38,7 @@
 
     <script>
         const ADMIN_EMAIL = "connor-odonnell@hotmail.co.uk";
+        const UPLOAD_API = "https://api.cfod.co.uk";
         window.siteConfig = {
             apiKey: "AIzaSyAQDrbejR6PTnKd9fpH7asHvLRKSaCVvvk",
             authDomain: "global-stratum.firebaseapp.com",
@@ -636,12 +637,18 @@
                     <textarea id="ed-lede" class="dark-input" rows="2" placeholder="The single most compelling sentence. Draws readers in.">${a?.lede||''}</textarea>
                 </div>
                 <div class="editor-field">
-                    <label class="editor-label">Body *</label>
-                    <textarea id="ed-body" class="dark-input" rows="14" placeholder="Write each paragraph separated by a blank line.&#10;&#10;Paragraph two starts here.&#10;&#10;And so on..." required>${a?.body||a?.content||''}</textarea>
+                    <label class="editor-label">Upload Word Doc <span style="opacity:0.4">(optional — auto-converts to branded PDF)</span></label>
+                    <input type="file" id="ed-docx" class="dark-input" accept=".docx" style="padding:0.4rem 0.75rem;"
+                           onchange="document.getElementById('ed-body-wrap').style.display=this.files.length?'none':''">
+                    <p class="editor-hint">Attach a .docx to generate a PDF article. Or leave blank and write body text below.</p>
+                </div>
+                <div id="ed-body-wrap" class="editor-field">
+                    <label class="editor-label">Body</label>
+                    <textarea id="ed-body" class="dark-input" rows="14" placeholder="Write each paragraph separated by a blank line.&#10;&#10;Paragraph two starts here.&#10;&#10;And so on...">${a?.body||a?.content||''}</textarea>
                     <p class="editor-hint">Separate paragraphs with a blank line. No markdown needed.</p>
                 </div>
                 <div class="editor-field">
-                    <label class="editor-label">Pull Quote <span style="opacity:0.4">(optional â€” highlighted in article)</span></label>
+                    <label class="editor-label">Pull Quote <span style="opacity:0.4">(optional — highlighted in article)</span></label>
                     <input type="text" id="ed-pullquote" class="dark-input" value="${a?.pullQuote||''}" placeholder="A striking quote from the piece...">
                 </div>
                 <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
@@ -664,23 +671,59 @@
     window.handleSave = async (e, id) => {
         e.preventDefault();
         const btn = e.target.querySelector('button[type=submit]');
-        btn.disabled = true; btn.innerText = 'Saving...';
+        btn.disabled = true;
 
+        const docxFile = document.getElementById('ed-docx')?.files?.[0];
+        const title    = document.getElementById('ed-title').value.trim();
+        const slug     = document.getElementById('ed-slug').value.trim();
+        const category = document.getElementById('ed-category').value;
+        const lede     = document.getElementById('ed-lede').value.trim();
+        const status   = document.getElementById('ed-status').value;
+
+        // DOCX upload: send to VPS API for PDF conversion
+        if (docxFile) {
+            btn.innerText = 'Converting & uploading…';
+            try {
+                const idToken = await currentUser.getIdToken();
+                const form = new FormData();
+                form.append('file', docxFile);
+                form.append('title', title);
+                form.append('slug', slug);
+                form.append('category', category);
+                form.append('lede', lede);
+                form.append('status', status);
+                form.append('date', new Date().toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                }));
+                const resp = await fetch(UPLOAD_API + '/upload', {
+                    method: 'POST',
+                    headers: { Authorization: 'Bearer ' + idToken },
+                    body: form,
+                });
+                const result = await resp.json();
+                if (!resp.ok) throw new Error(result.error || 'Upload failed');
+                window.closeModals();
+                alert('Published! Article live at /article/' + result.slug);
+            } catch(err) {
+                alert('Error: ' + err.message);
+                btn.disabled = false; btn.innerText = id ? 'Update' : 'Publish';
+            }
+            return;
+        }
+
+        // No docx: save text body to Firestore directly
+        btn.innerText = 'Saving…';
         const existing = id ? allArticles.find(a => a.id === id) : null;
         const data = {
-            title:     document.getElementById('ed-title').value.trim(),
-            slug:      document.getElementById('ed-slug').value.trim(),
-            category:  document.getElementById('ed-category').value,
-            status:    document.getElementById('ed-status').value,
+            title, slug, category, status,
             imageUrl:  document.getElementById('ed-image').value.trim(),
             summary:   document.getElementById('ed-summary').value.trim(),
-            lede:      document.getElementById('ed-lede').value.trim(),
+            lede,
             body:      document.getElementById('ed-body').value.trim(),
             pullQuote: document.getElementById('ed-pullquote').value.trim(),
             createdAt: existing?.createdAt || Date.now(),
             updatedAt: Date.now()
         };
-
         try {
             if (id) await updateDoc(doc(articlesRef(), id), data);
             else await addDoc(articlesRef(), data);

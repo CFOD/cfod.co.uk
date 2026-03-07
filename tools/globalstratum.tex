@@ -1,4 +1,4 @@
-$-- Global Stratum Article Template for pandoc + pdflatex
+$-- Global Stratum Article Template — Policy Paper Style
 $-- Usage: pandoc input.docx --template=globalstratum.tex --pdf-engine=pdflatex -V category="..." -V lede="..." -o output.pdf
 
 \documentclass[12pt,a4paper]{article}
@@ -6,10 +6,8 @@ $-- Usage: pandoc input.docx --template=globalstratum.tex --pdf-engine=pdflatex 
 %% ── PACKAGES ──────────────────────────────────────────────────────────────
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{mathpazo}                    % Palatino — elegant policy-journal body font
-\usepackage[scaled=0.92]{helvet}         % Helvetica — clean sans-serif for labels/headings
 \usepackage[dvipsnames,svgnames]{xcolor}
-\usepackage[top=1.1in,bottom=1.25in,left=1.25in,right=1.25in,headheight=15pt]{geometry}
+\usepackage[top=1.15in,bottom=1.2in,left=1.25in,right=1.25in,headheight=15pt]{geometry}
 \usepackage{microtype}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
@@ -22,137 +20,131 @@ $-- Usage: pandoc input.docx --template=globalstratum.tex --pdf-engine=pdflatex 
 \usepackage{longtable}
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
+\usepackage{helvet}
 
-%% Pandoc table compatibility
-\usepackage{calc}
+%% Pandoc compatibility
 \providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 %% ── COLORS ────────────────────────────────────────────────────────────────
 \definecolor{gsAccent}{HTML}{4DB6AC}
-\definecolor{gsDark}{HTML}{1B1F22}
-\definecolor{gsMuted}{HTML}{757575}
-\definecolor{gsLight}{HTML}{F4F7F7}
+\definecolor{gsDark}{HTML}{1a1a2e}
+\definecolor{gsMuted}{HTML}{888888}
+\definecolor{gsBox}{HTML}{F5F8F8}
 
 %% ── HYPERREF ──────────────────────────────────────────────────────────────
-\hypersetup{colorlinks=true,linkcolor=gsAccent,urlcolor=gsAccent,citecolor=gsAccent}
+\hypersetup{colorlinks=true,linkcolor=gsAccent,urlcolor=gsAccent,citecolor=gsMuted}
 
 %% ── HEADER / FOOTER ───────────────────────────────────────────────────────
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-\fancyhead[L]{\fontsize{7}{9}\selectfont\sffamily\color{gsMuted}\MakeUppercase{Global Stratum}}
-\fancyhead[R]{\fontsize{7}{9}\selectfont\sffamily\color{gsMuted}newsletter.cfod.co.uk}
-\fancyfoot[C]{\fontsize{8}{10}\selectfont\sffamily\color{gsMuted}\thepage}
+\fancyfoot[C]{\fontsize{9}{11}\selectfont\color{gsMuted}\thepage}
+
+%% First page has no header/footer
+\fancypagestyle{firstpage}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot[C]{\fontsize{9}{11}\selectfont\color{gsMuted}\thepage}
+}
 
 %% ── SECTION HEADINGS ──────────────────────────────────────────────────────
-\titleformat{\section}
+\setcounter{secnumdepth}{1}
+
+\titleformat{\section}[block]
   {\normalfont\large\bfseries\sffamily\color{gsDark}}
-  {}{0em}{}
-  [\vspace{3pt}\textcolor{gsAccent}{\rule{\linewidth}{1pt}}\vspace{2pt}]
+  {\textcolor{gsAccent}{\thesection.\enspace}}{0em}
+  {\MakeUppercase}
+  [\vspace{4pt}\textcolor{gsAccent}{\rule{\linewidth}{1pt}}]
 
 \titleformat{\subsection}
   {\normalfont\normalsize\bfseries\sffamily}
-  {}{0em}{}
+  {}{0em}{\MakeUppercase}
 
-\titleformat{\subsubsection}
-  {\normalfont\normalsize\itshape}
-  {}{0em}{}
-
-\titlespacing*{\section}{0pt}{1.75em}{0.75em}
-\titlespacing*{\subsection}{0pt}{1.25em}{0.5em}
+\titlespacing*{\section}{0pt}{2em}{0.85em}
+\titlespacing*{\subsection}{0pt}{1.5em}{0.5em}
 
 %% ── LISTS ─────────────────────────────────────────────────────────────────
-\setlist[itemize]{leftmargin=1.5em,itemsep=0.25em,topsep=0.5em}
-\setlist[enumerate]{leftmargin=1.5em,itemsep=0.25em,topsep=0.5em}
+\setlist[itemize]{leftmargin=1.75em,itemsep=0.25em,topsep=0.5em}
+\setlist[enumerate]{leftmargin=1.75em,itemsep=0.25em,topsep=0.5em}
 \setlist[itemize,1]{label=\textcolor{gsAccent}{\textbullet}}
 
-%% ── BLOCKQUOTE (pull quote style) ─────────────────────────────────────────
+%% ── BLOCKQUOTE ────────────────────────────────────────────────────────────
 \newmdenv[
-  topline=false, bottomline=false, rightline=false,
-  linewidth=3pt, linecolor=gsAccent,
-  skipabove=1.25em, skipbelow=1.25em,
-  innerleftmargin=1em, innerrightmargin=0.5em,
-  innertopmargin=0.5em, innerbottommargin=0.5em,
-  backgroundcolor=gsLight,
-]{quotebox}
-\renewenvironment{quote}{\begin{quotebox}\large\itshape\color{gsDark}}{\end{quotebox}}
+  topline=false,bottomline=false,rightline=false,
+  linewidth=3pt,linecolor=gsAccent,
+  skipabove=1.25em,skipbelow=1.25em,
+  innerleftmargin=1em,innerrightmargin=0.5em,
+  innertopmargin=0.4em,innerbottommargin=0.4em,
+  backgroundcolor=gsBox,
+]{pullquote}
+\renewenvironment{quote}{\begin{pullquote}\itshape}{\end{pullquote}}
+
+%% ── EXECUTIVE SUMMARY BOX ─────────────────────────────────────────────────
+\newmdenv[
+  topline=true,bottomline=true,rightline=true,leftline=true,
+  linewidth=0.6pt,linecolor=black!20,
+  skipabove=1.5em,skipbelow=2em,
+  innerleftmargin=1.25em,innerrightmargin=1.25em,
+  innertopmargin=1em,innerbottommargin=1em,
+  backgroundcolor=gsBox,
+]{summarybox}
 
 %% ── SPACING ───────────────────────────────────────────────────────────────
-\setlength{\parskip}{0.7em}
+\setlength{\parskip}{0.65em}
 \setlength{\parindent}{0pt}
 \setkeys{Gin}{width=\linewidth,keepaspectratio}
 
 %% ═════════════════════════════════════════════════════════════════════════════
 \begin{document}
-\thispagestyle{empty}
+\thispagestyle{firstpage}
 
-%% TOP ACCENT RULE
-\noindent\textcolor{gsAccent}{\rule{\linewidth}{2.5pt}}
-\vspace{0.4em}
-
-%% MASTHEAD
+%% TOP LINE — date and publication
 \noindent
-\begin{minipage}[c]{0.65\linewidth}
-  {\fontsize{7.5}{10}\selectfont\sffamily\color{gsMuted}%
-  \MakeUppercase{Global Stratum}\enspace\textperiodcentered\enspace
-  International Relations \& Policy}
-\end{minipage}%
-\hfill
-\begin{minipage}[c]{0.33\linewidth}
-  \raggedleft
-  {\fontsize{7.5}{10}\selectfont\sffamily\color{gsMuted}newsletter.cfod.co.uk}
-\end{minipage}
+{\fontsize{7.5}{10}\selectfont\sffamily\color{gsMuted}%
+\MakeUppercase{Global Stratum}%
+$if(date)$\enspace\textperiodcentered\enspace\MakeUppercase{$date$}$endif$%
+$if(category)$\enspace\textperiodcentered\enspace\MakeUppercase{$category$}$endif$}
+
+\vspace{1.1em}
+
+%% TITLE
+{\fontsize{34}{38}\selectfont\bfseries\sffamily\color{gsDark}%
+\MakeUppercase{$title$}\par}
 
 \vspace{0.6em}
-\noindent\textcolor{gsAccent!30}{\rule{\linewidth}{0.5pt}}
-\vspace{2em}
 
-%% CATEGORY BADGE
-$if(category)$
-{\fontsize{8.5}{11}\selectfont\sffamily\bfseries\textcolor{gsAccent}{\MakeUppercase{$category$}}}
-\vspace{0.65em}
-
+%% SUBTITLE (lede used as italic subtitle under title)
+$if(lede)$
+{\fontsize{13}{17}\selectfont\itshape\color{black!75} $lede$\par}
 $endif$
-%% TITLE
-\begin{spacing}{1.05}
-{\fontsize{28}{33}\selectfont\bfseries $title$\par}
-\end{spacing}
 
-\vspace{0.8em}
-
-%% BYLINE
-{\fontsize{8.5}{11}\selectfont\sffamily\color{gsMuted}%
-Global Stratum%
-$if(date)$\enspace\textperiodcentered\enspace $date$$endif$%
-$if(readtime)$\enspace\textperiodcentered\enspace $readtime$\,min read$endif$}
-
-\vspace{0.9em}
-\noindent\textcolor{gsAccent!40}{\rule{\linewidth}{0.5pt}}
+\vspace{0.75em}
+\noindent\rule{\linewidth}{0.5pt}
 \vspace{1.25em}
 
-%% LEDE
+%% EXECUTIVE SUMMARY BOX
 $if(lede)$
-\begin{spacing}{1.25}
-{\large\itshape $lede$\par}
-\end{spacing}
-\vspace{0.9em}
-\noindent\textcolor{gsMuted!40}{\rule{\linewidth}{0.4pt}}
-\vspace{1em}
+\begin{summarybox}
+{\fontsize{8.5}{11}\selectfont\sffamily\bfseries\MakeUppercase{Executive Summary}}
 
+\vspace{0.4em}
+{\fontsize{10.5}{15}\selectfont\itshape $lede$\par}
+\end{summarybox}
 $endif$
+
 %% BODY
-\begin{spacing}{1.22}
+\begin{spacing}{1.2}
 $body$
 \end{spacing}
 
-%% CLOSING RULE
-\vspace{2.5em}
-\noindent\textcolor{gsAccent!30}{\rule{\linewidth}{0.5pt}}
-\vspace{0.4em}
+%% FOOTER
+\vspace{2em}
+\noindent\rule{\linewidth}{0.4pt}
+\vspace{0.3em}
 
 {\fontsize{7}{9}\selectfont\sffamily\color{gsMuted}%
-\MakeUppercase{Global Stratum}\enspace\textperiodcentered\enspace
-All analysis represents the views of the author and does not constitute policy advice.\enspace
-\textcopyright\enspace Global Stratum.}
+\textcopyright\enspace Global Stratum.\enspace
+All analysis represents the views of the author.\enspace
+newsletter.cfod.co.uk}
 
 \end{document}
