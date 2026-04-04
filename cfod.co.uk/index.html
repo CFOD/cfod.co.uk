@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CFOD - Home</title>
+        <link
+            rel="icon"
+            type="image/png"
+            href="https://placehold.co/32x32/374151/FFF?text=C&font=sans-serif"
+        />
+
+        <!-- Load Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Load Fonts & Icons -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <script
+            src="https://kit.fontawesome.com/0b745d7406.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ["Inter", "sans-serif"],
+                            montserrat: ["Montserrat", "sans-serif"],
+                        },
+                        colors: {
+                            primary: {
+                                600: "#374151",
+                                700: "#1f2937",
+                                800: "#111827",
+                            },
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            .loader {
+                border: 3px solid #f3f3f3;
+                border-top: 3px solid #374151;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                animation: spin 1s linear infinite;
+                display: inline-block;
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* Markdown-ish styling for dynamic article content */
+            .prose p {
+                margin-bottom: 1.5em;
+                line-height: 1.8;
+            }
+            .prose h2 {
+                font-size: 1.5em;
+                font-weight: bold;
+                margin-top: 2em;
+                margin-bottom: 1em;
+                color: #111827;
+            }
+            .prose ul {
+                list-style-type: disc;
+                padding-left: 1.5em;
+                margin-bottom: 1.5em;
+            }
+            .prose blockquote {
+                border-left: 4px solid #e5e7eb;
+                padding-left: 1em;
+                font-style: italic;
+                color: #4b5563;
+            }
+            .fade-in {
+                animation: fadeIn 0.3s ease-in;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="bg-gray-50 font-sans text-gray-800 antialiased min-h-screen flex flex-col"
+    >
+        <!-- Header -->
+        <header
+            class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm"
+        >
+            <nav
+                class="container mx-auto px-6 py-4 flex justify-between items-center"
+            >
+                <div class="flex items-center gap-4">
+                    <a
+                        href="#"
+                        onclick="window.location.hash=''; return false;"
+                        class="text-2xl font-bold text-gray-900 hover:text-primary-700 transition-colors tracking-tight"
+                        >CFOD</a
+                    >
+                    <span
+                        id="admin-badge"
+                        class="hidden bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider"
+                        >Staff Mode</span
+                    >
+                </div>
+
+                <div class="flex items-center space-x-6">
+                    <!-- Navigation -->
+                    <div class="hidden md:flex space-x-6">
+                        <a
+                            href="#"
+                            onclick="window.location.hash=''; return false;"
+                            class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors"
+                            >HOME</a
+                        >
+                        <a
+                            href="./about-me.html"
+                            class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors"
+                            >ABOUT ME</a
+                        >
+                        <a
+                            href="/map.html"
+                            class="text-base font-medium text-gray-600 hover:text-primary-700 transition-colors"
+                            >MAP</a
+                        >
+                    </div>
+
+                    <!-- Admin Action Button -->
+                    <button
+                        id="new-post-btn"
+                        onclick="window.location.hash='#submit'"
+                        class="hidden flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-800 transition-colors"
+                    >
+                        <i class="fa-solid fa-pen-nib"></i> New Post
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main
+            id="main-container"
+            class="container mx-auto px-6 py-12 flex-grow"
+        >
+            <!-- Views will be injected here via JavaScript -->
+            <div id="loading-view" class="text-center py-20">
+                <div class="loader mb-4"></div>
+                <p class="text-gray-500">Connecting to Live Database...</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-gray-300 mt-auto">
+            <div
+                class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center"
+            >
+                <div class="mb-6 md:mb-0">
+                    <span class="text-2xl font-bold text-white">CFOD</span>
+                    <p class="text-sm text-gray-400 mt-1">&copy; 2025 CFOD.</p>
+                </div>
+                <div
+                    class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8"
+                >
+                    <div id="auth-links">
+                        <!-- Dynamic Login/Logout Link -->
+                        <a
+                            href="#login"
+                            class="text-xs font-bold text-gray-500 hover:text-white uppercase transition-colors"
+                            >Staff Login</a
+                        >
+                    </div>
+                    <a
+                        href="mailto:connor-odonnell@hotmail.co.uk"
+                        class="flex items-center justify-center bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium"
+                    >
+                        <i class="fa-regular fa-envelope mr-2"></i> CONTACT
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- LOGIC -->
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+            import {
+                getAuth,
+                onAuthStateChanged,
+                signInWithEmailAndPassword,
+                signOut,
+                setPersistence,
+                browserLocalPersistence,
+            } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+            import {
+                getFirestore,
+                collection,
+                addDoc,
+                updateDoc,
+                getDoc,
+                onSnapshot,
+                doc,
+                query,
+                orderBy,
+                limit,
+                where,
+                serverTimestamp,
+            } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+            // CONFIGURATION (Forcing Live Connection)
+            const firebaseConfig = {
+                apiKey: "AIzaSyBjyAYAyQI4rGQviWbH1Dx8o2hFoe7jAS4",
+                authDomain: "jc-journal.firebaseapp.com",
+                projectId: "jc-journal",
+                storageBucket: "jc-journal.firebasestorage.app",
+                messagingSenderId: "931803753012",
+                appId: "1:931803753012:web:fce867abf6794c180ff861",
+            };
+
+            // --- LEGACY CONTENT ---
+            const legacyArticles = [];
+
+            let app, auth, db;
+            let currentUser = null;
+            let unifiedFeed = [];
+            let displayedCount = 6;
+            let currentView = "home";
+
+            let unsubCfod = null;
+            let unsubJc = null;
+            let feedError = null;
+
+            // --- APP INITIALIZATION ---
+            async function init() {
+                try {
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    // Auth Listener with UI Refresh
+                    onAuthStateChanged(auth, (user) => {
+                        currentUser = user;
+                        updateUIForUser();
+                        // Re-trigger feed setup to apply draft/live filters based on login status
+                        if(unsubCfod && unsubJc) {
+                            unsubCfod();
+                            unsubJc();
+                            setupFeedListeners();
+                        }
+                        
+                        // Re-render views
+                        if (currentView === 'article') {
+                            const hash = window.location.hash;
+                            if(hash.startsWith('#article/')) {
+                                const id = hash.split('/')[1];
+                                renderArticleDetail(id);
+                            }
+                        } else if (currentView === 'submit') {
+                            handleRouting();
+                        } else if (currentView === 'home') {
+                            renderHome();
+                        }
+                    });
+
+                    window.addEventListener("hashchange", handleRouting);
+                    setupFeedListeners();
+                    handleRouting();
+                } catch (e) {
+                    console.error("Init Error:", e);
+                    document.getElementById("main-container").innerHTML =
+                        `<div class="text-center text-red-500">System Error: ${e.message}</div>`;
+                }
+            }
+
+            // --- HELPER: ROBUST DATE PARSING ---
+            function parseFirebaseDate(val) {
+                if (!val) return new Date().toISOString();
+                if (typeof val.toDate === "function") {
+                    return val.toDate().toISOString();
+                }
+                return new Date(val).toISOString();
+            }
+
+            // --- DATA FETCHING (REAL-TIME SNAPSHOTS) ---
+            function setupFeedListeners() {
+                unifiedFeed = [...legacyArticles]; 
+
+                // 1. CFOD Listener
+                const cfodRef = collection(db, "cfod_articles");
+
+                unsubCfod = onSnapshot(
+                    query(cfodRef, orderBy("createdAt", "desc"), limit(20)),
+                    (snapshot) => {
+                        unifiedFeed = unifiedFeed.filter((i) => i.type !== "dynamic");
+
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            
+                            // FILTER: Hide if explicitly "draft" and user not logged in
+                            // Safe for legacy items (undefined status is visible)
+                            const isDraft = (data.status === 'draft' || data.status === 'Draft');
+                            if (!currentUser && isDraft) return;
+
+                            unifiedFeed.push({
+                                id: doc.id,
+                                type: "dynamic",
+                                source: "Portfolio",
+                                date: parseFirebaseDate(data.createdAt),
+                                imageUrl: data.imageUrl,
+                                title: data.title,
+                                description: data.summary,
+                                content: data.content,
+                                linkUrl: data.externalLink || null,
+                                status: data.status || 'live'
+                            });
+                        });
+                        refreshFeed();
+                    },
+                    (error) => {
+                        console.error("CFOD Feed Error:", error);
+                        feedError = "Error loading CFOD posts: " + error.code;
+                        refreshFeed();
+                    },
+                );
+
+                // 2. JCJournal Listener
+                const jcRef = collection(db, "articles");
+                const jcQuery = query(
+                    jcRef,
+                    where("author", "==", "Connor O'Donnell"),
+                    orderBy("createdAt", "desc"),
+                    limit(10),
+                );
+
+                unsubJc = onSnapshot(
+                    jcQuery,
+                    (snapshot) => {
+                        unifiedFeed = unifiedFeed.filter((i) => i.type !== "external");
+
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            
+                            // FILTER: Hide if explicitly "draft" or "Draft" and user not logged in
+                            const isDraft = (data.status === 'draft' || data.status === 'Draft');
+                            if (!currentUser && isDraft) return;
+
+                            unifiedFeed.push({
+                                id: doc.id,
+                                type: "external",
+                                source: "JCJournal",
+                                date: parseFirebaseDate(data.createdAt),
+                                imageUrl: data.imageUrl,
+                                title: data.title,
+                                description: data.summary,
+                                linkUrl: `https://jcjournal.co.uk/#article/${doc.id}`,
+                                status: isDraft ? 'draft' : 'live'
+                            });
+                        });
+                        refreshFeed();
+                    },
+                    (error) => {
+                        console.error("JC Feed Error:", error);
+                        if (error.code === "failed-precondition") {
+                            feedError = "Missing Index. Check Console for link.";
+                            refreshFeed();
+                        }
+                    },
+                );
+            }
+
+            function refreshFeed() {
+                unifiedFeed.sort((a, b) => new Date(b.date) - new Date(a.date));
+                if (currentView === "home") {
+                    renderHome();
+                } else if (currentView === "article") {
+                    const hash = window.location.hash;
+                    if(hash.startsWith('#article/')) {
+                        const id = hash.split('/')[1];
+                        renderArticleDetail(id);
+                    }
+                }
+            }
+
+            // --- ROUTING & VIEWS ---
+            function handleRouting() {
+                const hash = window.location.hash;
+                window.scrollTo(0, 0);
+
+                if (hash === "" || hash === "#") {
+                    currentView = "home";
+                    renderHome();
+                } else if (hash === "#login") {
+                    currentView = "login";
+                    renderLogin();
+                } else if (hash === "#submit") {
+                    currentView = "submit";
+                    if (!currentUser) {
+                        window.location.hash = "#login";
+                        return;
+                    }
+                    renderSubmitForm();
+                } else if (hash.startsWith("#edit/")) {
+                    currentView = "submit";
+                    if (!currentUser) {
+                        window.location.hash = "#login";
+                        return;
+                    }
+                    const id = hash.split("/")[1];
+                    renderSubmitForm(id);
+                } else if (hash.startsWith("#article/")) {
+                    currentView = "article";
+                    const id = hash.split("/")[1];
+                    // Small delay to ensure feed is populated if hitting directly
+                    if (unifiedFeed.length === 0) {
+                        setTimeout(() => renderArticleDetail(id), 500);
+                    } else {
+                        renderArticleDetail(id);
+                    }
+                } else if (hash === "#logout") {
+                    signOut(auth).then(() => (window.location.hash = ""));
+                }
+            }
+
+            // --- VIEW: HOME GRID ---
+            function renderHome() {
+                const container = document.getElementById("main-container");
+
+                const cardsHtml = unifiedFeed
+                    .slice(0, displayedCount)
+                    .map((item) => {
+                        const badgeColor =
+                            item.source === "JCJournal"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-800";
+                        const btnText =
+                            item.source === "JCJournal"
+                                ? "VISIT JOURNAL"
+                                : "READ MORE";
+                        const btnColor =
+                            item.source === "JCJournal"
+                                ? "bg-blue-700 hover:bg-blue-800"
+                                : "bg-primary-600 hover:bg-primary-700";
+
+                        let href = item.linkUrl;
+                        let target = "";
+
+                        if (item.type === "dynamic" && !item.linkUrl) {
+                            href = `#article/${item.id}`;
+                        } else if (
+                            item.source === "JCJournal" ||
+                            item.linkUrl?.startsWith("http")
+                        ) {
+                            target = 'target="_blank"';
+                        }
+
+                        // Status Badge for Admin
+                        let statusBadge = "";
+                        if (currentUser && item.status !== 'live') {
+                            statusBadge = `<div class="absolute top-4 left-4 z-20"><span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">DRAFT</span></div>`;
+                        }
+
+                        return `
+                <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col transition-all hover:shadow-lg hover:-translate-y-1 relative h-full">
+                    ${statusBadge}
+                    <div class="absolute top-4 right-4 z-10">
+                        <span class="${badgeColor} text-xs font-bold px-2 py-1 rounded border border-white/50 uppercase tracking-wide shadow-sm">${item.source}</span>
+                    </div>
+                    <div class="h-56 bg-gray-100 overflow-hidden relative">
+                         <img src="${item.imageUrl || "https://placehold.co/600x400/EEE/31343C?text=No+Image"}"
+                              class="w-full h-full object-cover"
+                              alt="${item.title}"
+                              onerror="this.src='https://placehold.co/600x400/EEE/31343C?text=Image+Error'">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col">
+                        <div class="text-xs text-gray-400 mb-2 font-mono">${new Date(item.date).toLocaleDateString()}</div>
+                        <h2 class="text-xl font-bold mb-3 text-gray-900 leading-tight">${item.title}</h2>
+                        <p class="text-gray-600 mb-6 flex-grow text-sm leading-relaxed">${item.description || "No description available."}</p>
+                        <a href="${href}" ${target} class="inline-block w-full text-center ${btnColor} text-white font-bold text-xs py-3 px-4 rounded uppercase tracking-wider transition-colors">
+                            ${btnText}
+                        </a>
+                    </div>
+                </article>
+                `;
+                    })
+                    .join("");
+
+                let statusHtml = "";
+                if (feedError) {
+                    statusHtml = `<div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-8 text-sm flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> ${feedError}</div>`;
+                } else if (unifiedFeed.length === legacyArticles.length) {
+                    statusHtml = `<div class="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded mb-8 text-sm">
+                    <strong>Connected to Live Database.</strong> No posts found by 'Connor O'Donnell' or in 'cfod_articles'. Use "New Post" to create one.
+                </div>`;
+                }
+
+                container.innerHTML = `
+                <div class="flex justify-between items-end mb-8 fade-in">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Latest Updates</h1>
+                        <p class="text-gray-500 mt-1">Aggregated from across my network.</p>
+                    </div>
+                </div>
+                ${statusHtml}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in">
+                    ${cardsHtml}
+                </div>
+                ${
+                    unifiedFeed.length > displayedCount
+                        ? `
+                <div class="text-center mt-12">
+                    <button onclick="window.displayedCount += 6; window.handleRouting()" class="text-gray-500 hover:text-black font-bold border-b-2 border-transparent hover:border-black transition-all">Load More Archives</button>
+                </div>`
+                        : ""
+                }
+            `;
+
+                window.displayedCount = displayedCount;
+                window.handleRouting = handleRouting;
+            }
+
+            // --- VIEW: ARTICLE READER ---
+            function renderArticleDetail(id) {
+                const item = unifiedFeed.find((i) => i.id === id);
+                const container = document.getElementById("main-container");
+
+                if (!item) {
+                    container.innerHTML = `<div class="text-center py-20">Loading article... (or not found) <br><a href="#" class="underline mt-4 inline-block">Go Home</a></div>`;
+                    return;
+                }
+
+                const formattedBody = item.content
+                    ? item.content
+                          .split("\n")
+                          .map((line) => {
+                              if (line.startsWith("## "))
+                                  return `<h2>${line.replace("## ", "")}</h2>`;
+                              if (line.startsWith("- "))
+                                  return `<li>${line.replace("- ", "")}</li>`;
+                              if (line.trim() === "") return "<br>";
+                              return `<p>${line}</p>`;
+                          })
+                          .join("")
+                    : "<p>No content provided.</p>";
+
+                // EDIT BUTTON LOGIC
+                let editAction = "";
+                const canEdit = currentUser && item.source === "Portfolio" && !item.id.startsWith("legacy");
+                
+                if (canEdit) {
+                    editAction = `<a href="#edit/${item.id}" class="text-blue-600 hover:text-blue-800 font-bold ml-4 border-l pl-4 border-gray-300"><i class="fa-solid fa-pen"></i> Edit Post</a>`;
+                }
+
+                // DRAFT INDICATOR
+                let draftIndicator = "";
+                if(item.status !== 'live') {
+                    draftIndicator = `<span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full ml-3 align-middle">DRAFT MODE</span>`;
+                }
+
+                container.innerHTML = `
+                <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100 fade-in">
+                    <a href="#" onclick="window.location.hash=''; return false;" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-black mb-8 uppercase tracking-wide">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Back to Home
+                    </a>
+                    ${editAction}
+
+                    <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title} ${draftIndicator}</h1>
+
+                    <div class="flex items-center text-sm text-gray-500 mb-8 pb-8 border-b border-gray-100">
+                        <span>Published ${new Date(item.date).toLocaleDateString()}</span>
+                        <span class="mx-2">•</span>
+                        <span class="bg-gray-100 px-2 py-1 rounded text-xs font-bold text-gray-700">Portfolio Update</span>
+                    </div>
+
+                    ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full h-auto rounded-lg mb-10 shadow-sm">` : ""}
+
+                    <div class="prose max-w-none text-gray-800 text-lg">
+                        <p class="font-bold text-xl mb-8 text-gray-900 italic">${item.description}</p>
+                        ${formattedBody}
+                    </div>
+                </div>
+            `;
+            }
+
+            // --- VIEW: SUBMIT/EDIT FORM ---
+            async function renderSubmitForm(editId = null) {
+                const container = document.getElementById("main-container");
+                let formTitle = "Create New CFOD Post";
+                let btnText = "Publish Post";
+
+                // Initial data structure
+                let articleData = {
+                    title: "",
+                    imageUrl: "",
+                    summary: "",
+                    content: "",
+                    status: "live" // Default
+                };
+
+                // If editing, try to fetch data
+                if (editId) {
+                    container.innerHTML = `<div class="text-center py-20"><div class="loader mb-4"></div><p>Loading article data...</p></div>`;
+                    try {
+                        const docRef = doc(db, "cfod_articles", editId);
+                        const docSnap = await getDoc(docRef);
+                        if (docSnap.exists()) {
+                            articleData = docSnap.data();
+                            formTitle = "Edit Post";
+                            btnText = "Update Post";
+                        } else {
+                            alert("Article not found!");
+                            window.location.hash = "";
+                            return;
+                        }
+                    } catch (e) {
+                        alert("Error loading article: " + e.message);
+                        return;
+                    }
+                }
+
+                container.innerHTML = `
+                     <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200 fade-in">
+                         <h2 class="text-2xl font-bold mb-6">${formTitle}</h2>
+                         <form id="cms-form" class="space-y-4">
+                             <div class="flex gap-4">
+                                <div class="flex-grow">
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Title</label>
+                                    <input type="text" id="p-title" required value="${articleData.title}" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                                </div>
+                                <div class="w-1/3">
+                                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Status</label>
+                                    <select id="p-status" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                                        <option value="live" ${articleData.status === 'live' ? 'selected' : ''}>Live (Visible)</option>
+                                        <option value="draft" ${articleData.status === 'draft' ? 'selected' : ''}>Draft (Hidden)</option>
+                                    </select>
+                                </div>
+                             </div>
+                             
+                             <div>
+                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Image URL</label>
+                                 <input type="text" id="p-image" value="${articleData.imageUrl || ""}" placeholder="https://..." class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">
+                             </div>
+                             <div>
+                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Summary (Shown on card)</label>
+                                 <textarea id="p-summary" required rows="2" class="w-full p-3 border rounded bg-gray-50 focus:ring-2 focus:ring-black outline-none transition-all">${articleData.summary || ""}</textarea>
+                             </div>
+
+                             <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                 <div>
+                                     <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Article Content</label>
+                                     <textarea id="p-content" rows="6" placeholder="Write content here. Use '##' for headers." class="w-full p-3 border rounded bg-white focus:ring-2 focus:ring-black outline-none transition-all">${articleData.content || ""}</textarea>
+                                 </div>
+                             </div>
+
+                             <div class="pt-4 flex justify-between items-center">
+                                 <a href="#" class="text-sm text-red-500 font-bold hover:underline">Cancel</a>
+                                 <button type="submit" class="bg-black text-white px-8 py-3 rounded font-bold hover:bg-gray-800 transition-transform active:scale-95">${btnText}</button>
+                             </div>
+                         </form>
+                     </div>
+                 `;
+
+                document
+                    .getElementById("cms-form")
+                    .addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        const btn = e.target.querySelector("button");
+                        btn.textContent = "Processing...";
+                        btn.disabled = true;
+
+                        try {
+                            const data = {
+                                title: document.getElementById("p-title").value,
+                                imageUrl:
+                                    document.getElementById("p-image").value,
+                                summary:
+                                    document.getElementById("p-summary").value,
+                                content:
+                                    document.getElementById("p-content").value,
+                                status:
+                                    document.getElementById("p-status").value,
+                                authorId: currentUser.uid,
+                            };
+
+                            if (editId) {
+                                // UPDATE EXISTING
+                                const docRef = doc(db, "cfod_articles", editId);
+                                await updateDoc(docRef, data);
+                                alert("Updated successfully!");
+                                window.location.hash = `#article/${editId}`;
+                            } else {
+                                // CREATE NEW
+                                data.createdAt = serverTimestamp();
+                                const colRef = collection(db, "cfod_articles");
+                                await addDoc(colRef, data);
+                                alert("Posted successfully!");
+                                window.location.hash = "";
+                            }
+                        } catch (err) {
+                            alert("Error: " + err.message);
+                            btn.textContent = btnText;
+                            btn.disabled = false;
+                        }
+                    });
+            }
+
+            // --- VIEW: LOGIN ---
+            function renderLogin() {
+                const container = document.getElementById("main-container");
+                container.innerHTML = `
+                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200 mt-10 fade-in">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Staff Access</h2>
+                    <form id="login-form" class="space-y-4">
+                        <input type="email" id="email" placeholder="Email" required class="w-full p-3 border rounded bg-gray-50">
+                        <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded bg-gray-50">
+                        <button type="submit" class="w-full bg-black text-white py-3 rounded font-bold">Login</button>
+                    </form>
+                    <p id="login-error" class="text-center text-red-500 text-sm mt-4"></p>
+                </div>
+            `;
+
+                document
+                    .getElementById("login-form")
+                    .addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        const errorBox = document.getElementById("login-error");
+                        errorBox.textContent = "";
+
+                        try {
+                            await signInWithEmailAndPassword(
+                                auth,
+                                document.getElementById("email").value,
+                                document.getElementById("password").value,
+                            );
+                            window.location.hash = "";
+                        } catch (err) {
+                            let msg = err.message;
+                            if (err.code === "auth/invalid-credential")
+                                msg = "Incorrect email or password.";
+                            errorBox.textContent = msg;
+                        }
+                    });
+            }
+
+            // --- UI HELPERS ---
+            function updateUIForUser() {
+                const authLinks = document.getElementById("auth-links");
+                const newPostBtn = document.getElementById("new-post-btn");
+                const badge = document.getElementById("admin-badge");
+
+                if (currentUser) {
+                    authLinks.innerHTML = `<a href="#logout" class="text-xs font-bold text-red-400 hover:text-red-600 uppercase transition-colors">Logout</a>`;
+                    newPostBtn.classList.remove("hidden");
+                    badge.classList.remove("hidden");
+                } else {
+                    authLinks.innerHTML = `<a href="#login" class="text-xs font-bold text-gray-500 hover:text-white uppercase transition-colors">Staff Login</a>`;
+                    newPostBtn.classList.add("hidden");
+                    badge.classList.add("hidden");
+                }
+            }
+
+            // Start
+            init();
+        </script>
+    </body>
+</html>
