@@ -12,16 +12,16 @@
 
 export const config = {
   // Shown in the nav brand and the hero title.
-  name: 'Your Name',
+  name: 'CFOD',
 
   // Small monospace line above the hero title.
   eyebrow: 'Portfolio — 2026',
 
   // Hero title, one array item per line. The last line renders outlined.
-  title: ['Your', 'Name'],
+  title: ['CFOD', 'Name'],
 
   // The single line under the hero title. Keep it short.
-  tagline: 'Selected work, systems, notes, and experiments.',
+  tagline: 'Selected works and projects.',
 
   // Custom cursor (desktop, fine pointers only). Set false to disable.
   customCursor: true,
@@ -124,5 +124,5 @@ export const contact = {
     { label: 'X / Twitter', href: '#' },
     { label: 'LinkedIn', href: '#' },
   ],
-  smallprint: 'Shell v1 — content arriving.',
+  smallprint: 'Alpha v1 — Work in progress - content arriving.',
 };
