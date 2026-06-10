@@ -24,7 +24,7 @@ export default function ProjectCard({ project, flip, reduced }) {
           {project.media ? (
             <img src={project.media} alt={project.title} loading="lazy" />
           ) : (
-            <div className="media-ph mono">[ plate ]</div>
+            <div className="media-ph mono">[ media ]</div>
           )}
           <span className="card-sheen" aria-hidden="true" />
           <span className="card-corners" aria-hidden="true" />

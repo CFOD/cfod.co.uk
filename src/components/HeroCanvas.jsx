@@ -4,95 +4,85 @@ import * as THREE from 'three';
 
 /**
  * ─── HeroCanvas ──────────────────────────────────────────────────────────────
- * A low, drifting particle terrain rendered with a custom shader:
- *  - ~21k points on a wide grid, displaced by two octaves of simplex noise
- *  - the pointer lifts and tints a soft patch of the field (uMouse)
- *  - edges fade out so the field melts into the page background
+ * Dust motes drifting through a shaft of light — the air of an old reading
+ * room. A custom shader renders ~1,100 soft points that:
+ *  - drift slowly sideways and upward, wrapping around the field
+ *  - brighten and warm to gold inside a diagonal beam (matching the CSS
+ *    .hero-shaft gradient layered above the canvas)
+ *  - shimmer faintly near the pointer, with gentle camera parallax
  *
- * The accent colour is read from the CSS variable --accent at mount, so
- * re-theming the site automatically re-themes the shader.
+ * The gold is read from the CSS variable --accent at mount, so re-theming
+ * the site automatically re-themes the dust.
  *
  * This file is lazy-loaded (see Hero.jsx) so three.js ships as its own chunk.
  */
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
-  uniform vec2 uMouse;       // world-space x,z of the pointer target
+  uniform vec2 uMouse;       // world-space x,y of the pointer target
   uniform float uPixelRatio;
 
   attribute float aScale;
+  attribute float aSeed;
+  attribute float aDrift;
 
+  varying float vBeam;
   varying float vGlow;
+  varying float vTwinkle;
   varying float vFade;
-
-  // Ashima 2D simplex noise (public domain)
-  vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
-  float snoise(vec2 v) {
-    const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                        -0.577350269189626, 0.024390243902439);
-    vec2 i  = floor(v + dot(v, C.yy));
-    vec2 x0 = v - i + dot(i, C.xx);
-    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    i = mod289(i);
-    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
-    m = m * m;
-    m = m * m;
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-    vec3 g;
-    g.x = a0.x * x0.x + h.x * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
-  }
 
   void main() {
     vec3 pos = position;
+    float t = uTime;
 
-    // Two octaves of drifting noise displace the terrain vertically.
-    float n = snoise(pos.xz * 0.16 + uTime * 0.05) * 0.9
-            + snoise(pos.xz * 0.42 - uTime * 0.03) * 0.35;
-    pos.y += n;
+    // Slow lateral drift + slow rise, both wrapping across the field box.
+    pos.x = mod(pos.x + aDrift * t, 18.0) - 9.0;
+    pos.y = mod(pos.y + 5.0 + t * (0.05 + aSeed * 0.06), 11.0) - 5.0;
 
-    // Pointer lift: gaussian bump centred on uMouse.
-    float d2 = dot(pos.xz - uMouse, pos.xz - uMouse);
-    float lift = exp(-d2 * 0.16);
-    pos.y += lift * 0.9;
-    vGlow = lift;
+    // Gentle, individual bobbing.
+    pos.x += sin(t * 0.45 + aSeed * 9.0) * 0.12;
+    pos.y += sin(t * 0.6 + aSeed * 6.2831) * 0.16;
 
-    // Fade the field out toward its edges.
-    float fx = 1.0 - smoothstep(8.5, 13.0, abs(pos.x));
-    float fz = 1.0 - smoothstep(4.5, 8.0, abs(pos.z));
-    vFade = fx * fz;
+    // The shaft of light: distance from a diagonal line in the xy plane.
+    vec2 n = normalize(vec2(1.0, -0.5));
+    float d = dot(pos.xy - vec2(1.2, 0.4), n);
+    vBeam = exp(-d * d * 0.5);
+
+    // Faint shimmer near the pointer.
+    vec2 m = pos.xy - uMouse;
+    vGlow = exp(-dot(m, m) * 0.8) * 0.55;
+
+    // Each mote breathes on its own slow cycle.
+    vTwinkle = 0.72 + 0.28 * sin(t * 1.3 + aSeed * 12.566);
+
+    // Fade out near the wrap edges so motes never pop in or out.
+    float fx = 1.0 - smoothstep(7.6, 9.0, abs(pos.x));
+    float fy = 1.0 - smoothstep(4.4, 5.5, abs(pos.y - 0.5));
+    vFade = fx * fy;
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = aScale * uPixelRatio * (34.0 / -mv.z);
+    gl_PointSize = aScale * uPixelRatio * (30.0 / -mv.z);
   }
 `;
 
 const fragmentShader = /* glsl */ `
   uniform vec3 uBase;
-  uniform vec3 uAccent;
+  uniform vec3 uGold;
 
+  varying float vBeam;
   varying float vGlow;
+  varying float vTwinkle;
   varying float vFade;
 
   void main() {
-    // Soft round point sprite.
+    // Very soft round sprite — out-of-focus dust, not a hard dot.
     float d = length(gl_PointCoord - 0.5);
-    float disc = 1.0 - smoothstep(0.32, 0.5, d);
+    float disc = 1.0 - smoothstep(0.12, 0.5, d);
     if (disc < 0.01) discard;
 
-    float alpha = disc * (0.16 + vGlow * 0.75) * vFade;
-    vec3 color = mix(uBase, uAccent, clamp(vGlow * 1.4, 0.0, 1.0));
+    float alpha = disc * (0.05 + vBeam * 0.4 + vGlow * 0.35) * vTwinkle * vFade;
+    vec3 color = mix(uBase, uGold, clamp(vBeam * 0.85 + vGlow * 0.7, 0.0, 1.0));
     gl_FragColor = vec4(color, alpha);
   }
 `;
@@ -101,44 +91,44 @@ function readAccent() {
   const v = getComputedStyle(document.documentElement)
     .getPropertyValue('--accent')
     .trim();
-  return v || '#c6ff4e';
+  return v || '#c8a45c';
 }
 
-function Field() {
+function Dust() {
   const matRef = useRef(null);
   const mouseTarget = useRef(new THREE.Vector2(0, 0));
   const { camera } = useThree();
 
   const { geometry, uniforms } = useMemo(() => {
-    const cols = 190;
-    const rows = 110;
-    const count = cols * rows;
+    const count = 1100;
     const positions = new Float32Array(count * 3);
     const scales = new Float32Array(count);
+    const seeds = new Float32Array(count);
+    const drifts = new Float32Array(count);
 
-    let i = 0;
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const x = (c / (cols - 1) - 0.5) * 26 + (Math.random() - 0.5) * 0.12;
-        const z = (r / (rows - 1) - 0.5) * 16 + (Math.random() - 0.5) * 0.12;
-        positions[i * 3 + 0] = x;
-        positions[i * 3 + 1] = 0;
-        positions[i * 3 + 2] = z;
-        scales[i] = 0.5 + Math.random();
-        i++;
-      }
+    for (let i = 0; i < count; i++) {
+      positions[i * 3 + 0] = (Math.random() - 0.5) * 18; // x ∈ [-9, 9]
+      positions[i * 3 + 1] = -5 + Math.random() * 11; //    y ∈ [-5, 6]
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 7; //  z ∈ [-3.5, 3.5]
+
+      // Mostly fine specks, with a few large soft bokeh motes.
+      scales[i] = 0.5 + Math.pow(Math.random(), 3) * 2.6;
+      seeds[i] = Math.random();
+      drifts[i] = 0.08 + Math.random() * 0.22;
     }
 
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
+    geometry.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
+    geometry.setAttribute('aDrift', new THREE.BufferAttribute(drifts, 1));
 
     const uniforms = {
       uTime: { value: 0 },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-      uBase: { value: new THREE.Color('#aab2bd') },
-      uAccent: { value: new THREE.Color(readAccent()) },
+      uBase: { value: new THREE.Color('#a89a80') }, // warm parchment grey
+      uGold: { value: new THREE.Color(readAccent()) },
     };
 
     return { geometry, uniforms };
@@ -150,14 +140,14 @@ function Field() {
 
     mat.uniforms.uTime.value += Math.min(delta, 0.05);
 
-    // Map normalized pointer (-1..1) into the field's world space.
-    mouseTarget.current.set(state.pointer.x * 11, 2.2 - state.pointer.y * 5.5);
-    mat.uniforms.uMouse.value.lerp(mouseTarget.current, 0.055);
+    // Map normalized pointer (-1..1) into the dust field's world space.
+    mouseTarget.current.set(state.pointer.x * 5.5, state.pointer.y * 3.2);
+    mat.uniforms.uMouse.value.lerp(mouseTarget.current, 0.05);
 
-    // Subtle camera parallax.
-    camera.position.x += (state.pointer.x * 0.6 - camera.position.x) * 0.04;
-    camera.position.y += (3.1 + state.pointer.y * 0.25 - camera.position.y) * 0.04;
-    camera.lookAt(0, 0.4, 0);
+    // Subtle camera parallax — leaning toward the light.
+    camera.position.x += (state.pointer.x * 0.5 - camera.position.x) * 0.04;
+    camera.position.y += (0.35 + state.pointer.y * 0.3 - camera.position.y) * 0.04;
+    camera.lookAt(0, 0.3, 0);
   });
 
   // Dispose GPU resources on unmount.
@@ -184,10 +174,10 @@ export default function HeroCanvas({ active }) {
       className="hero-canvas"
       dpr={[1, 2]}
       frameloop={active ? 'always' : 'never'}
-      camera={{ position: [0, 3.1, 9.2], fov: 40, near: 0.1, far: 60 }}
+      camera={{ position: [0, 0.4, 8.5], fov: 38, near: 0.1, far: 40 }}
       gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
     >
-      <Field />
+      <Dust />
     </Canvas>
   );
 }

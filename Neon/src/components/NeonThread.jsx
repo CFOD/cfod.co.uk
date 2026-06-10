@@ -6,10 +6,10 @@ import { catmullRomPath } from '../lib/path.js';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * ─── NeonThread (the gilt thread) ────────────────────────────────────────────
- * The page's signature element: a hairline of gold — Ariadne's thread — that
- * draws itself as you scroll, weaving left and right through the layout and
- * coming to rest at the seal in the contact section.
+ * ─── NeonThread ──────────────────────────────────────────────────────────────
+ * The page's signature element: a single luminous line that draws itself as
+ * you scroll, snaking left and right through the layout and resolving into
+ * the terminal dot in the contact section.
  *
  * How it works
  *  1. Sections place invisible waypoint markers: <i className="wp" data-thread />
@@ -163,10 +163,10 @@ export default function NeonThread({ reduced }) {
             className="thread-core"
             d={geom.d}
           />
-          {/* A small gilded bead riding the tip of the thread */}
+          {/* Comet head riding the tip of the drawn line */}
           <g ref={headRef} className="thread-head" style={{ opacity: 0 }}>
-            <circle r="9" className="thread-head-glow" />
-            <circle r="2.2" className="thread-head-core" />
+            <circle r="14" className="thread-head-glow" />
+            <circle r="2.6" className="thread-head-core" />
           </g>
         </svg>
       )}
