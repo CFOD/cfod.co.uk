@@ -12,13 +12,13 @@
 
 export const config = {
   // Shown in the nav brand and the hero title.
-  name: 'Your Name',
+  name: 'CFOD',
 
   // Small inscription line above the hero title.
   eyebrow: 'Portfolio · MMXXVI',
 
   // Hero title, one array item per line. The last line renders in gilded italic.
-  title: ['Your', 'Name'],
+  title: ['CFOD', ''],
 
   // The single line under the hero title. Keep it short.
   tagline: 'Essays, arguments, systems, and marginalia.',
