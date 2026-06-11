@@ -38,6 +38,7 @@ export default function Hero({ reduced }) {
         ) : (
           <div className="hero-fallback" />
         )}
+        <div className="hero-shaft" />
         <div className="hero-vignette" />
       </div>
 

@@ -1,27 +1,28 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   NEON THREAD PORTFOLIO — global stylesheet
+   GILT THREAD PORTFOLIO — global stylesheet
 
+   Candlelit-library palette: warm espresso black, parchment ink, antique gold.
    Theming lives in :root. Change --accent (+ --accent-rgb) to re-colour the
    entire site, including the WebGL hero (the shader reads --accent at load).
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Palette */
-  --bg: #0a0a0c;
-  --bg-raise: #101116;
-  --bg-panel: #0e0f13;
-  --ink: #e8e6e1;
-  --ink-dim: #8c8b86;
-  --hairline: rgba(232, 230, 225, 0.08);
+  /* Palette — leather, parchment, gold leaf */
+  --bg: #0e0c0a;
+  --bg-raise: #171310;
+  --bg-panel: #141110;
+  --ink: #eae3d4;
+  --ink-dim: #998d78;
+  --hairline: rgba(234, 227, 212, 0.09);
 
-  /* The one bold accent. Keep --accent-rgb in sync for alpha glows. */
-  --accent: #c6ff4e;
-  --accent-rgb: 198, 255, 78;
+  /* The one accent: antique gold. Keep --accent-rgb in sync for alpha washes. */
+  --accent: #c8a45c;
+  --accent-rgb: 200, 164, 92;
 
-  /* Type */
-  --font-display: 'Space Grotesk', 'Helvetica Neue', sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+  /* Type — Cormorant for display, EB Garamond for body, Cinzel for inscriptions */
+  --font-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --font-body: 'EB Garamond', Georgia, serif;
+  --font-label: 'Cinzel', 'EB Garamond', serif;
 
   /* Layout */
   --pad: clamp(20px, 5vw, 72px);
@@ -50,8 +51,8 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -82,7 +83,7 @@ ul {
 
 ::selection {
   background: var(--accent);
-  color: var(--bg);
+  color: #14100a;
 }
 
 :focus-visible {
@@ -97,11 +98,11 @@ ul {
   background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #26272e;
+  background: #342c21;
   border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #34353d;
+  background: #463b2c;
 }
 
 /* Lenis recommended styles */
@@ -126,10 +127,13 @@ html.lenis body {
   padding-right: var(--pad);
 }
 
+/* Inscription style — engraved Roman capitals for labels, eyebrows, buttons.
+   (Class is named .mono for historical reasons; restyle freely.) */
 .mono {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-family: var(--font-label);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--ink-dim);
 }
@@ -155,13 +159,13 @@ html.lenis body {
   background: var(--hairline);
 }
 
-/* Film grain — one static SVG-noise overlay, very faint */
+/* Paper grain — one static SVG-noise overlay, very faint */
 .grain {
   position: fixed;
   inset: 0;
   z-index: 80;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.055;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -195,27 +199,28 @@ html.lenis body {
   visibility: hidden;
 }
 
-/* Thread strokes — layered for a filter-free glow */
+/* The gilt thread — a hairline of gold leaf with the faintest warm wash.
+   Deliberately quiet: gilding catching light, not neon. */
 .thread-halo {
   fill: none;
-  stroke: rgba(var(--accent-rgb), 0.07);
-  stroke-width: 10;
+  stroke: rgba(var(--accent-rgb), 0.05);
+  stroke-width: 6;
   stroke-linecap: round;
 }
 .thread-glow {
   fill: none;
-  stroke: rgba(var(--accent-rgb), 0.22);
-  stroke-width: 3.5;
+  stroke: rgba(var(--accent-rgb), 0.12);
+  stroke-width: 2;
   stroke-linecap: round;
 }
 .thread-core {
   fill: none;
   stroke: var(--accent);
-  stroke-width: 1.5;
+  stroke-width: 1.1;
   stroke-linecap: round;
 }
 .thread-head-glow {
-  fill: rgba(var(--accent-rgb), 0.16);
+  fill: rgba(var(--accent-rgb), 0.1);
 }
 .thread-head-core {
   fill: var(--accent);
@@ -240,7 +245,7 @@ html.lenis body {
   border-bottom: 1px solid transparent;
 }
 .nav.scrolled {
-  background: rgba(10, 10, 12, 0.66);
+  background: rgba(14, 12, 10, 0.7);
   border-bottom-color: var(--hairline);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -249,18 +254,18 @@ html.lenis body {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
 }
 .brand-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.8);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.14);
 }
 .brand-name {
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: 17px;
   letter-spacing: 0.02em;
 }
 
@@ -299,16 +304,32 @@ html.lenis body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(60% 50% at 70% 30%, rgba(var(--accent-rgb), 0.07), transparent 70%),
-    radial-gradient(50% 60% at 25% 75%, rgba(120, 130, 150, 0.1), transparent 70%),
+    radial-gradient(55% 50% at 72% 26%, rgba(var(--accent-rgb), 0.07), transparent 70%),
+    radial-gradient(50% 60% at 24% 78%, rgba(150, 132, 104, 0.08), transparent 70%),
     var(--bg);
 }
+
+/* Shaft of light — a tall window's beam falling across the dust */
+.hero-shaft {
+  position: absolute;
+  inset: -12% -6%;
+  background: linear-gradient(
+    112deg,
+    transparent 34%,
+    rgba(234, 227, 212, 0.04) 45%,
+    rgba(var(--accent-rgb), 0.075) 51%,
+    rgba(234, 227, 212, 0.03) 58%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
 .hero-vignette {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(110% 90% at 50% 40%, transparent 55%, rgba(10, 10, 12, 0.85) 100%),
-    linear-gradient(to bottom, rgba(10, 10, 12, 0.4), transparent 22%, transparent 70%, var(--bg) 100%);
+    radial-gradient(110% 90% at 50% 40%, transparent 55%, rgba(14, 12, 10, 0.85) 100%),
+    linear-gradient(to bottom, rgba(14, 12, 10, 0.4), transparent 22%, transparent 70%, var(--bg) 100%);
 }
 
 .hero-inner {
@@ -321,25 +342,26 @@ html.lenis body {
 }
 
 .hero-title {
-  font-size: clamp(58px, 11.5vw, 176px);
-  line-height: 0.94;
-  letter-spacing: -0.03em;
+  font-size: clamp(60px, 11.5vw, 180px);
+  line-height: 0.96;
+  letter-spacing: -0.015em;
   font-weight: 300;
 }
 .hero-line {
   display: block;
 }
 .hero-title em {
-  font-style: normal;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(232, 230, 225, 0.55);
+  font-style: italic;
+  color: var(--accent);
+  padding-right: 0.04em; /* italic overhang */
 }
 
 .hero-tagline {
-  margin: 28px 0 0;
-  max-width: 34ch;
+  margin: 26px 0 0;
+  max-width: 36ch;
   color: var(--ink-dim);
-  font-size: clamp(15px, 1.4vw, 18px);
+  font-size: clamp(16px, 1.4vw, 19px);
+  font-style: italic;
 }
 
 .hero-actions {
@@ -349,14 +371,14 @@ html.lenis body {
 }
 
 .btn {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-family: var(--font-label);
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink);
-  border: 1px solid rgba(232, 230, 225, 0.25);
-  padding: 13px 22px;
-  border-radius: 2px;
+  border: 1px solid rgba(234, 227, 212, 0.26);
+  padding: 13px 24px;
+  border-radius: 0;
   transition:
     border-color 0.25s ease,
     color 0.25s ease,
@@ -410,11 +432,21 @@ html.lenis body {
 .intro-statement {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(26px, 3.6vw, 48px);
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  max-width: 26ch;
+  font-weight: 400;
+  font-size: clamp(27px, 3.6vw, 47px);
+  line-height: 1.3;
+  letter-spacing: 0;
+  max-width: 28ch;
+}
+/* Gilded drop cap — the illuminated initial */
+.intro-statement::first-letter {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.9em;
+  line-height: 0.72;
+  float: left;
+  padding: 0.06em 0.12em 0 0;
+  color: var(--accent);
 }
 
 /* ── Projects ──────────────────────────────────────────────────────────── */
@@ -452,9 +484,9 @@ html.lenis body {
   position: relative;
   aspect-ratio: 16 / 10;
   border: 1px solid var(--hairline);
-  border-radius: 4px;
+  border-radius: 3px;
   background:
-    linear-gradient(135deg, var(--bg-raise) 0%, var(--bg-panel) 60%, #0b0c10 100%);
+    linear-gradient(150deg, #181410 0%, #131110 55%, #0f0d0b 100%);
   overflow: hidden;
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform 0.2s ease-out, border-color 0.3s ease;
@@ -469,29 +501,30 @@ html.lenis body {
   object-fit: cover;
 }
 
+/* Engraver's hatching on the empty plate */
 .media-ph {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #3c3d44;
+  color: #574b39;
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0 18px,
-    rgba(232, 230, 225, 0.025) 18px 19px
+    rgba(234, 227, 212, 0.028) 18px 19px
   );
 }
 
-/* Cursor-following sheen */
+/* Candle glint following the cursor */
 .card-sheen {
   position: absolute;
   inset: 0;
   opacity: 0;
   transition: opacity 0.35s ease;
   background: radial-gradient(
-    340px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(var(--accent-rgb), 0.1),
+    360px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(var(--accent-rgb), 0.08),
     transparent 65%
   );
   pointer-events: none;
@@ -500,48 +533,38 @@ html.lenis body {
   opacity: 1;
 }
 
-/* Accent corner brackets, drawn with 8 background gradients */
+/* Gilt inner frame — a bookplate rule that settles in on hover */
 .card-corners {
   position: absolute;
-  inset: 10px;
-  opacity: 0;
-  transition: opacity 0.3s ease, inset 0.3s ease;
+  inset: 12px;
+  border: 1px solid rgba(var(--accent-rgb), 0);
+  transition: border-color 0.4s ease, inset 0.4s ease;
   pointer-events: none;
-  --cl: var(--accent);
-  background:
-    linear-gradient(var(--cl), var(--cl)) left 0 top 0 / 16px 1px,
-    linear-gradient(var(--cl), var(--cl)) left 0 top 0 / 1px 16px,
-    linear-gradient(var(--cl), var(--cl)) right 0 top 0 / 16px 1px,
-    linear-gradient(var(--cl), var(--cl)) right 0 top 0 / 1px 16px,
-    linear-gradient(var(--cl), var(--cl)) left 0 bottom 0 / 16px 1px,
-    linear-gradient(var(--cl), var(--cl)) left 0 bottom 0 / 1px 16px,
-    linear-gradient(var(--cl), var(--cl)) right 0 bottom 0 / 16px 1px,
-    linear-gradient(var(--cl), var(--cl)) right 0 bottom 0 / 1px 16px;
-  background-repeat: no-repeat;
 }
 .card:hover .card-corners {
-  opacity: 1;
-  inset: 14px;
+  border-color: rgba(var(--accent-rgb), 0.45);
+  inset: 9px;
 }
 
 .proj-index {
   margin: 0 0 10px;
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(40px, 4.5vw, 64px);
+  font-size: clamp(38px, 4vw, 58px);
   line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(232, 230, 225, 0.3);
+  color: rgba(234, 227, 212, 0.2);
 }
 .proj-title {
-  font-size: clamp(24px, 2.4vw, 34px);
-  letter-spacing: -0.01em;
+  font-size: clamp(26px, 2.4vw, 36px);
+  font-weight: 500;
+  letter-spacing: 0;
   margin-bottom: 8px;
 }
 .proj-desc {
   margin: 0 0 20px;
   color: var(--ink-dim);
-  font-size: 15px;
+  font-size: 16px;
+  font-style: italic;
 }
 
 .tags {
@@ -552,8 +575,8 @@ html.lenis body {
 }
 .tags li {
   border: 1px solid var(--hairline);
-  border-radius: 99px;
-  padding: 6px 12px;
+  border-radius: 0;
+  padding: 5px 11px;
   transition: border-color 0.25s ease, color 0.25s ease;
 }
 .proj:hover .tags li {
@@ -591,6 +614,7 @@ html.lenis body {
   padding: clamp(80px, 12vh, 140px) 0;
 }
 
+/* Ghost letter — an engraved capital sunk into the page */
 .big-index {
   position: absolute;
   top: 10%;
@@ -599,11 +623,10 @@ html.lenis body {
   z-index: 0;
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(90px, 15vw, 220px);
+  font-size: clamp(110px, 17vw, 260px);
   line-height: 1;
-  letter-spacing: -0.04em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(232, 230, 225, 0.14);
+  letter-spacing: 0;
+  color: rgba(234, 227, 212, 0.07);
   user-select: none;
 }
 .spot.alt .big-index {
@@ -619,8 +642,8 @@ html.lenis body {
 .frame {
   position: absolute;
   border: 1px solid var(--hairline);
-  border-radius: 4px;
-  background: rgba(16, 17, 22, 0.55);
+  border-radius: 3px;
+  background: rgba(23, 19, 16, 0.55);
 }
 .frame.f1 {
   left: 12%;
@@ -647,11 +670,11 @@ html.lenis body {
   align-items: center;
   justify-content: center;
   background:
-    repeating-linear-gradient(-45deg, transparent 0 22px, rgba(232, 230, 225, 0.02) 22px 23px),
+    repeating-linear-gradient(-45deg, transparent 0 22px, rgba(234, 227, 212, 0.02) 22px 23px),
     var(--bg-panel);
 }
 .frame.f3 .mono {
-  color: #3c3d44;
+  color: #574b39;
 }
 .spot.alt .frame.f1 {
   left: auto;
@@ -667,9 +690,9 @@ html.lenis body {
   z-index: 2;
 }
 .spot-title {
-  font-size: clamp(28px, 3vw, 44px);
-  font-weight: 300;
-  letter-spacing: -0.01em;
+  font-size: clamp(30px, 3vw, 46px);
+  font-weight: 400;
+  letter-spacing: 0;
   margin-bottom: 8px;
 }
 .spot-note {
@@ -692,8 +715,8 @@ html.lenis body {
   position: relative;
   aspect-ratio: 1;
   border: 1px solid var(--hairline);
-  border-radius: 4px;
-  background: rgba(16, 17, 22, 0.4);
+  border-radius: 2px;
+  background: rgba(23, 19, 16, 0.4);
   padding: 14px;
   transition:
     border-color 0.25s ease,
@@ -702,7 +725,7 @@ html.lenis body {
 }
 .cell:hover {
   border-color: rgba(var(--accent-rgb), 0.5);
-  background: rgba(var(--accent-rgb), 0.04);
+  background: rgba(var(--accent-rgb), 0.035);
   transform: translateY(-3px);
 }
 .cell-kind {
@@ -718,7 +741,12 @@ html.lenis body {
   position: absolute;
   bottom: 14px;
   right: 14px;
-  color: #4a4b52;
+  color: #5c5142;
+  text-transform: none;
+  letter-spacing: 0.12em;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 12px;
 }
 .cell.slot {
   border-style: dashed;
@@ -736,7 +764,7 @@ html.lenis body {
   font-family: var(--font-display);
   font-weight: 300;
   font-size: clamp(30px, 5.4vw, 84px);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   line-height: 1.1;
   border-bottom: 1px solid var(--hairline);
   padding-bottom: 10px;
@@ -761,6 +789,7 @@ html.lenis body {
   color: var(--accent);
 }
 
+/* The seal — where the gilt thread comes to rest */
 .terminal {
   position: relative;
   height: 160px;
@@ -770,21 +799,21 @@ html.lenis body {
   justify-content: center;
 }
 .end-dot {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 1px solid rgba(232, 230, 225, 0.3);
+  border: 1px solid rgba(234, 227, 212, 0.3);
   background: transparent;
   transition: background 0.5s ease, border-color 0.5s ease;
 }
 .end-dot.lit {
   background: var(--accent);
   border-color: var(--accent);
-  animation: pulse 2.2s ease-in-out infinite;
+  animation: pulse 2.6s ease-in-out infinite;
 }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.55); }
-  50% { box-shadow: 0 0 18px 6px rgba(var(--accent-rgb), 0.25); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.4); }
+  50% { box-shadow: 0 0 12px 4px rgba(var(--accent-rgb), 0.18); }
 }
 
 .footer {
@@ -820,16 +849,16 @@ html.has-cursor textarea {
   transition: opacity 0.3s ease;
 }
 .cursor-dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
   background: var(--accent);
 }
 .cursor-ring {
   width: 34px;
   height: 34px;
   margin: -17px 0 0 -17px;
-  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
   transition: opacity 0.3s ease, width 0.25s ease, height 0.25s ease,
     margin 0.25s ease, border-color 0.25s ease;
 }
@@ -837,7 +866,7 @@ html.has-cursor textarea {
   width: 52px;
   height: 52px;
   margin: -26px 0 0 -26px;
-  border-color: rgba(var(--accent-rgb), 0.8);
+  border-color: rgba(var(--accent-rgb), 0.75);
 }
 
 /* ── Responsive ────────────────────────────────────────────────────────── */
@@ -883,13 +912,13 @@ html.has-cursor textarea {
     min-height: 95vh;
   }
   .thread-halo {
-    stroke-width: 7;
+    stroke-width: 4.5;
   }
   .thread-glow {
-    stroke-width: 2.5;
+    stroke-width: 1.6;
   }
   .thread-core {
-    stroke-width: 1.2;
+    stroke-width: 1;
   }
   .hero-hint {
     display: none;
