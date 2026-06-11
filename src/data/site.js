@@ -6,7 +6,7 @@
  *  here. Components read this file; you should rarely need to touch them.
  *
  *  Media: drop images/video into /public/media and set `media: '/media/x.jpg'`
- *  on a project. Leave `media: null` to keep the placeholder plate.
+ *  on a project. Leave `media: null` to keep the placeholder panel.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -14,14 +14,14 @@ export const config = {
   // Shown in the nav brand and the hero title.
   name: 'CFOD',
 
-  // Small inscription line above the hero title.
-  eyebrow: 'Portfolio · MMXXVI',
+  // Small monospace line above the hero title.
+  eyebrow: 'Portfolio — 2026',
 
-  // Hero title, one array item per line. The last line renders in gilded italic.
-  title: ['CFOD', ''],
+  // Hero title, one array item per line. The last line renders outlined.
+  title: ['CFOD', 'Name'],
 
   // The single line under the hero title. Keep it short.
-  tagline: 'Essays, arguments, systems, and marginalia.',
+  tagline: 'Selected works and projects.',
 
   // Custom cursor (desktop, fine pointers only). Set false to disable.
   customCursor: true,
@@ -37,9 +37,9 @@ export const nav = [
 
 // One short statement for the transition section. Replace with your own line.
 export const intro = {
-  index: '§ I',
+  index: '001',
   statement:
-    'A study being assembled — essays, projects, and field notes will take their places here.',
+    'A space being assembled — projects, prototypes, and field notes will live here.',
 };
 
 // ── Projects ────────────────────────────────────────────────────────────────
@@ -48,17 +48,17 @@ export const intro = {
 export const projects = [
   {
     id: 'project-01',
-    index: 'I',
-    title: 'Project One',
+    index: '01',
+    title: 'Project 01',
     descriptor: 'Short descriptor',
     tags: ['Tag', 'Tag', 'Tag'],
-    href: '#', // ← link to essay / case study / repo
+    href: '#', // ← link to case study / repo / video
     media: null, // ← '/media/project-01.jpg' once you have an image
   },
   {
     id: 'project-02',
-    index: 'II',
-    title: 'Project Two',
+    index: '02',
+    title: 'Project 02',
     descriptor: 'Short descriptor',
     tags: ['Tag', 'Tag', 'Tag'],
     href: '#',
@@ -66,8 +66,8 @@ export const projects = [
   },
   {
     id: 'project-03',
-    index: 'III',
-    title: 'Project Three',
+    index: '03',
+    title: 'Project 03',
     descriptor: 'Short descriptor',
     tags: ['Tag', 'Tag', 'Tag'],
     href: '#',
@@ -75,8 +75,8 @@ export const projects = [
   },
   {
     id: 'project-04',
-    index: 'IV',
-    title: 'Project Four',
+    index: '04',
+    title: 'Project 04',
     descriptor: 'Short descriptor',
     tags: ['Tag', 'Tag', 'Tag'],
     href: '#',
@@ -85,35 +85,34 @@ export const projects = [
 ];
 
 // ── Spotlights ──────────────────────────────────────────────────────────────
-// Two cinematic, mostly-empty stages reserved for future major works.
-// The index renders as a huge ghost letter behind the stage (Α, Β — alpha, beta).
+// Two cinematic, mostly-empty stages reserved for future major projects.
 export const spotlights = [
   {
     id: 'spotlight-01',
-    index: 'Α',
+    index: 'S–01',
     title: 'Spotlight',
-    note: 'Reserved — future major work.',
+    note: 'Reserved — future major project.',
   },
   {
     id: 'spotlight-02',
-    index: 'Β',
+    index: 'S–02',
     title: 'Spotlight',
-    note: 'Reserved — future major work.',
+    note: 'Reserved — future major project.',
   },
 ];
 
 // ── Archive grid ────────────────────────────────────────────────────────────
-// Small modular cells. `kind` is the label, `ref` is the folio mark.
+// Small modular cells. `kind` is the label, `ref` is the corner mark.
 export const archive = [
-  { kind: 'Essay', ref: 'fol. i' },
-  { kind: 'Note', ref: 'fol. ii' },
-  { kind: 'Fragment', ref: 'fol. iii' },
-  { kind: 'Commentary', ref: 'fol. iv' },
-  { kind: 'Build', ref: 'fol. v' },
-  { kind: 'Marginalia', ref: 'fol. vi' },
-  { kind: 'Letter', ref: 'fol. vii' },
-  { kind: 'Argument', ref: 'fol. viii' },
-  { kind: 'Translation', ref: 'fol. ix' },
+  { kind: 'Note', ref: 'A–01' },
+  { kind: 'Field', ref: 'A–02' },
+  { kind: 'Experiment', ref: 'A–03' },
+  { kind: 'Archive', ref: 'A–04' },
+  { kind: 'Build', ref: 'A–05' },
+  { kind: 'Note', ref: 'A–06' },
+  { kind: 'Experiment', ref: 'A–07' },
+  { kind: 'Field', ref: 'A–08' },
+  { kind: 'Build', ref: 'A–09' },
   { kind: 'Slot', ref: '+' }, // empty slot — duplicate this row to grow the grid
 ];
 
@@ -125,5 +124,5 @@ export const contact = {
     { label: 'X / Twitter', href: '#' },
     { label: 'LinkedIn', href: '#' },
   ],
-  smallprint: 'Vol. I · in preparation.',
+  smallprint: 'Alpha v1 — Work in progress - content arriving.',
 };

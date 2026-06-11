@@ -1,12 +1,9 @@
-# Gilt Thread — Portfolio Shell
+# Neon Thread — Portfolio Shell
 
 A single-page React + Vite portfolio shell: dark, editorial, deliberately
-sparse, with the air of an old reading room. Dust motes drift through a shaft
-of light in the hero, and one hairline of gold — *Ariadne's thread* — draws
-itself as you scroll, weaving left and right through every section before
-coming to rest at a small gilded seal in the contact block. Type is set in
-Cormorant Garamond and EB Garamond, with Cinzel's Roman inscriptional
-capitals for the small labels.
+sparse. A WebGL particle field fills the hero, and one luminous line — the
+*thread* — draws itself as you scroll, weaving left and right through every
+section before resolving into a glowing terminal dot at the contact block.
 
 All copy on the page is placeholder by design. You populate it later by
 editing **one file**: `src/data/site.js`.
@@ -31,7 +28,7 @@ Node 20.19+ (or 22+) is recommended for Vite.
 | Library | Role |
 | --- | --- |
 | **React 19 + Vite** | App framework and build tool. Fast dev server, tiny config. |
-| **three / @react-three/fiber** | The hero's drifting dust motes. R3F lets the scene live as a React component; three.js is code-split into its own chunk and only loads if WebGL is available. |
+| **three / @react-three/fiber** | The hero's WebGL particle terrain. R3F lets the scene live as a React component; three.js is code-split into its own chunk and only loads if WebGL is available. |
 | **GSAP + ScrollTrigger** | All scroll choreography: section reveals, masked media wipes, parallax frames, and the thread's draw progress. |
 | **Lenis** | Inertial smooth scrolling. It rides on native scroll, so ScrollTrigger and ordinary scroll listeners stay accurate. |
 
@@ -66,9 +63,9 @@ neon-thread-portfolio/
     └── components/
         ├── Nav.jsx
         ├── Cursor.jsx          # optional custom cursor
-        ├── NeonThread.jsx      # ★ the gilt thread (scroll-drawn line)
+        ├── NeonThread.jsx      # ★ the scroll-drawn line
         ├── Hero.jsx            # lazy-loads the canvas, owns the fallback
-        ├── HeroCanvas.jsx      # dust motes in a light shaft + custom GLSL
+        ├── HeroCanvas.jsx      # particle field + custom GLSL
         ├── Intro.jsx
         ├── Projects.jsx / ProjectCard.jsx
         ├── Spotlights.jsx
@@ -104,22 +101,19 @@ Inline `← comments` in `site.js` mark every spot.
 Open `src/styles/global.css` — the design tokens sit at the top in `:root`:
 
 - **Accent colour**: change `--accent` *and* `--accent-rgb` (used for alpha
-  washes). The default is antique gold (`#c8a45c`). The WebGL shader reads
-  `--accent` at load, so the dust, thread, cursor, and hovers all re-theme
-  together.
+  glows). The WebGL shader reads `--accent` at load, so the particle field,
+  thread, cursor, and hovers all re-theme together.
 - **Fonts**: swap the Google Fonts `<link>` in `index.html`, then update
-  `--font-display` (Cormorant Garamond), `--font-body` (EB Garamond), and
-  `--font-label` (Cinzel — the engraved capitals used for labels/buttons).
+  `--font-display` / `--font-body`.
 - **Spacing / width**: `--pad` and `--max`.
 
 ---
 
-## The gilt thread
+## The neon thread
 
-`NeonThread.jsx` (the component keeps its original name) measures invisible
-waypoint markers, threads a smooth Catmull-Rom curve through them, and ties
-the line's `stroke-dashoffset` (plus a small gold bead at its tip) to scroll
-progress with one scrubbed ScrollTrigger.
+`NeonThread.jsx` measures invisible waypoint markers, threads a smooth
+Catmull-Rom curve through them, and ties the line's `stroke-dashoffset` (plus
+a comet head) to scroll progress with one scrubbed ScrollTrigger.
 
 To reshape the route, move the markers — each section contains one:
 
@@ -130,7 +124,7 @@ To reshape the route, move the markers — each section contains one:
 Add, remove, or reposition markers freely; the curve rebuilds automatically
 (also on resize). The line sits on a layer *behind* cards and panels, so it
 weaves through negative space and ducks under content. The final marker in
-`Contact.jsx` lands on the seal, which lights gold at ~96% scroll.
+`Contact.jsx` lands on the terminal dot, which lights up at ~96% scroll.
 
 ---
 
