@@ -1,0 +1,15 @@
+{
+  // Cloudflare Workers config — static-assets-only deployment of the Vite build.
+  // `npx wrangler deploy` reads this; without it wrangler tries to auto-detect
+  // config and fails parsing vite.config.js.
+  "name": "cfod",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./dist",
+    // Serve /mw2/ as mw2/index.html, like a classic static host.
+    "html_handling": "auto-trailing-slash",
+    // Unknown routes fall back to 404 handling appropriate for a static site
+    // (the portfolio is a single page; no SPA routing needed).
+    "not_found_handling": "404-page"
+  }
+}
