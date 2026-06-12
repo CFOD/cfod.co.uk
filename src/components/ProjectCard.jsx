@@ -47,6 +47,17 @@ export default function ProjectCard({ project, flip, reduced }) {
         <p className="proj-desc" data-reveal data-reveal-delay="0.12">
           {project.descriptor}
         </p>
+        {(project.what || project.why) && (
+          <div className="proj-note" data-reveal data-reveal-delay="0.15">
+            {project.what && <p className="proj-what mono">{project.what}</p>}
+            {project.why && (
+              <p className="proj-why">
+                <span className="proj-why-label mono">Why it’s here</span>
+                {project.why}
+              </p>
+            )}
+          </div>
+        )}
         <ul className="tags mono" data-reveal data-reveal-delay="0.18">
           {project.tags.map((t, i) => (
             <li key={t + i}>{t}</li>

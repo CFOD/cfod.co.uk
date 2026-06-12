@@ -567,6 +567,37 @@ html.lenis body {
   font-style: italic;
 }
 
+/* Annotation — what the piece is, and why it's shown. */
+.proj-note {
+  margin: 0 0 20px;
+  padding-left: 14px;
+  border-left: 1px solid var(--hairline);
+}
+.proj-what {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.proj-why {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+.proj-why-label {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(var(--accent-rgb), 0.7);
+}
+.proj:hover .proj-note {
+  border-left-color: rgba(var(--accent-rgb), 0.3);
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;

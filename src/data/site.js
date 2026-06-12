@@ -45,12 +45,22 @@ export const intro = {
 // ── Projects ────────────────────────────────────────────────────────────────
 // Placeholder zones. For each future project, replace title / descriptor /
 // tags, point `href` somewhere real, and optionally add `media`.
+//
+// Each project also carries an annotation, so the card explains the piece
+// rather than repeating it:
+//   what — one short line on the form of the thing: medium, length, date.
+//          e.g. 'PDF essay · 12 pages · May 2026'
+//   why  — the curator's note: why this piece earns a place on the site.
+//          One or two sentences, in your own voice. Leave either as null
+//          to hide it.
 export const projects = [
   {
     id: 'project-01',
     index: 'I',
     title: 'Strategic Volatility',
     descriptor: 'Market dynamics and the limits of rhetoric — an analysis of performative disruption in the international system.',
+    what: 'WHAT IT IS — e.g. “PDF essay · N pages · written <month year>”', // ← replace
+    why: 'WHY IT’S HERE — one or two sentences on why this piece is showcased.', // ← replace
     tags: ['Analysis', 'Geopolitics', 'Markets'],
     href: 'work/strategic-volatility.pdf', // ← PDF in /public/work
     newTab: true, // PDFs open in a new tab
@@ -61,16 +71,20 @@ export const projects = [
     index: 'II',
     title: 'MW2 Collector',
     descriptor: 'An interactive archive of Modern Warfare 2 — weapons, killstreaks, and ephemera from the 2009 classic.',
+    what: 'WHAT IT IS — e.g. “Interactive web build · single page · <month year>”', // ← replace
+    why: 'WHY IT’S HERE — one or two sentences on why this piece is showcased.', // ← replace
     tags: ['Build', 'Interactive', 'Archive'],
     href: 'mw2/', // standalone page in /public/mw2
     newTab: true,
-    media: '/mw2/background.jpg', // the page's own key art
+    media: '/mw2/background.webp', // the page's own key art
   },
   {
     id: 'project-03',
     index: 'III',
     title: 'Project Three',
     descriptor: 'Short descriptor',
+    what: null,
+    why: null,
     tags: ['Tag', 'Tag', 'Tag'],
     href: '#',
     media: null,
@@ -80,6 +94,8 @@ export const projects = [
     index: 'IV',
     title: 'Project Four',
     descriptor: 'Short descriptor',
+    what: null,
+    why: null,
     tags: ['Tag', 'Tag', 'Tag'],
     href: '#',
     media: null,

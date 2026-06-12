@@ -773,7 +773,10 @@
                             <div id="weaponStats" class="content-card">
                                 <div class="text-2xl md:text-3xl font-bold tracking-wider mb-1" id="wsName" style="color:var(--mw-text)">--</div>
                                 <div class="signal-line w-full mb-6"></div>
-                                <div class="space-y-4" id="wsBars"></div>
+                                <div class="flex flex-col md:flex-row gap-8 items-center">
+                                    <div class="space-y-4 flex-1 w-full" id="wsBars"></div>
+                                    <canvas id="wsRadar" width="300" height="300" class="flex-shrink-0 hidden" aria-hidden="true"></canvas>
+                                </div>
                             </div>
                         </section>
 
@@ -1080,6 +1083,41 @@ const statColors = {
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
             });
+            document.addEventListener('mouseover', e => {
+                cursor.classList.toggle('hover', !!e.target.closest('a, button, .gallery-image, .ks-node, .lightbox-close'));
+            });
+
+            /* ============================
+               Hero Parallax + Title Glitch
+            ============================ */
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const heroParallax = document.getElementById('hero-parallax');
+            if (!reducedMotion && window.matchMedia('(hover: hover)').matches) {
+                let tx = 0, ty = 0, px = 0, py = 0;
+                window.addEventListener('mousemove', e => {
+                    tx = (e.clientX / window.innerWidth - 0.5) * 2;
+                    ty = (e.clientY / window.innerHeight - 0.5) * 2;
+                }, { passive: true });
+                (function animateParallax() {
+                    if (window.scrollY < window.innerHeight) {
+                        px += (tx - px) * 0.04;
+                        py += (ty - py) * 0.04;
+                        heroParallax.style.transform = `translate(${(px * -14).toFixed(2)}px, ${(py * -10).toFixed(2)}px)`;
+                    }
+                    requestAnimationFrame(animateParallax);
+                })();
+            }
+
+            const mw2Title = document.querySelector('.mw2-main-title');
+            if (!reducedMotion && mw2Title) {
+                (function scheduleGlitch() {
+                    setTimeout(() => {
+                        mw2Title.classList.add('glitching');
+                        setTimeout(() => mw2Title.classList.remove('glitching'), 300);
+                        scheduleGlitch();
+                    }, 3500 + Math.random() * 5500);
+                })();
+            }
 
             /* ============================
                HUD Time
@@ -1235,9 +1273,104 @@ const statColors = {
                 });
             }
 
+/* Radar chart */
+const wsRadar = document.getElementById('wsRadar');
+const radarCtx = wsRadar.getContext('2d');
+let radarAnim = null;
+
+function drawRadar(stats, labels, progress) {
+    const dpr = window.devicePixelRatio || 1;
+    const size = 300;
+    wsRadar.width = size * dpr;
+    wsRadar.height = size * dpr;
+    wsRadar.style.width = size + 'px';
+    wsRadar.style.height = size + 'px';
+    radarCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    radarCtx.clearRect(0, 0, size, size);
+
+    const cx = size / 2, cy = size / 2, maxR = size / 2 - 52;
+    const keys = Object.keys(stats);
+    const n = keys.length;
+    const angle = (i) => -Math.PI / 2 + (i * 2 * Math.PI) / n;
+
+    // Grid rings
+    radarCtx.strokeStyle = 'rgba(255,255,255,0.07)';
+    radarCtx.lineWidth = 1;
+    [0.25, 0.5, 0.75, 1].forEach(f => {
+        radarCtx.beginPath();
+        for (let i = 0; i <= n; i++) {
+            const a = angle(i % n);
+            const x = cx + Math.cos(a) * maxR * f;
+            const y = cy + Math.sin(a) * maxR * f;
+            i === 0 ? radarCtx.moveTo(x, y) : radarCtx.lineTo(x, y);
+        }
+        radarCtx.stroke();
+    });
+
+    // Axes + labels
+    radarCtx.font = '8px "Share Tech Mono", monospace';
+    radarCtx.fillStyle = 'rgba(232,255,204,0.45)';
+    keys.forEach((k, i) => {
+        const a = angle(i);
+        radarCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+        radarCtx.beginPath();
+        radarCtx.moveTo(cx, cy);
+        radarCtx.lineTo(cx + Math.cos(a) * maxR, cy + Math.sin(a) * maxR);
+        radarCtx.stroke();
+        const lx = cx + Math.cos(a) * (maxR + 14);
+        const ly = cy + Math.sin(a) * (maxR + 14);
+        radarCtx.textAlign = Math.abs(Math.cos(a)) < 0.3 ? 'center' : (Math.cos(a) > 0 ? 'left' : 'right');
+        radarCtx.textBaseline = 'middle';
+        radarCtx.fillText(labels[k], lx, ly);
+    });
+
+    // Stat polygon
+    radarCtx.beginPath();
+    keys.forEach((k, i) => {
+        const a = angle(i);
+        const r = maxR * (stats[k] / 100) * progress;
+        const x = cx + Math.cos(a) * r;
+        const y = cy + Math.sin(a) * r;
+        i === 0 ? radarCtx.moveTo(x, y) : radarCtx.lineTo(x, y);
+    });
+    radarCtx.closePath();
+    radarCtx.fillStyle = 'rgba(186,255,0,0.12)';
+    radarCtx.fill();
+    radarCtx.strokeStyle = 'rgba(186,255,0,0.7)';
+    radarCtx.lineWidth = 1.5;
+    radarCtx.shadowColor = 'rgba(186,255,0,0.5)';
+    radarCtx.shadowBlur = 8;
+    radarCtx.stroke();
+    radarCtx.shadowBlur = 0;
+
+    // Vertex dots
+    radarCtx.fillStyle = 'rgba(255,219,0,0.9)';
+    keys.forEach((k, i) => {
+        const a = angle(i);
+        const r = maxR * (stats[k] / 100) * progress;
+        radarCtx.beginPath();
+        radarCtx.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 2, 0, Math.PI * 2);
+        radarCtx.fill();
+    });
+}
+
+function animateRadar(stats, labels) {
+    if (radarAnim) cancelAnimationFrame(radarAnim);
+    wsRadar.classList.remove('hidden');
+    const start = performance.now(), dur = 600;
+    function frame(now) {
+        const t = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        drawRadar(stats, labels, ease);
+        if (t < 1) radarAnim = requestAnimationFrame(frame);
+    }
+    radarAnim = requestAnimationFrame(frame);
+}
+
 function renderWeaponStats(weapon) {
     const labels = weapons[currentCat].statLabels;
     wsName.textContent = weapon.name;
+    animateRadar(weapon.stats, labels);
     wsBars.innerHTML = '';
     if (weapon.img) {
         const imgWrap = document.createElement('div');
@@ -1268,6 +1401,8 @@ function renderWeaponStats(weapon) {
 function clearStats() {
     wsName.textContent = '--';
     wsBars.innerHTML = `<div class="text-center font-mono text-xs tracking-wider opacity-30 py-4" style="color:var(--mw-green)">SELECT AN ITEM TO VIEW SPECIFICATIONS</div>`;
+    if (radarAnim) cancelAnimationFrame(radarAnim);
+    wsRadar.classList.add('hidden');
 }
 
             renderCatTabs(); renderWeaponList(); clearStats();
@@ -1348,6 +1483,9 @@ function clearStats() {
                 };
                 if (closeButton) closeButton.addEventListener('click', closeLightbox);
                 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+                document.addEventListener('keydown', e => {
+                    if (e.key === 'Escape' && lightbox.style.display === 'flex') closeLightbox();
+                });
             }
         </script>
     </body>
