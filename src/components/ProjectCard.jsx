@@ -12,6 +12,11 @@ export default function ProjectCard({ project, flip, reduced }) {
   const cardRef = useRef(null);
   useTilt(cardRef, { reduced });
 
+  // Open in a new tab when the project asks for it (e.g. PDFs, external links).
+  const linkTarget = project.newTab
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {};
+
   return (
     <article className={`proj ${flip ? 'flip' : ''}`} id={project.id}>
       <a
@@ -19,6 +24,7 @@ export default function ProjectCard({ project, flip, reduced }) {
         href={project.href}
         aria-label={`${project.title} — open`}
         data-mask
+        {...linkTarget}
       >
         <div ref={cardRef} className="card" data-cursor>
           {project.media ? (
@@ -51,6 +57,7 @@ export default function ProjectCard({ project, flip, reduced }) {
           href={project.href}
           data-reveal
           data-reveal-delay="0.24"
+          {...linkTarget}
         >
           Open <span className="arrow">→</span>
         </a>

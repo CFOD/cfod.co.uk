@@ -49,20 +49,22 @@ export const projects = [
   {
     id: 'project-01',
     index: 'I',
-    title: 'Project One',
-    descriptor: 'Short descriptor',
-    tags: ['Tag', 'Tag', 'Tag'],
-    href: '#', // ← link to essay / case study / repo
-    media: null, // ← '/media/project-01.jpg' once you have an image
+    title: 'Strategic Volatility',
+    descriptor: 'Market dynamics and the limits of rhetoric — an analysis of performative disruption in the international system.',
+    tags: ['Analysis', 'Geopolitics', 'Markets'],
+    href: 'work/strategic-volatility.pdf', // ← PDF in /public/work
+    newTab: true, // PDFs open in a new tab
+    media: '/media/strategic-volatility.jpg', // graded plate: masthead + executive summary
   },
   {
     id: 'project-02',
     index: 'II',
-    title: 'Project Two',
-    descriptor: 'Short descriptor',
-    tags: ['Tag', 'Tag', 'Tag'],
-    href: '#',
-    media: null,
+    title: 'MW2 Collector',
+    descriptor: 'An interactive archive of Modern Warfare 2 — weapons, killstreaks, and ephemera from the 2009 classic.',
+    tags: ['Build', 'Interactive', 'Archive'],
+    href: 'mw2/', // standalone page in /public/mw2
+    newTab: true,
+    media: '/mw2/background.jpg', // the page's own key art
   },
   {
     id: 'project-03',
