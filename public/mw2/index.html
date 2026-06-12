@@ -5,25 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>MW2 Collector</title>
         <link rel="icon" type="image/x-icon" href="./icon.ico" />
-        <script src="https://cdn.tailwindcss.com"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            sans: ['Rajdhani', 'sans-serif'],
-                            mono: ['"Share Tech Mono"', 'monospace'],
-                        }
-                    }
-                }
-            };
-        </script>
+        <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="./tw.css" />
         <style>
             @font-face {
                 font-family: "BankGothic";
@@ -56,6 +41,10 @@
                 height: 100vh; width: 100%;
                 overflow: hidden; z-index: 1;
                 background: #0a0a08;
+            }
+            #hero-parallax {
+                position: absolute; inset: -3%;
+                will-change: transform;
             }
             #fullscreen-image {
                 position: absolute; top: 0; left: 0;
@@ -164,6 +153,20 @@
                 text-shadow: 0 0 4px var(--mw-green), 0 0 10px var(--mw-green);
                 filter: blur(0.4px);
             }
+            @keyframes mw2-glitch {
+                0% { transform: translate(0); }
+                20% { transform: translate(-3px, 1px) skewX(-3deg); }
+                40% { transform: translate(3px, -1px) skewX(3deg); }
+                60% { transform: translate(-2px, 0) skewX(-1deg); }
+                80% { transform: translate(2px, 1px); }
+                100% { transform: translate(0); }
+            }
+            .mw2-main-title.glitching span {
+                animation: mw2-glitch 0.28s steps(2, end) both;
+                text-shadow: -3px 0 rgba(255, 45, 85, 0.8), 3px 0 rgba(0, 229, 255, 0.8), 0 0 15px var(--mw-green);
+            }
+            .mw2-main-title.glitching span:nth-child(2) { animation-direction: reverse; }
+
             .mw2-scan-bar {
                 position: absolute; top: 0; left: -10%;
                 width: 120%; height: 5px;
@@ -223,8 +226,11 @@
             #cursor {
                 position: fixed; width: 28px; height: 28px;
                 pointer-events: none; z-index: 100000;
-                transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%) rotate(0deg);
+                transition: width 0.25s ease, height 0.25s ease, transform 0.25s ease;
             }
+            #cursor.hover { width: 44px; height: 44px; transform: translate(-50%, -50%) rotate(45deg); }
+            #cursor.hover::before, #cursor.hover::after { background: rgba(186, 255, 0, 0.9); box-shadow: 0 0 6px rgba(186,255,0,0.6); }
             #cursor::before, #cursor::after {
                 content: ''; position: absolute;
                 background: rgba(186, 255, 0, 0.6);
@@ -323,12 +329,14 @@
             }
             .op-card:hover .scan-overlay { transform: translateY(100%); }
             .op-card .op-photo { position: relative; overflow: hidden; background: #0a0a08; border-radius: 0.5rem 0.5rem 0 0; }
-            .op-card .op-photo img {
+            .op-card .op-photo img,
+            .op-card .op-photo video {
                 width: 100%; height: 100%; object-fit: cover;
                 filter: grayscale(100%) contrast(1.1) brightness(0.6);
                 transition: filter 0.4s;
             }
-            .op-card:hover .op-photo img { filter: grayscale(40%) contrast(1.2) brightness(0.7); }
+            .op-card:hover .op-photo img,
+            .op-card:hover .op-photo video { filter: grayscale(40%) contrast(1.2) brightness(0.7); }
             .op-card .op-photo::after {
                 content: ''; position: absolute; inset: 0;
                 background: linear-gradient(180deg, transparent 40%, rgba(15,15,12,0.4) 100%);
@@ -490,7 +498,9 @@
     <body>
         <!-- Hero -->
         <div class="hero-section">
-            <img id="fullscreen-image" src="./background.jpg" alt="MW2 Background" />
+            <div id="hero-parallax">
+                <img id="fullscreen-image" src="./background.webp" alt="MW2 Background" />
+            </div>
         </div>
 
         <!-- Embers -->
@@ -632,7 +642,10 @@
     <div class="op-card">
         <div class="scan-overlay"></div>
         <div class="op-photo h-48">
-            <img src="no_russian.gif" alt="No Russian" loading="lazy">
+            <video autoplay muted loop playsinline aria-label="No Russian">
+                <source src="no_russian.webm" type="video/webm">
+                <source src="no_russian.mp4" type="video/mp4">
+            </video>
         </div>
         <div class="p-4">
             <div class="font-mono text-[9px] tracking-[3px] opacity-60 mb-1" style="color:var(--mw-green)">FACT // 004</div>
@@ -667,18 +680,18 @@
                             <div class="content-card">
                                 <h2 class="text-3xl font-bold mb-6 uppercase tracking-widest">Resurgence DLC</h2>
                                 <p class="text-lg mb-6">
-                                    This is a sealed copy of the Resurgence downloadable content for Modern Warfare 2. This was the second of two DLC's released for the game, honouring Activision's claim to release at least two pieces of downloadable content at E3 2009. The Resurgence Pack was released on June 3, 2010 for Xbox 360, and July 6 for PlayStation 3 in North America and PC worldwide, and July 7 for PS3 in Europe.
+                                    This is a sealed copy of the Resurgence downloadable content for Modern Warfare 2. This was the second of two DLCs released for the game, honouring Activision's claim to release at least two pieces of downloadable content at E3 2009. The Resurgence Pack was released on June 3, 2010 for Xbox 360, and July 6 for PlayStation 3 in North America and PC worldwide, and July 7 for PS3 in Europe.
                                 </p>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                                     <div class="rounded-lg overflow-hidden shadow-lg reveal" style="background:rgba(30,30,25,0.5)">
-                                        <img data-src="resurgence_pack.webp" src="resurgence_pack.webp" loading="lazy" alt="Sealed Resurgence Pack DLC" class="w-full h-64 object-cover gallery-image lazy" />
+                                        <img src="resurgence_pack.webp" loading="lazy" decoding="async" alt="Sealed Resurgence Pack DLC" class="w-full h-64 object-cover gallery-image lazy" />
                                         <div class="p-4">
-                                            <h3 class="text-xl font-semibold">At £27 delivered from america, this was surprisingly good value.</h3>
+                                            <h3 class="text-xl font-semibold">At £27 delivered from America, this was surprisingly good value.</h3>
                                             <p class="opacity-50 mt-2">Although 15+ years old, I couldn't accept the Best Buy sticker. I had to find a way to remove it.</p>
                                         </div>
                                     </div>
                                     <div class="rounded-lg overflow-hidden shadow-lg reveal" style="background:rgba(30,30,25,0.5)">
-                                        <img data-src="resurgence_sticker.webp" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="Removing sticker from DLC box" class="w-full h-64 object-cover gallery-image lazy" />
+                                        <img src="resurgence_sticker.webp" loading="lazy" decoding="async" alt="Removing sticker from DLC box" class="w-full h-64 object-cover gallery-image lazy" />
                                         <div class="p-4">
                                             <h3 class="text-xl font-semibold">After asking around, I had heard lighter fluid was the best method of removal.&nbsp;</h3>
                                             <p class="opacity-50 mt-2">A cotton bud applying the fluid in light layers allowed the sticker to come off with ease in minutes.</p>
@@ -686,25 +699,25 @@
                                     </div>
                                 </div>
                                 <p class="text-lg mb-4">
-                                    The Resugence Pack expanded the Modern Warfare 2 online experience with five new multiplayer maps, with three brand new releases and two remastered fan-favourites from the original Modern Warfare - causing its release to be both fascinating and controversial.
+                                    The Resurgence Pack expanded the Modern Warfare 2 online experience with five new multiplayer maps, with three brand new releases and two remastered fan-favourites from the original Modern Warfare - causing its release to be both fascinating and controversial.
                                 </p>
                                 <p class="text-lg mb-4">The three new maps added completely fresh experiences:</p>
                                 <ul class="map-list text-lg mb-6">
-                                    <li class="mb-2">Carnival: A large, desolate theme park, offering a very unique experience. Its wide-open long-range design made it deadly due to the threat of snipers, while the claustrophobic, dilapidated, clown-filled funhouse and bumper car areas meant you could never let your guard down due to the high chance of close-quater combat at any time.</li>
-                                    <li class="mb-2">Fuel: A massive oil refinery and rail yard in the Middle Eastern desert built for long-range warfare. When released, it ovetook <i>Derail, Overgrown</i> and <i>Wasteland</i> as the largest multiplayer map in the game, defined by its split between an external area full of long sightlines and a close quater urban area in its center.</li>
-                                    <li class="mb-4">Trailer Park: The polar opposite of Fuel, this map was a tight, maze-like trailer park. Its extremely close quarters and chaotic layout made it a haven for fase-paced play. This map was very unique and one of my personal favourites, once a player learned possible spawns and tactics, killstreaks were almost guaranteed.</li>
+                                    <li class="mb-2">Carnival: A large, desolate theme park, offering a very unique experience. Its wide-open long-range design made it deadly due to the threat of snipers, while the claustrophobic, dilapidated, clown-filled funhouse and bumper car areas meant you could never let your guard down due to the high chance of close-quarters combat at any time.</li>
+                                    <li class="mb-2">Fuel: A massive oil refinery and rail yard in the Middle Eastern desert built for long-range warfare. When released, it overtook <i>Derail, Overgrown</i> and <i>Wasteland</i> as the largest multiplayer map in the game, defined by its split between an external area full of long sightlines and a close-quarters urban area at its centre.</li>
+                                    <li class="mb-4">Trailer Park: The polar opposite of Fuel, this map was a tight, maze-like trailer park. Its extremely close quarters and chaotic layout made it a haven for fast-paced play. This map was truly unique and one of my personal favourites — once a player learned the possible spawns and tactics, killstreaks were almost guaranteed.</li>
                                 </ul>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                                     <div class="rounded-lg overflow-hidden shadow-lg reveal" style="background:rgba(30,30,25,0.5)">
-                                        <img data-src="carnival.webp" src="carnival.webp" loading="lazy" alt="Carnival DLC Map" class="w-full h-64 object-cover gallery-image lazy" />
+                                        <img src="carnival.webp" loading="lazy" decoding="async" alt="Carnival DLC Map" class="w-full h-64 object-cover gallery-image lazy" />
                                         <div class="p-4"><h3 class="text-xl font-semibold uppercase tracking-widest">CARNIVAL</h3></div>
                                     </div>
                                     <div class="rounded-lg overflow-hidden shadow-lg reveal" style="background:rgba(30,30,25,0.5)">
-                                        <img data-src="fuel.webp" src="fuel.webp" loading="lazy" alt="Fuel DLC Map" class="w-full h-64 object-cover gallery-image lazy" />
+                                        <img src="fuel.webp" loading="lazy" decoding="async" alt="Fuel DLC Map" class="w-full h-64 object-cover gallery-image lazy" />
                                         <div class="p-4"><h3 class="text-xl font-semibold uppercase tracking-widest">FUEL</h3></div>
                                     </div>
                                     <div class="rounded-lg overflow-hidden shadow-lg reveal" style="background:rgba(30,30,25,0.5)">
-                                        <img data-src="trailer_park.webp" src="trailer_park.webp" loading="lazy" alt="Trailer Park DLC Map" class="w-full h-64 object-cover gallery-image lazy" />
+                                        <img src="trailer_park.webp" loading="lazy" decoding="async" alt="Trailer Park DLC Map" class="w-full h-64 object-cover gallery-image lazy" />
                                         <div class="p-4"><h3 class="text-xl font-semibold uppercase tracking-widest">TRAILER PARK</h3></div>
                                     </div>
                                 </div>
@@ -731,20 +744,20 @@
                                     This is a genuine Press copy of Modern Warfare 2, a unique copy of the game from the pre-release window of 2009. Unlike the mass-produced retail copies that broke global sales records in November of that year, this exclusive copy was part of the internal pre-release process of the game.
                                 </p>
                                 <div class="rounded-lg overflow-hidden shadow-lg mb-4 reveal" style="background:rgba(30,30,25,0.5)">
-                                    <img data-src="promo_copy.webp" src="promo_copy.webp" loading="lazy" alt="MW2 promo copy" class="w-full h-80 object-cover gallery-image lazy" />
+                                    <img src="promo_copy.webp" loading="lazy" decoding="async" alt="MW2 promo copy" class="w-full h-80 object-cover gallery-image lazy" />
                                     <div class="p-4">
                                         <h3 class="text-xl font-semibold">This is a promotional copy of Modern Warfare 2</h3>
                                         <p class="opacity-50 mt-2">It came from Australia and was sold by a very nice man.</p>
                                     </div>
                                 </div>
                                 <p class="text-lg mb-4">
-                                    Identifying non-retail media for the Xbox 360 has been a difficult and confusing process. Here is very limited information available on this copy. It is frequently confused with the "Bundle Copy" included with the Limited Edition console, however, there are a few significant differences.
+                                    Identifying non-retail media for the Xbox 360 has been a difficult and confusing process, and there is very limited information available on this copy. It is frequently confused with the "Bundle Copy" included with the Limited Edition console; however, there are a few significant differences.
                                 </p>
                                 <p class="text-lg mb-4">
-                                    The "Bundle Copy" is defined by its case (which lacks a barcode), but usually contains a standard disc with the full-colour soldier artwork. This differs from this as it features a noticeably 'washed out' sleeve design with clear text signifying its purpose — a utilitarian aesthetic designed to limit unauthorized resale and differentiate it from retail copies, not for shelf appeal. These were distributed strictly by Activision's PR agencies to major media outlets (like IGN, GameSpot, and print magazines) for critical evaluation before launch.
+                                    The "Bundle Copy" is defined by its case (which lacks a barcode), but usually contains a standard disc with the full-colour soldier artwork. The press copy differs in that it features a noticeably 'washed out' sleeve design with clear text signifying its purpose — a utilitarian aesthetic designed to limit unauthorised resale and differentiate it from retail copies, not for shelf appeal. These were distributed strictly by Activision's PR agencies to major media outlets (like IGN, GameSpot, and print magazines) for critical evaluation before launch.
                                 </p>
                                 <p class="text-lg">
-                                    Despite its humble appearance as nearly blank white disk with little more than black text, reviewers were sent a fully pressed disc. The inner hub features the standard Xbox 360 holographic security ring, distinguishing it from the "burned" beta discs often found on development kits. It contains the full retail code, serving as the vessel that delivered the game to the critics who would go on to cement its legacy. For me, this review copy is more than just a relic of the industry; it is a physical metaphor for the entire Modern Warfare 2 phenomenon. The copy arrived in a washed-out case with a plain white disc, looking almost unfinished and entirely unassuming. It was a quiet, faded object that gave no hint of the sheer scale of what was inside. It was the stillness before the impact — a monochromatic secret held in the hands of a few before it exploded into the colorful, controversial, and record-shattering chaos that redefined as well as my teenage years.
+                                    Despite its humble appearance as a nearly blank white disc with little more than black text, reviewers were sent a fully pressed disc. The inner hub features the standard Xbox 360 holographic security ring, distinguishing it from the "burned" beta discs often found on development kits. It contains the full retail code, serving as the vessel that delivered the game to the critics who would go on to cement its legacy. For me, this review copy is more than just a relic of the industry; it is a physical metaphor for the entire Modern Warfare 2 phenomenon. The copy arrived in a washed-out case with a plain white disc, looking almost unfinished and entirely unassuming. It was a quiet, faded object that gave no hint of the sheer scale of what was inside. It was the stillness before the impact — a monochromatic secret held in the hands of a few before it exploded into the colourful, controversial, and record-shattering chaos that redefined the industry, as well as my teenage years.
                                 </p>
                             </div>
                         </section>
@@ -777,9 +790,9 @@
                                     This was one of the later items I have added to my collection as it was an oddly difficult one to find. I had seen a lot of copies for sale that weren't sealed, and the ones that were looked particularly suspicious due to a torn or loose seal. I'd seen this copy available on a website for a game shop in Doncaster, over a hundred miles away. It was surprisingly cheap, but the reviews for the shop were all excellent, so I thought "why not?" and committed to the journey.
                                 </p>
                                 <div class="rounded-lg overflow-hidden shadow-lg mb-4 reveal" style="background:rgba(30,30,25,0.5)">
-                                    <img data-src="hardened.webp" src="hardened.webp" loading="lazy" alt="Hardened Edition" class="w-full h-80 object-cover gallery-image lazy" />
+                                    <img src="hardened.webp" loading="lazy" decoding="async" alt="Hardened Edition" class="w-full h-80 object-cover gallery-image lazy" />
                                     <div class="p-4">
-                                        <h3 class="text-xl font-semibold">A sealed copy of the limited Hardened Edition was one of the hardest things i've had to source.</h3>
+                                        <h3 class="text-xl font-semibold">A sealed copy of the limited Hardened Edition was one of the hardest things I've had to source.</h3>
                                         <p class="opacity-50 mt-2">Thankfully this was found in near-perfect condition for a very reasonable price.</p>
                                     </div>
                                 </div>
@@ -788,7 +801,7 @@
                                 </p>
                                 <p class="text-lg mb-4">Its contents were a significant upgrade from the standard release, all contained in a unique metal case:</p>
                                 <ul class="map-list text-lg mb-2">
-                                    <li class="mb-2">A copy of Modern Warfare 2 on a PS3.</li>
+                                    <li class="mb-2">A copy of Modern Warfare 2 for PlayStation 3.</li>
                                     <li class="mb-2">Collectible SteelBook: The game came in a metal steelbook case, which are often collected items in themselves.</li>
                                     <li class="mb-2">"Behind the Lines" Art Book: A hardcover book filled with development art, sketches, and behind-the-scenes renders.</li>
                                     <li class="mb-2">Call of Duty Classic Download: This version included a voucher code to download a full, remastered version of the original Call of Duty. At the time, this was the only way to get CoD Classic on the console.</li>
@@ -819,7 +832,7 @@
                             <div class="content-card">
                                 <h2 class="text-3xl font-bold mb-6 uppercase tracking-widest">Modern Warfare 2 Patch</h2>
                                 <div class="rounded-lg overflow-hidden shadow-lg mb-4 reveal" style="background:rgba(30,30,25,0.5)">
-                                    <img data-src="patch.webp" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" loading="lazy" alt="MW2 patch in hand" class="w-full h-80 object-cover gallery-image lazy" />
+                                    <img src="patch.webp" loading="lazy" decoding="async" alt="MW2 patch in hand" class="w-full h-80 object-cover gallery-image lazy" />
                                     <div class="p-4">
                                         <h3 class="text-xl font-semibold">You aren't gonna believe it... but this is a patch</h3>
                                         <p class="opacity-50 mt-2">It is in my hand. Look at it. It's also in some plastic.</p>
@@ -840,8 +853,11 @@
                             </div>
                             <div class="text-center">
                                 <h2 class="text-3xl font-bold mb-8 uppercase tracking-widest">The End</h2>
+                                <p class="text-lg max-w-2xl mx-auto leading-relaxed mb-6">
+                                    The lobbies are quieter now. The million concurrent players of 2009 have moved on, and the servers that remain are kept alive by the same communities that taught me how to bring the game back safely. One day they may go dark for good — and all that will remain is what we chose to keep.
+                                </p>
                                 <p class="text-lg max-w-2xl mx-auto leading-relaxed">
-                                    In retaliation for the airport massacre, Russia launches a surprise invasion of the U.S. East Coast, facilitated by their earlier capture of the ACS module, which allowed them to disable NORAD's satellite network. Foley's squad, including Allen's replacement Private James Ramirez, alongside other Army Rangers, defends Northern Virginia before holding out against Russian forces in Washington, D.C. Under interrogation, Rojas reveals that Makarov's most hated enemy is an individual known as "Prisoner 627", imprisoned in a gulag in Kamchatka Krai. With the United States unable to send assistance due to the war, Task Force 141 is forced to escape Rio de Janeiro with aid from Soap's old contact, Nikolai. Task Force 141 then links up with U.S. Navy SEALs to rescue hostages and neutralize S.A.M. sites aboard oilrigs, before breaking into the gulag and rescuing the prisoner, who is revealed to be Soap's former commanding officer Captain John Price.
+                                    This collection is my way of making sure something does. Every sealed box, faded sleeve, and plain white disc on this page marks the point where a game stopped being just a game and became part of who I am. This archive will still be here when the last lobby empties. End of transmission.
                                 </p>
                             </div>
                         </section>
@@ -880,12 +896,13 @@
             /* ============================
                Data
             ============================ */
+const ksSvg = (paths) => `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
 const killstreaks = [
-    { label: 'DEV', name: 'SILENT NERF', icon: 'fa-microphone-slash', desc: 'Akimbo Model 1887s had absurd range at launch. A patch quietly reduced it — the change was never mentioned in patch notes.' },
-    { label: 'COM', name: 'IWNET BACKLASH', icon: 'fa-server', desc: 'Dedicated servers were replaced with IWnet on PC. The community responded with a petition of over 100,000 signatures.' },
-    { label: 'GEO', name: 'REAL SATELLITE DATA', icon: 'fa-satellite', desc: 'The "Whiskey Hotel" level used actual satellite imagery of Washington D.C. to model the geography and building positions.' },
-    { label: 'MAP', name: 'TERMINAL SAVED', icon: 'fa-map-location-dot', desc: 'Terminal was nearly cut from the game. A single developer fought to keep it in — it became one of the most requested map remasters ever.' },
-    { label: 'LEAK', name: 'EMBARGO BROKEN', icon: 'fa-triangle-exclamation', desc: 'The ending leaked two weeks before launch when a reviewer posted the Price vs. Shepherd confrontation online.', nuke: true },
+    { label: 'DEV', name: 'SILENT NERF', icon: ksSvg('<line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>'), desc: 'Akimbo Model 1887s had absurd range at launch. A patch quietly reduced it — the change was never mentioned in patch notes.' },
+    { label: 'COM', name: 'IWNET BACKLASH', icon: ksSvg('<rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>'), desc: 'Dedicated servers were replaced with IWnet on PC. The community responded with a petition of over 100,000 signatures.' },
+    { label: 'GEO', name: 'REAL SATELLITE DATA', icon: ksSvg('<path d="M13 7 9 3 5 7l4 4"/><path d="m17 11 4 4-4 4-4-4"/><path d="m8 12 4 4 6-6-4-4Z"/><path d="m16 8 3-3"/><path d="M9 21a6 6 0 0 0-6-6"/>'), desc: 'The "Whiskey Hotel" level used actual satellite imagery of Washington D.C. to model the geography and building positions.' },
+    { label: 'MAP', name: 'TERMINAL SAVED', icon: ksSvg('<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>'), desc: 'Terminal was nearly cut from the game. A single developer fought to keep it in — it became one of the most requested map remasters ever.' },
+    { label: 'LEAK', name: 'EMBARGO BROKEN', icon: ksSvg('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'), desc: 'The ending leaked two weeks before launch when a reviewer posted the Price vs. Shepherd confrontation online.', nuke: true },
 ];
 
 const weapons = {
@@ -1068,10 +1085,11 @@ const statColors = {
                HUD Time
             ============================ */
             const hudTime = document.getElementById('hudTime');
-            (function updateHudTime() {
+            function updateHudTime() {
                 hudTime.textContent = new Date().toTimeString().slice(0, 8);
-                requestAnimationFrame(updateHudTime);
-            })();
+            }
+            updateHudTime();
+            setInterval(updateHudTime, 1000);
 
             /* ============================
                Scroll Button
@@ -1098,7 +1116,7 @@ const statColors = {
                 const node = document.createElement('div');
                 node.className = `ks-node flex flex-col items-center${ks.nuke ? ' ks-nuke' : ''}`;
                 node.innerHTML = `
-                    <div class="ks-icon-wrap"><i class="fas ${ks.icon}"></i></div>
+                    <div class="ks-icon-wrap">${ks.icon}</div>
                     <div class="font-mono text-[10px] tracking-[2px] mt-3" style="color:var(--mw-gold)">${ks.label}</div>
                     <div class="text-sm font-bold tracking-wider mt-1" style="color:var(--mw-text)">${ks.name}</div>
                     <div class="ks-desc font-mono text-[10px] opacity-50 text-center max-w-[140px] leading-relaxed" style="color:var(--mw-text)">${ks.desc}</div>
@@ -1301,30 +1319,12 @@ function clearStats() {
             }, { passive: true });
 
             /* ============================
-               Lazy Image Loading
+               Lazy Image Fade-in (loading="lazy" is native)
             ============================ */
-            const lazyImages = document.querySelectorAll('img.lazy');
-            if ('IntersectionObserver' in window) {
-                const imgObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            const src = img.getAttribute('data-src');
-                            if (!src) return;
-                            img.onload = () => img.classList.add('loaded');
-                            img.setAttribute('src', src);
-                            img.classList.remove('lazy');
-                            observer.unobserve(img);
-                        }
-                    });
-                }, { rootMargin: '0px 0px 200px 0px' });
-                lazyImages.forEach(img => imgObserver.observe(img));
-            } else {
-                lazyImages.forEach(img => {
-                    const src = img.getAttribute('data-src');
-                    if (src) { img.setAttribute('src', src); img.classList.add('loaded'); img.classList.remove('lazy'); }
-                });
-            }
+            document.querySelectorAll('img.lazy').forEach(img => {
+                if (img.complete) { img.classList.add('loaded'); }
+                else { img.addEventListener('load', () => img.classList.add('loaded'), { once: true }); }
+            });
 
             /* ============================
                Lightbox
